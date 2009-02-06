@@ -69,34 +69,30 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
 			return iByte;
 	}
 
-	this.getShortAt = function(iOffset, bBigEndian) {
-		var iShort = bBigEndian ? 
-			(this.getByteAt(iOffset) << 8) + this.getByteAt(iOffset + 1)
-			: (this.getByteAt(iOffset + 1) << 8) + this.getByteAt(iOffset)
+	this.getShortAt = function(iOffset) {
+		var iShort = (this.getByteAt(iOffset + 1) << 8) + this.getByteAt(iOffset)
 		if (iShort < 0) iShort += 65536;
 		return iShort;
 	}
-	this.getSShortAt = function(iOffset, bBigEndian) {
-		var iUShort = this.getShortAt(iOffset, bBigEndian);
+	this.getSShortAt = function(iOffset) {
+		var iUShort = this.getShortAt(iOffset);
 		if (iUShort > 32767)
 			return iUShort - 65536;
 		else
 			return iUShort;
 	}
-	this.getLongAt = function(iOffset, bBigEndian) {
+	this.getLongAt = function(iOffset) {
 		var iByte1 = this.getByteAt(iOffset),
 			iByte2 = this.getByteAt(iOffset + 1),
 			iByte3 = this.getByteAt(iOffset + 2),
 			iByte4 = this.getByteAt(iOffset + 3);
 
-		var iLong = bBigEndian ? 
-			(((((iByte1 << 8) + iByte2) << 8) + iByte3) << 8) + iByte4
-			: (((((iByte4 << 8) + iByte3) << 8) + iByte2) << 8) + iByte1;
+		var iLong = (((((iByte4 << 8) + iByte3) << 8) + iByte2) << 8) + iByte1;
 		if (iLong < 0) iLong += 4294967296;
 		return iLong;
 	}
-	this.getSLongAt = function(iOffset, bBigEndian) {
-		var iULong = this.getLongAt(iOffset, bBigEndian);
+	this.getSLongAt = function(iOffset) {
+		var iULong = this.getLongAt(iOffset);
 		if (iULong > 2147483647)
 			return iULong - 4294967296;
 		else

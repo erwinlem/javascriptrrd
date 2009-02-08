@@ -225,4 +225,5 @@ function FetchBinaryURLAsync(url, callback) {
     // ignore any error, just to make both FF and IE work
   }
   request.send(null);
+  return request
 }

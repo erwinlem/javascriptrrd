@@ -5,7 +5,7 @@
 	<TITLE>binaryXHR module</TITLE>
 	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Linux)">
 	<META NAME="CREATED" CONTENT="20090207;18445600">
-	<META NAME="CHANGED" CONTENT="20090207;21102900">
+	<META NAME="CHANGED" CONTENT="20090208;21102900">
 	<META NAME="Info 1" CONTENT="">
 	<META NAME="Info 2" CONTENT="">
 	<META NAME="Info 3" CONTENT="">
@@ -172,6 +172,7 @@ the binary file.</P>
 				</TD>
 				<TD WIDTH=75%>
 					<P>Return a double float (64 bit little endian) from offset idx.</P>
+					<P>Return <i>undefined</i> if the value is not a float or is infinity.</P>
 				</TD>
 			</TR>
 			<TR VALIGN=TOP>
@@ -182,6 +183,7 @@ the binary file.</P>
 					<P>Return a low resolution (20 bit mantissa) double flat
 					obtained from the high 32 bits of the original little endian
 					double float from offset idx.</P>
+					<P>Return <i>undefined</i> if the value is not a float or is infinity.</P>
 				</TD>
 			</TR>
 			<TR VALIGN=TOP>

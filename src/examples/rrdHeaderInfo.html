@@ -33,42 +33,73 @@
     <hr>
 
     <table id="infotable" border=1>
-	<tr><th>RRD file</th><td id="fname" colspan="3">None</td></tr>
-	<tr><th>Step</th><td id="step">N/A</td><th>Last update</th><td id="last_update">N/A</td></tr>
+	<tr><td><b>RRD file</b></td><td id="fname" colspan="4">None</td></tr>
+	<tr><td><b>Min Step</b></td><td id="step" align="right">N/A</td><td><b>Last update</b></td><td id="last_update" colspan="2">N/A</td></tr>
     </table>
 
     <script type="text/javascript">
-      function write_failure() {
-        var pel=document.getElementById("hello");
-        pel.style.color='red';
-        pel.firstChild.data="Invalid RRD file.";
-      }      
+      // fname is the global variable used by all the functions below
+      fname=document.getElementById("input_fname").value;
 
+      // This function updates the Web Page with the data from the RRD archive
       function update_info(fname,rrd_data) {
-        document.getElementById("fname").firstChild.data=fname;
-        document.getElementById("step").firstChild.data=rrd_data.getStep();
-        document.getElementById("last_update").firstChild.data=rrd_data.getLastUpdate();
+        // cleanup
+        // rows may have been added during previous updates
         var oTable=document.getElementById("infotable");
         while (oTable.rows.length>=3) {
           oTable.deleteRow(2);
         } 
 
+        // Generic header info
+        document.getElementById("fname").firstChild.data=fname;
+        document.getElementById("step").firstChild.data=rrd_data.getMinStep();
+        document.getElementById("last_update").firstChild.data=rrd_data.getLastUpdate();
 
+        // DS info
         var nrDSs=rrd_data.getNrDSs()
         var oRow=oTable.insertRow(-1);
         var oCell=oRow.insertCell(0);
         oCell.innerHTML="<b>DS list</b>";
-        oCell.colSpan=4;
+        oCell.colSpan=5;
         for (var i=0; i<nrDSs; i++) {
           var oDS=rrd_data.getDS(i);
           oRow=oTable.insertRow(-1);
           oCell=oRow.insertCell(0)
-          oCell.innerHTML="<b>"+oDS.getName()+"</B>";
+          oCell.innerHTML="<b>"+oDS.getName()+"</b>";
           oCell=oRow.insertCell(1)
           oCell.innerHTML=oDS.getType();
-          oCell.colSpan=3;
+          oCell.colSpan=4;
+        }
+
+        // RRA Info
+        var nrRRAs=rrd_data.getNrRRAs()
+        oRow=oTable.insertRow(-1);
+        oCell=oRow.insertCell(0);
+        oCell.innerHTML="<b>RRA list</b>";
+        oCell.colSpan=5;
+        for (var i=0; i<nrRRAs; i++) {
+          var oRRA=rrd_data.getRRAInfo(i);
+          oRow=oTable.insertRow(-1);
+          oCell=oRow.insertCell(0)
+          oCell.innerHTML=i;
+          oCell.align="center";
+          oCell=oRow.insertCell(1)
+          oCell.innerHTML="<b>Rows</b>";
+          oCell=oRow.insertCell(2)
+          oCell.innerHTML=oRRA.getNrRows();
+          oCell.align="right";
+          oCell=oRow.insertCell(3)
+          oCell.innerHTML="<b>Step</b>";
+          oCell=oRow.insertCell(4)
+          oCell.innerHTML=oRRA.getStep();
+          oCell.align="right";
         }
       }      
+
+      // This is the callback function that,
+      // given a binary file object,
+      // verifies that it is a valid RRD archive
+      // and performs the update of the Web page
       function update_info_handler(bf) {
           var rrd_data=undefined;
           try {
@@ -81,8 +112,7 @@
           }
       }
 
-      fname=document.getElementById("input_fname").value;
-
+      // this function is invoked when the RRD file name changes
       function input_update() {
         fname=document.getElementById("input_fname").value;
         try {
@@ -92,6 +122,9 @@
         }
       }
 
+      // Uncomment this part if you want the Web page to load the
+      // default RRD file at load time
+      //
       //try {
       //  FetchBinaryURLAsync(fname,update_info_handler);
       //} catch (err) {

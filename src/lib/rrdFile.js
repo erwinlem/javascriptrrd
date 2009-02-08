@@ -33,7 +33,6 @@
  * The data provided to this module require an object of a class
  * that implements the following methods:
  *   getByteAt(idx)            - Return a 8 bit unsigned integer at offset idx
- *   getShortAt(idx)           - Return a 16 bit unsigned integer at offset idx
  *   getLongAt(idx)            - Return a 32 bit unsigned integer at offset idx
  *   getDoubleAt(idx)          - Return a double float at offset idx
  *   getFastDoubleAt(idx)      - Similar to getDoubleAt but with less precision
@@ -59,7 +58,7 @@ InvalidRRD.prototype.toString = function() {
 
 
 // ============================================================
-// RRD DS handling class
+// RRD DS Info class
 function RRDDS(rrd_data,rrd_data_idx) {
   this.rrd_data=rrd_data;
   this.rrd_data_idx=rrd_data_idx;
@@ -80,60 +79,102 @@ RRDDS.prototype.getMax = function() {
 
 
 // ============================================================
+// RRD RRA Info class
+function RRDRRAInfo(rrd_data,rra_def_idx,
+		    rrd_align,row_cnt,pdp_step) {
+  this.rrd_data=rrd_data;
+  this.rra_def_idx=rra_def_idx;
+  this.rrd_align=rrd_align;
+  this.row_cnt=row_cnt;
+  this.pdp_step=pdp_step;
+}
+
+// Get number of rows
+RRDRRAInfo.prototype.getNrRows = function() {
+  return this.row_cnt;
+}
+
+// Get number of slots used for consolidation
+// Mostly for internal use
+RRDRRAInfo.prototype.getPdpPerRow = function() {
+  if (this.rrd_align==32)
+    return this.rrd_data.getLongAt(this.rra_def_idx+24,20);
+  else
+    return this.rrd_data.getLongAt(this.rra_def_idx+32,20);
+}
+
+// Get step per row (expressed in seconds)
+RRDRRAInfo.prototype.getStepPerRow = function() {
+  return this.pdp_step*this.getPdpPerRow();
+}
+
+// Get consolidation function name
+RRDRRAInfo.prototype.getCFName = function() {
+  return this.rrd_data.getCStringAt(this.rra_def_idx,20);
+}
+
+
+// ============================================================
 // RRD RRA handling class
-function RRDRRA(rrd_data,rrd_align,
-		rra_def_idx,rra_ptr_idx,
-		header_size,row_cnt,prev_row_cnts,ds_cnt,pdp_step) {
+function RRDRRA(rrd_data,rra_ptr_idx,
+		rra_info,
+		header_size,prev_row_cnts,ds_cnt) {
+  this.rrd_data=rrd_data;
+  this.rra_info=rra_info;
+  this.row_cnt=rra_info.row_cnt;
+  this.ds_cnt=ds_cnt;
+
   var row_size=ds_cnt*8;
-  var base_rrd_db_idx=header_size+prev_row_cnts*row_size;
+
+  this.base_rrd_db_idx=header_size+prev_row_cnts*row_size;
+
   // get imediately, since it will be needed often
   var cur_row=rrd_data.getLongAt(rra_ptr_idx);
 
-  var calc_idx = function(row_idx,ds_idx) {
-    if ((row_idx>=0) && (row_idx<row_cnt)) {
+  // calculate idx relative to base_rrd_db_idx
+  // mostly used internally
+  this.calc_idx = function(row_idx,ds_idx) {
+    if ((row_idx>=0) && (row_idx<this.row_cnt)) {
       if ((ds_idx>=0) && (ds_idx<ds_cnt)){
 	// it is round robin, starting from cur_row+1
 	var real_row_idx=row_idx+cur_row+1;
-	if (real_row_idx>=row_cnt) real_row_idx-=row_cnt;
+	if (real_row_idx>=this.row_cnt) real_row_idx-=this.row_cnt;
 	return row_size*real_row_idx+ds_idx*8;
       } else {
 	throw RangeError("DS idx ("+ row_idx +") out of range [0-" + ds_cnt +").");
       }
     } else {
-      throw RangeError("Row idx ("+ row_idx +") out of range [0-" + row_cnt +").");
+      throw RangeError("Row idx ("+ row_idx +") out of range [0-" + this.row_cnt +").");
     }	
   }
+}
 
-  // ----------------------------
-  // Start of public methods
+// Get number of rows/columns
+RRDRRA.prototype.getNrRows = function() {
+  return this.row_cnt;
+}
+RRDRRA.prototype.getNrDSs = function() {
+  return this.ds_cnt;
+}
 
-  this.getName = function() {
-    return rrd_data.getCStringAt(rra_def_idx,20);
-  }
-  this.getPdpPerRow = function() {
-    if (rrd_align==32)
-      return rrd_data.getLongAt(rra_def_idx+24,20);
-    else
-      return rrd_data.getLongAt(rra_def_idx+32,20);
-  }
-  this.getSecsPerRow = function() {
-    return pdp_step*this.getPdpPerRow();
-  }
+// Get step per row (expressed in seconds)
+RRDRRA.prototype.getStepPerRow = function() {
+  return this.rra_info.getStepPerRow();
+}
 
-  this.getNrRows = function() {
-    return row_cnt;
-  }
-  this.getNrDSs = function() {
-    return ds_cnt;
-  }
+// Get consolidation function name
+RRDRRA.prototype.getCFName = function() {
+  return this.rra_info.getCFName();
+}
 
-  this.getEl = function(row_idx,ds_idx) {
-    return rrd_data.getDoubleAt(base_rrd_db_idx+calc_idx(row_idx,ds_idx));
-  }
-  // Extracts only 4 bytes out of 8 in double, loosing in precision (20 bit mantissa)
-  this.getElFast = function(row_idx,ds_idx) {
-    return rrd_data.getFastDoubleAt(base_rrd_db_idx+calc_idx(row_idx,ds_idx));
-  }
+RRDRRA.prototype.getEl = function(row_idx,ds_idx) {
+  return this.rrd_data.getDoubleAt(this.base_rrd_db_idx+this.calc_idx(row_idx,ds_idx));
+}
+
+// Low precision version of getEl
+// Uses getFastDoubleAt
+RRDRRA.prototype.getElFast = function(row_idx,ds_idx) {
+  return this.rrd_data.getFastDoubleAt(this.base_rrd_db_idx+this.calc_idx(row_idx,ds_idx));
 }
 
 // ============================================================
@@ -261,6 +302,19 @@ RRDHeader.prototype.getDS = function(idx) {
   }	
 }
 
+RRDHeader.prototype.getNrRRAs = function() {
+  return this.rra_cnt;
+}
+RRDHeader.prototype.getRRAInfo = function(idx) {
+  if ((idx>=0) && (idx<this.rra_cnt)) {
+    return new RRDRRAInfo(this.rrd_data,
+			  this.rra_def_idx+idx*this.rra_def_el_size,
+			  this.rrd_align,this.rra_def_row_cnts[idx],this.pdp_step);
+  } else {
+    throw RangeError("RRA idx ("+ idx +") out of range [0-" + this.rra_cnt +").");
+  }	
+}
+
 // ============================================================
 // RRDFile class
 //   Given a BinaryFile, gives access to the RRD archive fields
@@ -291,20 +345,17 @@ function RRDFile(bf) {
   }
 
   this.getNrRRAs = function() {
-    return this.rrd_header.rra_cnt;
+    return this.rrd_header.getNrRRAs(idx);
   }
 
   this.getRRA = function(idx) {
-    if ((idx>=0) && (idx<this.rrd_header.rra_cnt)) {
-      return new RRDRRA(rrd_data,this.rrd_header.rrd_align,
-			this.rrd_header.rra_def_idx+idx*this.rrd_header.rra_def_el_size,
-			this.rrd_header.rra_ptr_idx+idx*this.rrd_header.rra_ptr_el_size,
-			this.rrd_header.header_size,
-			this.rrd_header.rra_def_row_cnts[idx],this.rrd_header.rra_def_row_cnt_sums[idx],
-			this.rrd_header.ds_cnt,this.rrd_header.pdp_step);
-    } else {
-      throw RangeError("RRA idx ("+ idx +") out of range [0-" + this.rrd_header.rra_cnt +").");
-    }	
+    rra_info=this.rrd_header.getRRAInfo(idx);
+    return new RRDRRA(rrd_data,
+		      this.rrd_header.rra_ptr_idx+idx*this.rrd_header.rra_ptr_el_size,
+		      rra_info,
+		      this.rrd_header.header_size,
+		      this.rrd_header.rra_def_row_cnt_sums[idx],
+		      this.rrd_header.ds_cnt);
   }
 
 }

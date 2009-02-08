@@ -131,7 +131,7 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
 		var iMantLo=((((iByte3) << 8) + iByte2) << 8) + iByte1;
 
 		if (iExpRaw==0) return 0.0;
-		if (iExpRaw==0x7ff) return false;
+		if (iExpRaw==0x7ff) return undefined;
 
 		var iExp=(iExpRaw & 0x7FF)-1023;
 
@@ -150,7 +150,7 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
 		var iMant=((((iByte7 & 0x0F) << 8) + iByte6) << 8) + iByte5;
 
 		if (iExpRaw==0) return 0.0;
-		if (iExpRaw==0x7ff) return false;
+		if (iExpRaw==0x7ff) return undefined;
 
 		var iExp=(iExpRaw & 0x7FF)-1023;
 

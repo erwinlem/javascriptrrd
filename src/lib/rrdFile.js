@@ -103,8 +103,8 @@ RRDRRAInfo.prototype.getPdpPerRow = function() {
     return this.rrd_data.getLongAt(this.rra_def_idx+32,20);
 }
 
-// Get step per row (expressed in seconds)
-RRDRRAInfo.prototype.getStepPerRow = function() {
+// Get RRA step (expressed in seconds)
+RRDRRAInfo.prototype.getStep = function() {
   return this.pdp_step*this.getPdpPerRow();
 }
 
@@ -157,9 +157,9 @@ RRDRRA.prototype.getNrDSs = function() {
   return this.ds_cnt;
 }
 
-// Get step per row (expressed in seconds)
-RRDRRA.prototype.getStepPerRow = function() {
-  return this.rra_info.getStepPerRow();
+// Get RRA step (expressed in seconds)
+RRDRRA.prototype.getStep = function() {
+  return this.rra_info.getStep();
 }
 
 // Get consolidation function name
@@ -284,7 +284,7 @@ RRDHeader.prototype.load_row_cnts = function() {
 // ---------------------------
 // Start of user functions
 
-RRDHeader.prototype.getStep = function() {
+RRDHeader.prototype.getMinStep = function() {
   return this.pdp_step;
 }
 RRDHeader.prototype.getLastUpdate = function() {
@@ -330,8 +330,8 @@ function RRDFile(bf) {
   // ===================================
   // Start of user functions
 
-  this.getStep = function() {
-    return this.rrd_header.getStep();
+  this.getMinStep = function() {
+    return this.rrd_header.getMinStep();
   }
   this.getLastUpdate = function() {
     return this.rrd_header.getLastUpdate();
@@ -345,7 +345,11 @@ function RRDFile(bf) {
   }
 
   this.getNrRRAs = function() {
-    return this.rrd_header.getNrRRAs(idx);
+    return this.rrd_header.getNrRRAs();
+  }
+
+  this.getRRAInfo = function(idx) {
+    return this.rrd_header.getRRAInfo(idx);
   }
 
   this.getRRA = function(idx) {

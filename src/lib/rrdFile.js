@@ -25,6 +25,9 @@
  *
  * Only versions 3 and 4 of the RRD archive are supported.
  *
+ * Only AVERAGE,MAXIMUM,MINIMUM and LAST consolidation functions are
+ * supported. For all others, the behaviour is at the moment undefined.
+ *
  */
 
 /*

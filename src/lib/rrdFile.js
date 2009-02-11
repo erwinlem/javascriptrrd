@@ -304,6 +304,15 @@ RRDHeader.prototype.getDS = function(idx) {
     throw RangeError("DS idx ("+ idx +") out of range [0-" + this.ds_cnt +").");
   }	
 }
+RRDHeader.prototype.getDSbyName = function(name) {
+  for (var idx=0; idx<this.ds_cnt; idx++) {
+    var ds=this.getDS(idx);
+    var ds_name=ds.getName()
+    if (ds_name==name)
+      return idx;
+  }
+  return undefined;
+}
 
 RRDHeader.prototype.getNrRRAs = function() {
   return this.rra_cnt;
@@ -345,6 +354,9 @@ function RRDFile(bf) {
   }
   this.getDS = function(idx) {
     return this.rrd_header.getDS(idx);
+  }
+  this.getDSbyName = function(name) {
+    return this.rrd_header.getDSbyName(name);
   }
 
   this.getNrRRAs = function() {

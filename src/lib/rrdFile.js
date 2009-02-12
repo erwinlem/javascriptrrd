@@ -62,11 +62,15 @@ InvalidRRD.prototype.toString = function() {
 
 // ============================================================
 // RRD DS Info class
-function RRDDS(rrd_data,rrd_data_idx) {
+  function RRDDS(rrd_data,rrd_data_idx,my_idx) {
   this.rrd_data=rrd_data;
   this.rrd_data_idx=rrd_data_idx;
+  this.my_idx=my_idx;
 }
 
+RRDDS.prototype.getIdx = function() {
+  return this.my_idx;
+}
 RRDDS.prototype.getName = function() {
   return this.rrd_data.getCStringAt(this.rrd_data_idx,20);
 }
@@ -84,12 +88,17 @@ RRDDS.prototype.getMax = function() {
 // ============================================================
 // RRD RRA Info class
 function RRDRRAInfo(rrd_data,rra_def_idx,
-		    rrd_align,row_cnt,pdp_step) {
+		    rrd_align,row_cnt,pdp_step,my_idx) {
   this.rrd_data=rrd_data;
   this.rra_def_idx=rra_def_idx;
   this.rrd_align=rrd_align;
   this.row_cnt=row_cnt;
   this.pdp_step=pdp_step;
+  this.my_idx=my_idx;
+}
+
+RRDRRAInfo.prototype.getIdx = function() {
+  return this.my_idx;
 }
 
 // Get number of rows
@@ -150,6 +159,10 @@ function RRDRRA(rrd_data,rra_ptr_idx,
       throw RangeError("Row idx ("+ row_idx +") out of range [0-" + this.row_cnt +").");
     }	
   }
+}
+
+RRDRRA.prototype.getIdx = function() {
+  return this.rra_info.getIdx();
 }
 
 // Get number of rows/columns
@@ -299,7 +312,7 @@ RRDHeader.prototype.getNrDSs = function() {
 }
 RRDHeader.prototype.getDS = function(idx) {
   if ((idx>=0) && (idx<this.ds_cnt)) {
-    return new RRDDS(this.rrd_data,this.ds_def_idx+this.ds_el_size*idx);
+    return new RRDDS(this.rrd_data,this.ds_def_idx+this.ds_el_size*idx,idx);
   } else {
     throw RangeError("DS idx ("+ idx +") out of range [0-" + this.ds_cnt +").");
   }	
@@ -309,7 +322,7 @@ RRDHeader.prototype.getDSbyName = function(name) {
     var ds=this.getDS(idx);
     var ds_name=ds.getName()
     if (ds_name==name)
-      return idx;
+      return ds;
   }
   return undefined;
 }
@@ -321,7 +334,8 @@ RRDHeader.prototype.getRRAInfo = function(idx) {
   if ((idx>=0) && (idx<this.rra_cnt)) {
     return new RRDRRAInfo(this.rrd_data,
 			  this.rra_def_idx+idx*this.rra_def_el_size,
-			  this.rrd_align,this.rra_def_row_cnts[idx],this.pdp_step);
+			  this.rrd_align,this.rra_def_row_cnts[idx],this.pdp_step,
+			  idx);
   } else {
     throw RangeError("RRA idx ("+ idx +") out of range [0-" + this.rra_cnt +").");
   }	

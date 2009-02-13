@@ -32,12 +32,7 @@ function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_label) {
     if (el!=undefined) {
       flot_series.push([timestamp,el]);
     } else {
-      if ((i>0) && ((i+1)<rra_rows)) {
-	flot_series.push([timestamp,null]);
-      } else {
-	// Flot misbehaves if first or last point is null
-	flot_series.push([timestamp,0]);
-      } 
+      flot_series.push([timestamp,null]);
     } 
   } // end for
 

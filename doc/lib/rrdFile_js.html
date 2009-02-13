@@ -114,23 +114,25 @@ thrown.</P>
 			</TR>
 			<TR VALIGN=TOP>
 				<TD WIDTH=20%>
-					<P>getDS(n)</P>
+					<P>getDSNames()</P>
 				</TD>
 				<TD WIDTH=80%>
-					<P>Return an object of type <A HREF="#RRDDS">RRDDS</A> holding
-					the information about the n-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
-					Source</A>.</P>
+					<P>Return the names of the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+					Sources</A> present in the RRD file. 
+					</P>
 				</TD>
 			</TR>
 			<TR VALIGN=TOP>
 				<TD WIDTH=20%>
-					<P>getDSbyName(name)</P>
+					<P>getDS(id)</P>
 				</TD>
 				<TD WIDTH=80%>
-					<P>Return an object of type <A HREF="#RRDDS">RRDDS</A> holding
+					<P>If id is a number, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
+					the information about the id-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+					Source</A>.</P>
+					<P>If id is a string, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
 					the information about the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
 					Source</A> with the requested name.</P>
-	                                <P>If no DS has such name, <I>undefined</I> is returned.</P>
 				</TD>
 			</TR>
 			<TR VALIGN=TOP>

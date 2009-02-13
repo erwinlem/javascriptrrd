@@ -107,7 +107,7 @@
       // This function updates the Web Page with the data from the RRD archive
       function element_update() {
         oSelDS=document.getElementById("select_ds");
-        ds_idx=oSelDS.options[oSelDS.selectedIndex].value;
+        ds_idx=Math.round(oSelDS.options[oSelDS.selectedIndex].value);
         oSelRRA=document.getElementById("select_rra");
         rra_idx=oSelRRA.options[oSelRRA.selectedIndex].value;
 

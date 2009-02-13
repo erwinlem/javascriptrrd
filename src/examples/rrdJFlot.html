@@ -2,7 +2,7 @@
 <!--
  Example HTML/javascript file that display the
  content of a RRD archive file in a graph
- using the jFlot libraries
+ using the Flot libraries
  Part of the javascriptRRD package
  Copyright (c) 2009 Frank Wuerthwein, fkw@ucsd.edu
 
@@ -13,7 +13,7 @@
 -->
 
 <!--
- This page requires jFlot.
+ This page requires Flot.
 
  Repository: http://code.google.com/p/flot/
 
@@ -31,11 +31,11 @@
     <script type="text/javascript" src="http://people.iola.dk/olau/flot/jquery.js"></script>
     <script type="text/javascript" src="http://people.iola.dk/olau/flot/jquery.flot.js"></script>
   <head>
-    <title>RRD Graphs with jFlot</title>
+    <title>RRD Graphs with Flot</title>
   </head>
 
   <body>
-    <h1 id="title">RRD Graphs with jFlot</h1>
+    <h1 id="title">RRD Graphs with Flot</h1>
 
     RRD URL:
     <input type="text" id="input_fname" value="example1.rrd"
@@ -119,7 +119,7 @@
       // This function updates the Web Page with the data from the RRD archive
       function element_update() {
         oSelDS=document.getElementById("select_ds");
-        ds_idx=oSelDS.options[oSelDS.selectedIndex].value;
+        ds_idx=Math.round(oSelDS.options[oSelDS.selectedIndex].value);
         oSelRRA=document.getElementById("select_rra");
         rra_idx=oSelRRA.options[oSelRRA.selectedIndex].value;
 

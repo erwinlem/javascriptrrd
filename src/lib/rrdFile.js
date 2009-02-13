@@ -62,7 +62,7 @@ InvalidRRD.prototype.toString = function() {
 
 // ============================================================
 // RRD DS Info class
-  function RRDDS(rrd_data,rrd_data_idx,my_idx) {
+function RRDDS(rrd_data,rrd_data_idx,my_idx) {
   this.rrd_data=rrd_data;
   this.rrd_data_idx=rrd_data_idx;
   this.my_idx=my_idx;
@@ -310,7 +310,16 @@ RRDHeader.prototype.getLastUpdate = function() {
 RRDHeader.prototype.getNrDSs = function() {
   return this.ds_cnt;
 }
-RRDHeader.prototype.getDS = function(idx) {
+RRDHeader.prototype.getDSNames = function() {
+  var ds_names=[]
+  for (var idx=0; idx<this.ds_cnt; idx++) {
+    var ds=this.getDSbyIdx(idx);
+    var ds_name=ds.getName()
+    ds_names.push(ds_name);
+  }
+  return ds_names;
+}
+RRDHeader.prototype.getDSbyIdx = function(idx) {
   if ((idx>=0) && (idx<this.ds_cnt)) {
     return new RRDDS(this.rrd_data,this.ds_def_idx+this.ds_el_size*idx,idx);
   } else {
@@ -319,12 +328,12 @@ RRDHeader.prototype.getDS = function(idx) {
 }
 RRDHeader.prototype.getDSbyName = function(name) {
   for (var idx=0; idx<this.ds_cnt; idx++) {
-    var ds=this.getDS(idx);
+    var ds=this.getDSbyIdx(idx);
     var ds_name=ds.getName()
     if (ds_name==name)
       return ds;
   }
-  return undefined;
+  throw RangeError("DS name "+ name +" unknown.");
 }
 
 RRDHeader.prototype.getNrRRAs = function() {
@@ -366,11 +375,15 @@ function RRDFile(bf) {
   this.getNrDSs = function() {
     return this.rrd_header.getNrDSs();
   }
-  this.getDS = function(idx) {
-    return this.rrd_header.getDS(idx);
+  this.getDSNames = function() {
+    return this.rrd_header.getDSNames();
   }
-  this.getDSbyName = function(name) {
-    return this.rrd_header.getDSbyName(name);
+  this.getDS = function(id) {
+    if (typeof id == "number") {
+      return this.rrd_header.getDSbyIdx(id);
+    } else {
+      return this.rrd_header.getDSbyName(id);
+    }
   }
 
   this.getNrRRAs = function() {

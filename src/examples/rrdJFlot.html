@@ -141,11 +141,11 @@
           if (el!=undefined) {
             rra_pairs[i]=([(last_update+(i-rows+1)*step)*1000.0,el]);
           } else {
-            if ((i>0) && ((i+1)<rows)) { 
-               rra_pairs[i]=null;
+            if ((i>0) && ((i+1)<rows)) {
+               rra_pairs[i]=[(last_update+(i-rows+1)*step)*1000.0,null];
             } else {
-               rra_pairs[i]=0; // first and last must be defined or Flot gets confused
-            }
+               rra_pairs[i]=[(last_update+(i-rows+1)*step)*1000.0,0];
+            } 
           }
         }
 

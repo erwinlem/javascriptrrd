@@ -26,6 +26,7 @@
   
     <script type="text/javascript" src="../lib/binaryXHR.js"></script>
     <script type="text/javascript" src="../lib/rrdFile.js"></script>
+    <script type="text/javascript" src="../lib/rrdFlotSupport.js"></script>
 
     <!-- Using jFlot example URL... never do this on production pages -->
     <script type="text/javascript" src="http://people.iola.dk/olau/flot/jquery.js"></script>
@@ -129,25 +130,11 @@
 
         // get RRA info
         var rra=rrd_data.getRRA(rra_idx);
-        var rows=rra.getNrRows();
-        var last_update=rrd_data.getLastUpdate();
         var step=rra.getStep();
         document.getElementById("step_el").firstChild.data=step;
 
-        var rra_pairs=[]
-
-        for (var i=0; i<rows;i++) {
-          var el=rra.getElFast(i,ds_idx);
-          if (el!=undefined) {
-            rra_pairs[i]=([(last_update+(i-rows+1)*step)*1000.0,el]);
-          } else {
-            if ((i>0) && ((i+1)<rows)) {
-               rra_pairs[i]=[(last_update+(i-rows+1)*step)*1000.0,null];
-            } else {
-               rra_pairs[i]=[(last_update+(i-rows+1)*step)*1000.0,0];
-            } 
-          }
-        }
+        var plot_data=rrdDS2FlotSeries(rrd_data,ds_idx,rra_idx);
+        var overview_data=rrdDS2FlotSeries(rrd_data,ds_idx,rra_idx,false);
 
         // Plot
         var options = {
@@ -156,15 +143,15 @@
             selection: { mode: "x" },
         };
     
-        var plot = $.plot($("#placeholder"), [rra_pairs], options);
+        var plot = $.plot($("#placeholder"), [plot_data], options);
     
-        var overview = $.plot($("#overview"), [rra_pairs], options);
+        var overview = $.plot($("#overview"), [overview_data], options);
 
          // now connect the two
     
          $("#placeholder").bind("plotselected", function (event, ranges) {
             // do the zooming
-            plot = $.plot($("#placeholder"), [rra_pairs],
+            plot = $.plot($("#placeholder"), [plot_data],
                           $.extend(true, {}, options, {
                               xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
                           }));

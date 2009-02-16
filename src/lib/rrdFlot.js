@@ -32,6 +32,8 @@ function rrdFlot(html_id, rrd_file, ds_description, layout_opts) {
   this.ds_description=ds_description;
   this.layout_ops=layout_opts;
 
+  this.selection_range=new rrdFlotSelection();
+
   this.createHTML();
   this.populateRes();
   this.populateDScb();
@@ -96,10 +98,6 @@ rrdFlot.prototype.createHTML = function() {
   cellScale.appendChild(elScale);
   
   base_el.appendChild(external_table);
-
-  // since I created a new HTML structure, there are no graphs yet => no selection
-  this.selection_min=null;
-  this.selection_max=null;
 };
 
 // ======================================
@@ -199,7 +197,7 @@ rrdFlot.prototype.bindFlotGraph = function(flot_data) {
     selection: { mode: "x" },
   };
     
-  var graph_data=this.trim_flot_data(flot_data);
+  var graph_data=this.selection_range.trim_flot_data(flot_data);
   //var scale_data=flot_data.clone();
   var scale_data=flot_data;
   
@@ -214,9 +212,9 @@ rrdFlot.prototype.bindFlotGraph = function(flot_data) {
   // now connect the two    
   $(graph_jq_id).bind("plotselected", function (event, ranges) {
       // do the zooming
-      rf_this.selection_min=ranges.xaxis.from;
+			rf_this.selection_range.setFromFlotRanges(ranges);
       rf_this.selection_max=ranges.xaxis.to;
-      graph = $.plot($(graph_jq_id), rf_this.trim_flot_data(flot_data), graph_options);
+      graph = $.plot($(graph_jq_id), rf_this.selection_range.trim_flot_data(flot_data), graph_options);
       
       // don't fire event on the scale to prevent eternal loop
       scale.setSelection(ranges, true);
@@ -234,32 +232,5 @@ rrdFlot.prototype.callback_res_changed = function() {
 
 rrdFlot.prototype.callback_ds_cb_changed = function() {
   this.drawFlotGraph();
-};
-
-
-// =======================================================
-// Given an array of flot lines, limit to the selection
-rrdFlot.prototype.trim_flot_data = function(flot_data) {
-  var out_data=[];
-  for (var i=0; i<flot_data.length; i++) {
-    var data_el=flot_data[i];
-    out_data.push({label : data_el.label, data:this.trim_data(data_el.data)});
-  }
-  return out_data;
-};
-
-// Limit to selection the flot series data element
-rrdFlot.prototype.trim_data = function(data_list) {
-  if (this.selection_min==null) return data_list; // no selection => no filtering
-
-  var out_data=[];
-  for (var i=0; i<data_list.length; i++) {
-    if (data_list[i]==null) continue; // protect
-    var nr=data_list[i][0];
-    if ((nr>=this.selection_min) && (nr<=this.selection_max)) {
-      out_data.push(data_list[i]);
-    }
-  }
-  return out_data;
 };
 

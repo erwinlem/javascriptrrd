@@ -49,19 +49,29 @@ function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_label) {
 function rrdFlotSelection() {
   this.selection_min=null;
   this.selection_max=null;
-}
+};
 
 // reset to a state where ther is no selection
 rrdFlotSelection.prototype.reset = function() {
-      this.selection_min=null;
-      this.selection_max=null;
-}
+  this.selection_min=null;
+  this.selection_max=null;
+};
 
 // given the selection ranges, set internal variable accordingly
 rrdFlotSelection.prototype.setFromFlotRanges = function(ranges) {
-      this.selection_min=ranges.xaxis.from;
-      this.selection_max=ranges.xaxis.to;
-}
+  this.selection_min=ranges.xaxis.from;
+  this.selection_max=ranges.xaxis.to;
+};
+
+// Return a Flot ranges structure that can be promptly used in setSelection
+rrdFlotSelection.prototype.getFlotRanges = function() {
+  return { xaxis: {from: this.selection_min, to: this.selection_max}};
+};
+
+// return true is a selection is in use
+rrdFlotSelection.prototype.isSet = function() {
+  return this.selection_min!=null;
+};
 
 // Given an array of flot lines, limit to the selection
 rrdFlotSelection.prototype.trim_flot_data = function(flot_data) {

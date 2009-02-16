@@ -200,20 +200,18 @@ rrdFlot.prototype.bindFlotGraph = function(flot_data) {
   var graph_data=this.selection_range.trim_flot_data(flot_data);
   //var scale_data=flot_data.clone();
   var scale_data=flot_data;
-  
 
   var graph = $.plot($(graph_jq_id), graph_data, graph_options);
   var scale = $.plot($(scale_jq_id), scale_data, scale_options);
 
-  if (this.selection_min!=null) {
-    scale.setSelection({ xaxis: {from: this.selection_min, to: this.selection_max}},true); //don't fire event, no need
+  if (this.selection_range.isSet()) {
+    scale.setSelection(this.selection_range.getFlotRanges(),true); //don't fire event, no need
   }
 
   // now connect the two    
   $(graph_jq_id).bind("plotselected", function (event, ranges) {
       // do the zooming
-			rf_this.selection_range.setFromFlotRanges(ranges);
-      rf_this.selection_max=ranges.xaxis.to;
+      rf_this.selection_range.setFromFlotRanges(ranges);
       graph = $.plot($(graph_jq_id), rf_this.selection_range.trim_flot_data(flot_data), graph_options);
       
       // don't fire event on the scale to prevent eternal loop

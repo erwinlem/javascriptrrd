@@ -27,7 +27,7 @@ function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_label) {
   var last_update=rrd_file.getLastUpdate();
   var step=rra.getStep();
 
-  var first_el=(last_update-rra_rows+1)*step;
+  var first_el=last_update-(rra_rows-1)*step;
   var timestamp=first_el;
   var flot_series=[];
   for (var i=0;i<rra_rows;i++) {
@@ -52,7 +52,7 @@ function rrdRRA2FlotObj(rrd_file,rra_idx,ds_list,want_ds_labels) {
   var rra_rows=rra.getNrRows();
   var last_update=rrd_file.getLastUpdate();
   var step=rra.getStep();
-  var first_el=(last_update-rra_rows+1)*step;
+  var first_el=last_update-(rra_rows-1)*step;
 
   var out_el={data:[], min:first_el*1000.0, max:last_update*1000.0};
 

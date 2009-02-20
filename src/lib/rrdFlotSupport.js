@@ -25,21 +25,21 @@ function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_label) {
   var last_update=rrd_file.getLastUpdate();
   var step=rra.getStep();
 
+  var first_el=(last_update-rra_rows+1)*step;
+  var timestamp=first_el;
   var flot_series=[];
   for (var i=0;i<rra_rows;i++) {
-    var timestamp=(last_update+(i-rra_rows+1)*step)*1000.0;
     var el=rra.getEl(i,ds_idx);
     if (el!=undefined) {
-      flot_series.push([timestamp,el]);
-    } else {
-      flot_series.push([timestamp,null]);
-    } 
+      flot_series.push([timestamp*1000.0,el]);
+    }
+    timestamp+=step;
   } // end for
 
   if (want_label!=false) {
-    return {label: ds_name, data: flot_series};
+    return {label: ds_name, data: flot_series, min: first_el*1000.0, max:timestamp*1000.0};
   } else {
-    return {data:flot_series};
+    return {data:flot_series, min: first_el*1000.0, max:timestamp*1000.0};
   }
 }
 

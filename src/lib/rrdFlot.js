@@ -30,7 +30,11 @@ function rrdFlot(html_id, rrd_file, ds_description, layout_opts) {
   this.html_id=html_id;
   this.rrd_file=rrd_file;
   this.ds_description=ds_description;
-  this.layout_ops=layout_opts;
+  if (layout_opts!=null) {
+    this.layout_opts=layout_opts;
+  } else {
+    this.layout_opts={};
+  }
 
   this.selection_range=new rrdFlotSelection();
 
@@ -180,10 +184,26 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   var graph_jq_id="#"+this.graph_id;
   var scale_jq_id="#"+this.scale_id;
 
+  var legend_position="nw"; // choose a reasonable default
+  if (this.layout_opts.legend_position!=null) {
+    legend_position=this.layout_opts.legend_position;
+  }
+
+  var legend_columns=3; // choose a reasonable default
+  if (this.layout_opts.legend_columns!=null) {
+    legend_columns=this.layout_opts.legend_columns;
+  }
+
+  var legend_fraction=0.25; // choose a reasonable default
+  if (this.layout_opts.legend_fraction!=null) {
+    legend_fraction=this.layout_opts.legend_fraction;
+  }
+
   var graph_options = {
-    legend: {show:true},
+    legend: {show:true, position:legend_position,noColumns:legend_columns},
     lines: {show:true},
     xaxis: { mode: "time", min:flot_obj.min, max:flot_obj.max },
+    yaxis: { autoscaleMargin: legend_fraction},
     selection: { mode: "x" },
   };
   var scale_options = {

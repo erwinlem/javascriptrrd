@@ -16,6 +16,8 @@
  *
  */
 
+// Return a Flot-like data structure
+// Since Flot does not properly handle empty elements, main and max are returned, too
 function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_label) {
   var ds=rrd_file.getDS(ds_id);
   var ds_name=ds.getName();
@@ -37,10 +39,47 @@ function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_label) {
   } // end for
 
   if (want_label!=false) {
-    return {label: ds_name, data: flot_series, min: first_el*1000.0, max:timestamp*1000.0};
+    return {label: ds_name, data: flot_series, min: first_el*1000.0, max:last_update*1000.0};
   } else {
-    return {data:flot_series, min: first_el*1000.0, max:timestamp*1000.0};
+    return {data:flot_series, min: first_el*1000.0, max:last_update*1000.0};
   }
+}
+
+// return an object with an array containing Flot elements, one per DS
+// mina and max are also returned
+function rrdRRA2FlotSeries(rrd_file,rra_idx,ds_list,want_ds_labels) {
+  var rra=rrd_file.getRRA(rra_idx);
+  var rra_rows=rra.getNrRows();
+  var last_update=rrd_file.getLastUpdate();
+  var step=rra.getStep();
+  var first_el=(last_update-rra_rows+1)*step;
+
+  var out_el={data:[], min:first_el*1000.0, max:last_update*1000.0};
+
+  for (ds_list_idx in ds_list) {
+    var ds_id=ds_list[ds_list_idx];
+    var ds=rrd_file.getDS(ds_id);
+    var ds_name=ds.getName();
+    var ds_idx=ds.getIdx();
+
+    var timestamp=first_el;
+    var flot_series=[];
+    for (var i=0;i<rra_rows;i++) {
+      var el=rra.getEl(i,ds_idx);
+      if (el!=undefined) {
+	flot_series.push([timestamp*1000.0,el]);
+      }
+      timestamp+=step;
+    } // end for
+    
+    var flot_el={data:flot_series};
+    if (want_ds_labels!=false) {
+      var ds_name=ds.getName();
+      flot_el.label= ds_name;
+    }
+    out_el.data.push(flot_el);
+  }
+  return out_el;
 }
 
 // ======================================

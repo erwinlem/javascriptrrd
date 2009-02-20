@@ -166,19 +166,15 @@ rrdFlot.prototype.drawFlotGraph = function() {
   }
   
   // then extract RRA data about those DSs
-  var flot_data=[];
-  for (var j=0; j<ds_idxs.length; j++) {
-    var ds_idx=ds_idxs[j];
-    flot_data.push(rrdDS2FlotSeries(this.rrd_file,ds_idx,rra_idx));
-  }
+  var flot_obj=rrdRRA2FlotObj(this.rrd_file,rra_idx,ds_idxs);
 
   // finally do the real plotting
-  this.bindFlotGraph(flot_data);
+  this.bindFlotGraph(flot_obj);
 };
 
 // ======================================
 // Bind the graphs to the HTML tags
-rrdFlot.prototype.bindFlotGraph = function(flot_data) {
+rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   var rf_this=this; // use obj inside other functions
 
   var graph_jq_id="#"+this.graph_id;
@@ -187,16 +183,18 @@ rrdFlot.prototype.bindFlotGraph = function(flot_data) {
   var graph_options = {
     legend: {show:true},
     lines: {show:true},
-    xaxis: { mode: "time" },
+    xaxis: { mode: "time", min:flot_obj.min, max:flot_obj.max },
     selection: { mode: "x" },
   };
   var scale_options = {
     legend: {show:false},
     lines: {show:true},
-    xaxis: { mode: "time" },
+    xaxis: { mode: "time", min:flot_obj.min, max:flot_obj.max },
     selection: { mode: "x" },
   };
     
+  var flot_data=flot_obj.data;
+
   var graph_data=this.selection_range.trim_flot_data(flot_data);
   //var scale_data=flot_data.clone();
   var scale_data=flot_data;

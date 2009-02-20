@@ -47,7 +47,7 @@ function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_label) {
 
 // return an object with an array containing Flot elements, one per DS
 // mina and max are also returned
-function rrdRRA2FlotSeries(rrd_file,rra_idx,ds_list,want_ds_labels) {
+function rrdRRA2FlotObj(rrd_file,rra_idx,ds_list,want_ds_labels) {
   var rra=rrd_file.getRRA(rra_idx);
   var rra_rows=rra.getNrRows();
   var last_update=rrd_file.getLastUpdate();

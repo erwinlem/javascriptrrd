@@ -25,14 +25,17 @@
  *  [Flot]/jquery.flot.js
  */
 
-function rrdFlot(html_id, rrd_file, layout_opts) {
+/* graph_options defaults 
+ * {
+ *  legend: { position:"nw",noColumns:3},
+ *  yaxis: { autoscaleMargin: 0.20}
+ * }
+ */
+
+function rrdFlot(html_id, rrd_file, graph_options) {
   this.html_id=html_id;
   this.rrd_file=rrd_file;
-  if (layout_opts!=null) {
-    this.layout_opts=layout_opts;
-  } else {
-    this.layout_opts={};
-  }
+  this.graph_options=graph_options;
 
   this.selection_range=new rrdFlotSelection();
 
@@ -218,28 +221,30 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   var graph_jq_id="#"+this.graph_id;
   var scale_jq_id="#"+this.scale_id;
 
-  var legend_position="nw"; // choose a reasonable default
-  if (this.layout_opts.legend_position!=null) {
-    legend_position=this.layout_opts.legend_position;
-  }
-
-  var legend_columns=3; // choose a reasonable default
-  if (this.layout_opts.legend_columns!=null) {
-    legend_columns=this.layout_opts.legend_columns;
-  }
-
-  var legend_fraction=0.25; // choose a reasonable default
-  if (this.layout_opts.legend_fraction!=null) {
-    legend_fraction=this.layout_opts.legend_fraction;
-  }
-
   var graph_options = {
-    legend: {show:true, position:legend_position,noColumns:legend_columns},
+    legend: {show:true, position:"nw",noColumns:3},
     lines: {show:true},
     xaxis: { mode: "time", min:flot_obj.min, max:flot_obj.max },
-    yaxis: { autoscaleMargin: legend_fraction},
+    yaxis: { autoscaleMargin: 0.20},
     selection: { mode: "x" },
   };
+
+  if (this.graph_options!=null) {
+    if (this.graph_options.legend!=null) {
+      if (this.graph_options.legend.position!=null) {
+	graph_options.legend.position=this.graph_options.legend.position;
+      }
+      if (this.graph_options.legend.noColumns!=null) {
+	graph_options.legend.noColumns=this.graph_options.legend.noColumns;
+      }
+    }
+    if (this.graph_options.yaxis!=null) {
+      if (this.graph_options.yaxis.autoscaleMargin!=null) {
+	graph_options.yaxis.autoscaleMargin=this.graph_options.yaxis.autoscaleMargin;
+      }
+    }
+  }
+
   var scale_options = {
     legend: {show:false},
     lines: {show:true},

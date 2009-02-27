@@ -25,11 +25,9 @@
  *  [Flot]/jquery.flot.js
  */
 
-// ds_desciption and layout_opts not used yet
-function rrdFlot(html_id, rrd_file, ds_description, layout_opts) {
+function rrdFlot(html_id, rrd_file, layout_opts) {
   this.html_id=html_id;
   this.rrd_file=rrd_file;
-  this.ds_description=ds_description;
   if (layout_opts!=null) {
     this.layout_opts=layout_opts;
   } else {

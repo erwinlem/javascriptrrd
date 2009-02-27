@@ -71,7 +71,7 @@
         document.getElementById("fname").firstChild.data=fname;
 
         // the rrdFlot object creates and handles the graph
-        var f=new rrdFlot("mygraph",rrd_data);
+        var f=new rrdFlot("mygraph",rrd_data,null);
       }
 
       // This is the callback function that,
@@ -101,15 +101,6 @@
         }
       }
 
-      // Uncomment this part if you want the Web page to load the
-      // default RRD file at load time
-      //
-      //try {
-      //  FetchBinaryURLAsync(fname,update_fname_handler);
-      //} catch (err) {
-      //  alert("Failed loading "+fname+"\n"+err);
-      //}
-      
     </script>
   </body>
 </html>

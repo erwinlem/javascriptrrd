@@ -107,6 +107,42 @@ rrdFlot.prototype.createHTML = function() {
 // ======================================
 // Populate RRA and RD info
 rrdFlot.prototype.populateRes = function() {
+  function format_time(s) {
+    if (s<120) {
+      return s+"s";
+    } else {
+      var s60=s%60;
+      var m=(s-s60)/60;
+      if ((m<10) && (s60>9)) {
+	return m+":"+s60+"min";
+      } if (m<120) {
+	return m+"min";
+      } else {
+	var m60=m%60;
+	var h=(m-m60)/60;
+	if ((h<12) && (m60>9)) {
+	  return h+":"+m60+"h";
+	} if (h<48) {
+	  return h+"h";
+	} else {
+	  var h24=h%24;
+	  var d=(h-h24)/24;
+	  if ((d<7) && (h24>0)) {
+	    return d+" days "+h24+"h";
+	  } if (d<60) {
+	    return d+" days";
+	  } else {
+	    var d30=d%30;
+	    var mt=(d-d30)/30;
+	    return mt+" months";
+	  }
+	}
+      }
+
+    }
+  }
+
+
   var form_el=document.getElementById(this.res_id);
 
   // First clean up anything in the element
@@ -119,7 +155,7 @@ rrdFlot.prototype.populateRes = function() {
     var step=rra.getStep();
     var rows=rra.getNrRows();
     var period=step*rows;
-    var rra_label=step+"s ("+period+"s total)";
+    var rra_label=format_time(step)+" ("+format_time(period)+" total)";
     form_el.appendChild(new Option(rra_label,i));
   }
 };
@@ -139,7 +175,7 @@ rrdFlot.prototype.populateDScb = function() {
     cb_el.type = "checkbox";
     cb_el.name = "ds";
     cb_el.value = name;
-    cb_el.checked = cb_el.defaultChecked = true;
+    cb_el.checked = cb_el.defaultChecked = (i==0);
     form_el.appendChild(cb_el);
     form_el.appendChild(document.createTextNode(name));
     form_el.appendChild(document.createElement('br'));

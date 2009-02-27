@@ -192,22 +192,30 @@ rrdFlot.prototype.drawFlotGraph = function() {
 
   // now get the list of selected DSs
   var ds_idxs=[];
+  var ds_colors=[];
   var oCB=document.getElementById(this.ds_cb_id);
   var nrDSs=oCB.ds.length;
   if (oCB.ds.length>0) {
     for (var i=0; i<oCB.ds.length; i++) {
       if (oCB.ds[i].checked==true) {
 	ds_idxs.push(oCB.ds[i].value);
+	ds_colors.push(i);
       }
     }
   } else { // single element is not treated as an array
     if (oCB.ds.checked==true) {
       ds_idxs.push(oCB.ds.value);
+      ds_colors.push(0);
     }
   }
   
   // then extract RRA data about those DSs
   var flot_obj=rrdRRA2FlotObj(this.rrd_file,rra_idx,ds_idxs);
+
+  // fix the colors, based on the position in the RRD
+  for (var i=0; i<ds_colors.length; i++) {
+    flot_obj.data[i].color=ds_colors[i];
+  }
 
   // finally do the real plotting
   this.bindFlotGraph(flot_obj);
@@ -255,7 +263,6 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   var flot_data=flot_obj.data;
 
   var graph_data=this.selection_range.trim_flot_data(flot_data);
-  //var scale_data=flot_data.clone();
   var scale_data=flot_data;
 
   var graph = $.plot($(graph_jq_id), graph_data, graph_options);

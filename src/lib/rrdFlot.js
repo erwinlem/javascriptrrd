@@ -232,10 +232,19 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   var graph_options = {
     legend: {show:true, position:"nw",noColumns:3},
     lines: {show:true},
-    xaxis: { mode: "time", min:flot_obj.min, max:flot_obj.max },
+    xaxis: { mode: "time" },
     yaxis: { autoscaleMargin: 0.20},
     selection: { mode: "x" },
   };
+
+  if (this.selection_range.isSet()) {
+    var selection_range=this.selection_range.getFlotRanges();
+    graph_options.xaxis.min=selection_range.xaxis.from;
+    graph_options.xaxis.max=selection_range.xaxis.to;
+  } else {
+    graph_options.xaxis.min=flot_obj.min;
+    graph_options.xaxis.max=flot_obj.max;
+  }
 
   if (this.graph_options!=null) {
     if (this.graph_options.legend!=null) {
@@ -276,6 +285,8 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   $(graph_jq_id).bind("plotselected", function (event, ranges) {
       // do the zooming
       rf_this.selection_range.setFromFlotRanges(ranges);
+      graph_options.xaxis.min=ranges.xaxis.from;
+      graph_options.xaxis.max=ranges.xaxis.to;
       graph = $.plot($(graph_jq_id), rf_this.selection_range.trim_flot_data(flot_data), graph_options);
       
       // don't fire event on the scale to prevent eternal loop

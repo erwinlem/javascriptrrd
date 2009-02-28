@@ -67,6 +67,7 @@ rrdFlot.prototype.createHTML = function() {
   // Header rwo: resulution select and DS selection title
   var rowHeader=external_table.insertRow(-1);
   var cellRes=rowHeader.insertCell(-1);
+  cellRes.colSpan=2
   cellRes.appendChild(document.createTextNode("Resolution:"));
   var forRes=document.createElement("Select");
   forRes.id=this.res_id;
@@ -80,6 +81,7 @@ rrdFlot.prototype.createHTML = function() {
   // Graph row: main graph and DS selection block
   var rowGraph=external_table.insertRow(-1);
   var cellGraph=rowGraph.insertCell(-1);
+  cellGraph.colSpan=2;
   var elGraph=document.createElement("Div");
   elGraph.style.width="500px";
   elGraph.style.height="300px";
@@ -96,12 +98,22 @@ rrdFlot.prototype.createHTML = function() {
   // Scale row: scaled down selection graph
   var rowScale=external_table.insertRow(-1);
   var cellScale=rowScale.insertCell(-1);
+  cellScale.align="right";
   var elScale=document.createElement("Div");
-  elScale.style.width="400px";
+  elScale.style.width="250px";
   elScale.style.height="75px";
   elScale.id=this.scale_id;
   cellScale.appendChild(elScale);
   
+  var cellScaleReset=rowScale.insertCell(-1);
+  //cellScaleReset.vAlign="top";
+  var elScaleReset=document.createElement("input");
+  elScaleReset.type = "button";
+  elScaleReset.value = "Reset selection";
+  elScaleReset.onclick = function () {rf_this.callback_scale_reset();}
+
+  cellScaleReset.appendChild(elScaleReset);
+
   base_el.appendChild(external_table);
 };
 
@@ -274,11 +286,11 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   var graph_data=this.selection_range.trim_flot_data(flot_data);
   var scale_data=flot_data;
 
-  var graph = $.plot($(graph_jq_id), graph_data, graph_options);
-  var scale = $.plot($(scale_jq_id), scale_data, scale_options);
+  this.graph = $.plot($(graph_jq_id), graph_data, graph_options);
+  this.scale = $.plot($(scale_jq_id), scale_data, scale_options);
 
   if (this.selection_range.isSet()) {
-    scale.setSelection(this.selection_range.getFlotRanges(),true); //don't fire event, no need
+    this.scale.setSelection(this.selection_range.getFlotRanges(),true); //don't fire event, no need
   }
 
   // now connect the two    
@@ -287,14 +299,21 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
       rf_this.selection_range.setFromFlotRanges(ranges);
       graph_options.xaxis.min=ranges.xaxis.from;
       graph_options.xaxis.max=ranges.xaxis.to;
-      graph = $.plot($(graph_jq_id), rf_this.selection_range.trim_flot_data(flot_data), graph_options);
+      rf_this.graph = $.plot($(graph_jq_id), rf_this.selection_range.trim_flot_data(flot_data), graph_options);
       
       // don't fire event on the scale to prevent eternal loop
-      scale.setSelection(ranges, true);
+      rf_this.scale.setSelection(ranges, true);
   });
     
   $(scale_jq_id).bind("plotselected", function (event, ranges) {
-      graph.setSelection(ranges);
+      rf_this.graph.setSelection(ranges);
+  });
+
+  // only the scale has a selection
+  // so when that is cleared, redraw also the graph
+  $(scale_jq_id).bind("plotunselected", function() {
+      rf_this.selection_range.reset();
+      rf_this.graph = $.plot($(graph_jq_id), rf_this.selection_range.trim_flot_data(flot_data), graph_options);
   });
 };
 
@@ -305,5 +324,9 @@ rrdFlot.prototype.callback_res_changed = function() {
 
 rrdFlot.prototype.callback_ds_cb_changed = function() {
   this.drawFlotGraph();
+};
+
+rrdFlot.prototype.callback_scale_reset = function() {
+  this.scale.clearSelection();
 };
 

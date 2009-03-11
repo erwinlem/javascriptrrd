@@ -313,6 +313,8 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   // so when that is cleared, redraw also the graph
   $(scale_jq_id).bind("plotunselected", function() {
       rf_this.selection_range.reset();
+      graph_options.xaxis.min=flot_obj.min;
+      graph_options.xaxis.max=flot_obj.max;
       rf_this.graph = $.plot($(graph_jq_id), rf_this.selection_range.trim_flot_data(flot_data), graph_options);
   });
 };

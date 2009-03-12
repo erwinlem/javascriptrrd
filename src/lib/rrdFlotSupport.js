@@ -17,7 +17,7 @@
  */
 
 // Return a Flot-like data structure
-// Since Flot does not properly handle empty elements, main and max are returned, too
+// Since Flot does not properly handle empty elements, min and max are returned, too
 function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_label) {
   var ds=rrd_file.getDS(ds_id);
   var ds_name=ds.getName();
@@ -46,7 +46,7 @@ function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_label) {
 }
 
 // return an object with an array containing Flot elements, one per DS
-// mina and max are also returned
+// min and max are also returned
 function rrdRRA2FlotObj(rrd_file,rra_idx,ds_list,want_ds_labels) {
   var rra=rrd_file.getRRA(rra_idx);
   var rra_rows=rra.getNrRows();

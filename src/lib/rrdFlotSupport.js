@@ -1,5 +1,5 @@
 /*
- * Support library aimed at providing commonly used classes
+ * Support library aimed at providing commonly used functions and classes
  * that may be used while plotting RRD files with Flot
  *
  * Part of the javascriptRRD package

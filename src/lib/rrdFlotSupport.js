@@ -1,5 +1,7 @@
 /*
- * Support library for grpahing RRD files with Flot
+ * Support library aimed at providing commonly used classes
+ * that may be used while plotting RRD files with Flot
+ *
  * Part of the javascriptRRD package
  * Copyright (c) 2009 Frank Wuerthwein, fkw@ucsd.edu
  *

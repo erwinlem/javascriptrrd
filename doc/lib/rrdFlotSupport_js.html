@@ -339,5 +339,16 @@ rrdDS2FlotSeries(...).data
 		</TBODY>
 	</TABLE>
 </DIV>
+<P>Pseudo-example of use:
+<PRE>
+  myplotplot.bind("plotselected", function (event, ranges) {
+      // do the zooming
+      selection_range.setFromFlotRanges(ranges);
+      graph_options.xaxis.min=ranges.xaxis.from;
+      graph_options.xaxis.max=ranges.xaxis.to;
+      mygraph = $.plot("#mygraph", selection_range.trim_flot_data(flot_data), graph_options);
+  });
+</PRE>
+</P>
 </BODY>
 </HTML>

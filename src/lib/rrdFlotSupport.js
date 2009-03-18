@@ -20,7 +20,7 @@
 
 // Return a Flot-like data structure
 // Since Flot does not properly handle empty elements, min and max are returned, too
-function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx) {
+function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx,want_rounding) {
   var ds=rrd_file.getDS(ds_id);
   var ds_name=ds.getName();
   var ds_idx=ds.getIdx();
@@ -28,6 +28,12 @@ function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx) {
   var rra_rows=rra.getNrRows();
   var last_update=rrd_file.getLastUpdate();
   var step=rra.getStep();
+
+  if (want_rounding!=false) {
+    // round last_update to step
+    // so that all elements are sync
+    last_update-=(last_update%step); 
+  }
 
   var first_el=last_update-(rra_rows-1)*step;
   var timestamp=first_el;
@@ -45,11 +51,17 @@ function rrdDS2FlotSeries(rrd_file,ds_id,rra_idx) {
 
 // return an object with an array containing Flot elements, one per DS
 // min and max are also returned
-function rrdRRA2FlotObj(rrd_file,rra_idx,ds_list,want_ds_labels) {
+function rrdRRA2FlotObj(rrd_file,rra_idx,ds_list,want_ds_labels,want_rounding) {
   var rra=rrd_file.getRRA(rra_idx);
   var rra_rows=rra.getNrRows();
   var last_update=rrd_file.getLastUpdate();
   var step=rra.getStep();
+  if (want_rounding!=false) {
+    // round last_update to step
+    // so that all elements are sync
+    last_update-=(last_update%step); 
+  }
+
   var first_el=last_update-(rra_rows-1)*step;
 
   var out_el={data:[], min:first_el*1000.0, max:last_update*1000.0};

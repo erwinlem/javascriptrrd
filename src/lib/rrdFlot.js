@@ -28,15 +28,30 @@
 /* graph_options defaults 
  * {
  *  legend: { position:"nw",noColumns:3},
+ *  lines: { show:true },
  *  yaxis: { autoscaleMargin: 0.20}
  * }
+ *
+ * ds_graph_options is a dictionary of DS_name, 
+ *   with each element being a graph_option
+ *   The defaults for each element are
+ *   {
+ *     label: ds_name
+ *     color: ds_index
+ *     lines: { show:true }
+ *     yaxis: 1
+ *   }
  */
 
-function rrdFlot(html_id, rrd_file, graph_options) {
+function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options) {
   this.html_id=html_id;
   this.rrd_file=rrd_file;
   this.graph_options=graph_options;
-
+  if (ds_graph_options==null) {
+    this.ds_graph_options=new Object(); // empty object, just not to be null
+  } else {
+    this.ds_graph_options=ds_graph_options;
+  }
   this.selection_range=new rrdFlotSelection();
 
   this.createHTML();
@@ -184,13 +199,22 @@ rrdFlot.prototype.populateDScb = function() {
   for (var i=0; i<nrDSs; i++) {
     var ds=this.rrd_file.getDS(i);
     var name=ds.getName();
+    var label=name;
+    if (this.ds_graph_options[name]!=null) {
+      var dgo=this.ds_graph_options[name];
+      if (dgo['label']!=null) {
+	// if the user provided the label, use it
+	label=dgo['label'];
+      }
+    }
+
     var cb_el = document.createElement("input");
     cb_el.type = "checkbox";
     cb_el.name = "ds";
     cb_el.value = name;
     cb_el.checked = cb_el.defaultChecked = (i==0);
     form_el.appendChild(cb_el);
-    form_el.appendChild(document.createTextNode(name));
+    form_el.appendChild(document.createTextNode(label));
     form_el.appendChild(document.createElement('br'));
   }
 };
@@ -225,8 +249,28 @@ rrdFlot.prototype.drawFlotGraph = function() {
   var flot_obj=rrdRRA2FlotObj(this.rrd_file,rra_idx,ds_idxs);
 
   // fix the colors, based on the position in the RRD
-  for (var i=0; i<ds_colors.length; i++) {
-    flot_obj.data[i].color=ds_colors[i];
+  for (var i=0; i<flot_obj.data.length; i++) {
+    var name=flot_obj.data[i].label;
+    var color=ds_colors[i]; // default color is the index
+    if (this.ds_graph_options[name]!=null) {
+      var dgo=this.ds_graph_options[name];
+      if (dgo['color']!=null) {
+	color=dgo['color'];
+      }
+      if (dgo['label']!=null) {
+	// if the user provided the label, use it
+	flot_obj.data[i].label=dgo['label'];
+      }
+      if (dgo['lines']!=null) {
+	// if the user provided the label, use it
+	flot_obj.data[i].lines=dgo['lines'];
+      }
+      if (dgo['yaxis']!=null) {
+	// if the user provided the label, use it
+	flot_obj.data[i].yaxis=dgo['yaxis'];
+      }
+    }
+    flot_obj.data[i].color=color;
   }
 
   // finally do the real plotting
@@ -271,6 +315,9 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
       if (this.graph_options.yaxis.autoscaleMargin!=null) {
 	graph_options.yaxis.autoscaleMargin=this.graph_options.yaxis.autoscaleMargin;
       }
+    }
+    if (this.graph_options.lines!=null) {
+      graph_options.lines=this.graph_options.lines;
     }
   }
 

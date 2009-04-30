@@ -127,7 +127,7 @@ rrdFlotSelection.prototype.trim_flot_data = function(flot_data) {
   var out_data=[];
   for (var i=0; i<flot_data.length; i++) {
     var data_el=flot_data[i];
-    out_data.push({label : data_el.label, data:this.trim_data(data_el.data), color:data_el.color});
+    out_data.push({label : data_el.label, data:this.trim_data(data_el.data), color:data_el.color, lines:data_el.lines, yaxis:data_el.yaxis});
   }
   return out_data;
 };

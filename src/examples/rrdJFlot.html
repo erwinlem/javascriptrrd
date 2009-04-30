@@ -64,8 +64,15 @@
         // Finally, update the file name and enable the update button
         document.getElementById("fname").firstChild.data=fname;
 
+        var graph_opts={legend: { noColumns:4}};
+        var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
+                                         lines: { show: true, fill: true, fillColor:"#ffff80"} },
+                           'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
+                                    lines: { show: true, fill: true} },
+                           'Running':{color: "#000000",yaxis:2}};
+
         // the rrdFlot object creates and handles the graph
-        var f=new rrdFlot("mygraph",rrd_data,null);
+        var f=new rrdFlot("mygraph",rrd_data,graph_opts,ds_graph_opts);
       }
 
       // This is the callback function that,

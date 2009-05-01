@@ -129,7 +129,7 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
       var ds=rrd_file.getDS(ds_id);
       var ds_name=ds.getName();
       var ds_idx=ds.getIdx();
-      tmp_ds_ids.append(ds_idx); // getting this is expensive, call only once
+      tmp_ds_ids.push(ds_idx); // getting this is expensive, call only once
       
       // initialize
       var flot_el={data:[]}
@@ -137,7 +137,7 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
 	var ds_name=ds.getName();
 	flot_el.label= ds_name;
       }
-      tmp_flot_els.append(flot_el);
+      tmp_flot_els.push(flot_el);
     }
 
     var timestamp=first_el;
@@ -150,21 +150,21 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
 	var el=rra.getEl(row,ds_idx);
 	if (el!=undefined) {
 	  all_undef=false;
-	  ds_val.push(el);
+	  ds_vals.push(el);
 	} else {
 	  all_def=false;
-	  ds_val.push(0);
+	  ds_vals.push(0);
 	}
       } // end for id
       if (!all_undef) { // if all undefined, skip
 	if (all_def || (!one_undefined_enough)) {
 	  // this is a valid column, do the math
 	  for (var id=1; id<tmp_nr_ids; id++) {
-	    ds_val[id]+=ds_val[id-1]; // both positive and negative stack use a +, negative stack assumes negative values
+	    ds_vals[id]+=ds_vals[id-1]; // both positive and negative stack use a +, negative stack assumes negative values
 	  }
 	  // fill the flot data
 	  for (var id=0; id<tmp_nr_ids; id++) {
-	    tmp_flot_els[id].data.push([timestamp*1000.0,ds_val[id]]);
+	    tmp_flot_els[id].data.push([timestamp*1000.0,ds_vals[id]]);
 	  }
 	}
       } // end if
@@ -179,17 +179,16 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
     }
   } //end for stack_list_id
 
-  for (var row=0;row<rra_rows;row++) {
-    for (ds_list_idx in ds_single_list) {
-      var ds_id=ds_single_list[ds_list_idx];
-      var ds=rrd_file.getDS(ds_id);
-      var ds_name=ds.getName();
-      var ds_idx=ds.getIdx();
-      
-      var timestamp=first_el;
-      var flot_series=[];
+  for (ds_list_idx in ds_single_list) {
+    var ds_id=ds_single_list[ds_list_idx];
+    var ds=rrd_file.getDS(ds_id);
+    var ds_name=ds.getName();
+    var ds_idx=ds.getIdx();
 
-      var el=rra.getEl(row,ds_idx);
+    var timestamp=first_el;
+    var flot_series=[];
+    for (var i=0;i<rra_rows;i++) {
+      var el=rra.getEl(i,ds_idx);
       if (el!=undefined) {
 	flot_series.push([timestamp*1000.0,el]);
       }
@@ -202,7 +201,8 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
       flot_el.label= ds_name;
     }
     out_el.data.push(flot_el);
-  } //end for row
+  } //end for ds_list_idx
+
   return out_el;
 }
 

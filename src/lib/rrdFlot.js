@@ -40,6 +40,7 @@
  *     color: ds_index
  *     lines: { show:true }
  *     yaxis: 1
+ *     stack: 'none'  // other options are 'positive' and 'negative'
  *   }
  */
 
@@ -227,26 +228,44 @@ rrdFlot.prototype.drawFlotGraph = function() {
   var rra_idx=Number(oSelect.options[oSelect.selectedIndex].value);
 
   // now get the list of selected DSs
-  var ds_idxs=[];
+  var ds_positive_stack_list=[];
+  var ds_negative_stack_list=[];
+  var ds_single_list=[];
   var ds_colors=[];
   var oCB=document.getElementById(this.ds_cb_id);
   var nrDSs=oCB.ds.length;
   if (oCB.ds.length>0) {
     for (var i=0; i<oCB.ds.length; i++) {
       if (oCB.ds[i].checked==true) {
-	ds_idxs.push(oCB.ds[i].value);
+	var ds_name=oCB.ds[i].value;
+	var ds_stack_type='none';
+	if (this.ds_graph_options[ds_name]!=null) {
+	  var dgo=this.ds_graph_options[ds_name];
+	  if (dgo['stack']!=null) {
+	    var ds_stack_type=dgo['stack'];
+	  }
+	}
+	if (ds_stack_type=='positive') {
+	  ds_positive_stack_list.push(ds_name);
+	} else if (ds_stack_type=='negative') {
+	  ds_negative_stack_list.push(ds_name);
+	} else {
+	  ds_single_list.push(ds_name);
+	}
 	ds_colors.push(i);
       }
     }
   } else { // single element is not treated as an array
     if (oCB.ds.checked==true) {
-      ds_idxs.push(oCB.ds.value);
+      // no sense trying to stack a single element
+      ds_single_list.push(oCB.ds.value);
       ds_colors.push(0);
     }
   }
   
   // then extract RRA data about those DSs
-  var flot_obj=rrdRRA2FlotObj(this.rrd_file,rra_idx,ds_idxs);
+  var flot_obj=rrdRRAStackFlotObj(this.rrd_file,rra_idx,
+				  ds_positive_stack_list,ds_negative_stack_list,ds_single_list);
 
   // fix the colors, based on the position in the RRD
   for (var i=0; i<flot_obj.data.length; i++) {

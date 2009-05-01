@@ -180,8 +180,8 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
   } //end for stack_list_id
 
   for (var row=0;row<rra_rows;row++) {
-    for (ds_list_idx in ds_list) {
-      var ds_id=ds_list[ds_list_idx];
+    for (ds_list_idx in ds_single_list) {
+      var ds_id=ds_single_list[ds_list_idx];
       var ds=rrd_file.getDS(ds_id);
       var ds_name=ds.getName();
       var ds_idx=ds.getIdx();

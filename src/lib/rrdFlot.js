@@ -36,12 +36,13 @@
  *   with each element being a graph_option
  *   The defaults for each element are
  *   {
- *     title: ds_name  // this is what is displayed at the radio button
- *     label: ds_name  // this is what is displayed in the legend
- *     color: ds_index
- *     lines: { show:true } // see Flot docs for detail
- *     yaxis: 1       // can be 1 or 2
- *     stack: 'none'  // other options are 'positive' and 'negative'
+ *     title: ds_name               // this is what is displayed at the radio button
+ *     checked: first_ds_in_list?   //boolean
+ *     label: ds_name               // this is what is displayed in the legend
+ *     color: ds_index              // see Flot docs for details
+ *     lines: { show:true }         // see Flot docs for details
+ *     yaxis: 1                     // can be 1 or 2
+ *     stack: 'none'                // other options are 'positive' and 'negative'
  *   }
  */
 
@@ -202,11 +203,16 @@ rrdFlot.prototype.populateDScb = function() {
     var ds=this.rrd_file.getDS(i);
     var name=ds.getName();
     var title=name;
+    var checked=(i==0); // only first checked by default
     if (this.ds_graph_options[name]!=null) {
       var dgo=this.ds_graph_options[name];
       if (dgo['title']!=null) {
 	// if the user provided the title, use it
 	title=dgo['title'];
+      }
+      if (dgo['checked']!=null) {
+	// if the user provided the title, use it
+	checked=dgo['checked'];
       }
     }
 
@@ -214,7 +220,7 @@ rrdFlot.prototype.populateDScb = function() {
     cb_el.type = "checkbox";
     cb_el.name = "ds";
     cb_el.value = name;
-    cb_el.checked = cb_el.defaultChecked = (i==0);
+    cb_el.checked = cb_el.defaultChecked = checked;
     form_el.appendChild(cb_el);
     form_el.appendChild(document.createTextNode(title));
     form_el.appendChild(document.createElement('br'));

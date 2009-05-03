@@ -25,7 +25,7 @@
  *  [Flot]/jquery.flot.js
  */
 
-/* graph_options defaults 
+/* graph_options defaults (see Flot docs for details)
  * {
  *  legend: { position:"nw",noColumns:3},
  *  lines: { show:true },
@@ -36,10 +36,11 @@
  *   with each element being a graph_option
  *   The defaults for each element are
  *   {
- *     label: ds_name
+ *     title: ds_name  // this is what is displayed at the radio button
+ *     label: ds_name  // this is what is displayed in the legend
  *     color: ds_index
- *     lines: { show:true }
- *     yaxis: 1
+ *     lines: { show:true } // see Flot docs for detail
+ *     yaxis: 1       // can be 1 or 2
  *     stack: 'none'  // other options are 'positive' and 'negative'
  *   }
  */
@@ -200,12 +201,12 @@ rrdFlot.prototype.populateDScb = function() {
   for (var i=0; i<nrDSs; i++) {
     var ds=this.rrd_file.getDS(i);
     var name=ds.getName();
-    var label=name;
+    var title=name;
     if (this.ds_graph_options[name]!=null) {
       var dgo=this.ds_graph_options[name];
-      if (dgo['label']!=null) {
-	// if the user provided the label, use it
-	label=dgo['label'];
+      if (dgo['title']!=null) {
+	// if the user provided the title, use it
+	title=dgo['title'];
       }
     }
 
@@ -215,7 +216,7 @@ rrdFlot.prototype.populateDScb = function() {
     cb_el.value = name;
     cb_el.checked = cb_el.defaultChecked = (i==0);
     form_el.appendChild(cb_el);
-    form_el.appendChild(document.createTextNode(label));
+    form_el.appendChild(document.createTextNode(title));
     form_el.appendChild(document.createElement('br'));
   }
 };
@@ -269,7 +270,7 @@ rrdFlot.prototype.drawFlotGraph = function() {
 
   // fix the colors, based on the position in the RRD
   for (var i=0; i<flot_obj.data.length; i++) {
-    var name=flot_obj.data[i].label;
+    var name=flot_obj.data[i].label; // at this point, label is the ds_name
     var color=ds_colors[i]; // default color is the index
     if (this.ds_graph_options[name]!=null) {
       var dgo=this.ds_graph_options[name];

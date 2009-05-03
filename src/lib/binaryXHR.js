@@ -202,9 +202,10 @@ function FetchBinaryURL(url) {
 // ===============================================================
 // Asyncronously load a binary file from the specified URL 
 //
-// callback must be a function with a single argument:
-//  bf = an object of type BinaryFile
-function FetchBinaryURLAsync(url, callback) {
+// callback must be a function with one or two arguments:
+//  - bf = an object of type BinaryFile
+//  - optional argument object (used only if callback_arg not undefined) 
+function FetchBinaryURLAsync(url, callback, callback_arg) {
   var callback_wrapper = function() {
     if(this.readyState == 4) {
       var response=this.responseBody;
@@ -212,7 +213,11 @@ function FetchBinaryURLAsync(url, callback) {
 	response=this.responseText;
       }
       var bf=new BinaryFile(response);
-      callback(bf);
+      if (callback_arg!=null) {
+	callback(bf,callback_arg);
+      } else {
+	callback(bf);
+      }
     }
   }
 

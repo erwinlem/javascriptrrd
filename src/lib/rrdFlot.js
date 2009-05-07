@@ -36,9 +36,9 @@
  *   with each element being a graph_option
  *   The defaults for each element are
  *   {
- *     title: ds_name               // this is what is displayed at the radio button
+ *     title: label  or ds_name     // this is what is displayed at the radio button
  *     checked: first_ds_in_list?   //boolean
- *     label: ds_name               // this is what is displayed in the legend
+ *     label: title or ds_name      // this is what is displayed in the legend
  *     color: ds_index              // see Flot docs for details
  *     lines: { show:true }         // see Flot docs for details
  *     yaxis: 1                     // can be 1 or 2
@@ -209,7 +209,10 @@ rrdFlot.prototype.populateDScb = function() {
       if (dgo['title']!=null) {
 	// if the user provided the title, use it
 	title=dgo['title'];
-      }
+      } else if (dgo['label']!=null) {
+	// use label as a second choiceit
+	title=dgo['label'];
+      } // else leave the ds name
       if (dgo['checked']!=null) {
 	// if the user provided the title, use it
 	checked=dgo['checked'];
@@ -286,7 +289,10 @@ rrdFlot.prototype.drawFlotGraph = function() {
       if (dgo['label']!=null) {
 	// if the user provided the label, use it
 	flot_obj.data[i].label=dgo['label'];
-      }
+      } else  if (dgo['title']!=null) {
+	// use title as a second choice 
+	flot_obj.data[i].label=dgo['title'];
+      } // else use the ds name
       if (dgo['lines']!=null) {
 	// if the user provided the label, use it
 	flot_obj.data[i].lines=dgo['lines'];

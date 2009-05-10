@@ -95,7 +95,7 @@ function rrdRRA2FlotObj(rrd_file,rra_idx,ds_list,want_ds_labels,want_rounding) {
 // return an object with an array containing Flot elements
 //  have a positive and a negative stack of DSes, plus DSes with no stacking
 // min and max are also returned
-// If one_undefined_enough==true, a whole stack is invalidated is a single element
+// If one_undefined_enough==true, a whole stack is invalidated if a single element
 //  of the stack is invalid
 function rrdRRAStackFlotObj(rrd_file,rra_idx,
 			    ds_positive_stack_list,ds_negative_stack_list,ds_single_list,
@@ -203,6 +203,103 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
     out_el.data.push(flot_el);
   } //end for ds_list_idx
 
+  return out_el;
+}
+
+// return an object with an array containing Flot elements, one per RRD
+// min and max are also returned
+function rrdRRAMultiStackFlotObj(rrd_files, // a list of [rrd_id,rrd_file] pairs, all rrds must have the same step
+				 rra_idx,ds_id,
+				 want_rrd_labels,want_rounding,
+				 one_undefined_enough) { // If true, a whole stack is invalidated if a single element of the stack is invalid
+
+  var reference_rra=rrd_files[0][1].getRRA(rra_idx); // get the first one, all should be the same
+  var rows=reference_rra.getNrRows();
+  var step=reference_rra.getStep();
+  var ds_idx=rrd_files[0][1].getDS(ds_id).getIdx(); // this can be expensive, do once (all the same)
+
+  // rrds can be slightly shifted, calculate range
+  var max_ts=null;
+  var min_ts=null;
+
+  // initialize list of rrd data elements
+  var tmp_flot_els=[];
+  var tmp_rras=[];
+  var tmp_last_updates=[];
+  var tmp_nr_ids=rrd_files.length;
+  for (var id=0; id<tmp_nr_ids; id++) {
+    var rrd_file=rrd_files[id][1];
+    var rrd_rra=rrd_file.getRRA(rra_idx);
+
+    var rrd_last_update=rrd_file.getLastUpdate();
+    if (want_rounding!=false) {
+      // round last_update to step
+      // so that all elements are sync
+      rrd_last_update-=(rrd_last_update%step); 
+    }
+    tmp_last_updates.push(rrd_last_update);
+
+    var rrd_min_ts=rrd_last_update-(rows-1)*step;
+    if ((max_ts==null) || (rrd_last_update>max_ts)) {
+      max_ts=rrd_last_update;
+    }
+    if ((min_ts==null) || (rrd_min_ts<min_ts)) {
+      min_ts=rrd_min_ts;
+    }
+    
+    tmp_rras.push(rrd_rra);
+      
+    // initialize
+    var flot_el={data:[]}
+    if (want_rrd_labels!=false) {
+	var rrd_name=rrd_files[id][0];
+	flot_el.label= rrd_name;
+    }
+    tmp_flot_els.push(flot_el);
+  }
+
+  var out_el={data:[], min:min_ts*1000.0, max:max_ts*1000.0};
+
+  for (var ts=min_ts;ts<=max_ts;ts+=step) {
+      var rrd_vals=[];
+      var all_undef=true;
+      var all_def=true;
+      for (var id=0; id<tmp_nr_ids; id++) {
+        var rrd_rra=tmp_rras[id];
+        var rrd_last_update=tmp_last_updates[id];
+	var row_delta=Math.round((rrd_last_update-ts)/step);
+	var el=undefined; // if out of range
+        if ((row_delta>=0) && (row_delta<rows)) {
+          el=rrd_rra.getEl(rows-row_delta-1,ds_idx);
+        }
+	if (el!=undefined) {
+	  all_undef=false;
+	  rrd_vals.push(el);
+	} else {
+	  all_def=false;
+	  rrd_vals.push(0);
+	}
+      } // end for id
+      if (!all_undef) { // if all undefined, skip
+	if (all_def || (!one_undefined_enough)) {
+	  // this is a valid column, do the math
+	  for (var id=1; id<tmp_nr_ids; id++) {
+	    rrd_vals[id]+=rrd_vals[id-1]; 
+	  }
+	  // fill the flot data
+	  for (var id=0; id<tmp_nr_ids; id++) {
+	    tmp_flot_els[id].data.push([ts*1000.0,rrd_vals[id]]);
+	  }
+	}
+      } // end if
+  } // end for ts
+    
+  // put flot data in output object
+  // reverse order so higher numbers are behind
+  for (var id=0; id<tmp_nr_ids; id++) {
+    out_el.data.push(tmp_flot_els[tmp_nr_ids-id-1]);
+  }
+  
   return out_el;
 }
 

@@ -84,21 +84,47 @@ creates an interactive
 			</TR>
 			<TR VALIGN=TOP>
 				<TD WIDTH=20%>
-					<P>graph_options</P>
+					<P>graph_options (optional)</P>
 				</TD>
 				<TD WIDTH=80%>
-					<P>Graphing options.</P>
-                                        <P>The default graphing options are:
+					<P>Global graphing options. See
+				           <A HREF="http://code.google.com/p/flot/">Flot documentation</A>
+				           for more details.</P>
+                                        <P>The recognized elements and the default values are:
 <PRE>
   graph_options = {
     legend: {position:"nw",noColumns:3},
+    lines: { show:true },
     yaxis: { autoscaleMargin: 0.20},
   };
 </PRE></P>
 				</TD>
 			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>ds_graph_options (optional)</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>Dictionary of graphing options. This must be a dictionary of DS_id.
+				           Each element of the dictionary contains graphing options. See
+				           <A HREF="http://code.google.com/p/flot/">Flot documentation</A>
+				           for more details.</P>
+                                        <P>The recognized elements and the default values are:
+<PRE>
+   {
+     title: label  or ds_name     // this is what is displayed at the radio button
+     checked: first_ds_in_list?   // boolean
+     label: title or ds_name      // this is what is displayed in the legend
+     color: ds_index              // see Flot docs for details
+     lines: { show:true }         // see Flot docs for details
+     yaxis: 1                     // can be 1 or 2
+     stack: 'none'                // other options are 'positive' and 'negative'
+   }
+</PRE></P>
+				</TD>
+			</TR>
       </TABLE>
 </DIV>
-<P>Once instatiated, the object will automatically dra the plot and handle user interaction.</P>
+<P>Once instatiated, the object will automatically draw the plot and handle user interaction.</P>
 </BODY>
 </HTML>

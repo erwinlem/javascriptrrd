@@ -74,9 +74,12 @@ need to worry about them.</P>
 <P>Arguments:</P>
 <UL>
 	<LI><P>url:string - URL from where to load the binary file.</P>
-	<LI><P>callback:function(obj) - Pointer to the function that will
-	be called when the binary file has been loaded. He function will be
-	given a single argument; an object of type <A HREF="#BinaryFile">BinaryFile</A>.</P>
+	<LI><P>callback:function(obj[,arg]) - Pointer to the function that will
+	be called when the binary file has been loaded. <br>
+        The function will be
+	given one or two arguments; the first one is an object of type <A HREF="#BinaryFile">BinaryFile</A>.
+        The second one is the argument described below, if available.</P>
+	<LI><P>callback_arg:any (optional) - If present, it will be given as argument to the callback function.</P>
 </UL>
 <P>Output:</P>
 <UL>

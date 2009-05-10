@@ -36,8 +36,8 @@
  *   with each element being a graph_option
  *   The defaults for each element are
  *   {
- *     title: label  or ds_name     // this is what is displayed at the radio button
- *     checked: first_ds_in_list?   //boolean
+ *     title: label  or ds_name     // this is what is displayed in the checkboxes
+ *     checked: first_ds_in_list?   // boolean
  *     label: title or ds_name      // this is what is displayed in the legend
  *     color: ds_index              // see Flot docs for details
  *     lines: { show:true }         // see Flot docs for details

@@ -19,7 +19,7 @@
 /*
  * The rrd_files is a list of 
  *  [rrd_id,rrd_file] pairs
- * All rrd_files must have the same step, the same DSes amd the same number of RRAs.
+ * All rrd_files must have the same step, the same DSes and the same number of RRAs.
  *
  */ 
 
@@ -50,11 +50,11 @@
  *   with each element being a graph_option
  *   The defaults for each element are
  *   {
- *     title: label  or rrd_name                          // this is what is displayed at the radio button
- *     checked: true                                       //boolean
+ *     title: label  or rrd_name                          // this is what is displayed in the checkboxes
+ *     checked: true                                      // boolean
  *     label: title or rrd_name                           // this is what is displayed in the legend
  *     color: rrd_index                                   // see Flot docs for details
- *     lines: { show:true, fill: true, fillColor:color }   // see Flot docs for details
+ *     lines: { show:true, fill: true, fillColor:color }  // see Flot docs for details
  *   }
  */
 

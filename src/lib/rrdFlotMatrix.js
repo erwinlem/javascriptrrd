@@ -24,6 +24,13 @@
  */ 
 
 /*
+ * The ds_list is a list of 
+ *  [ds_id, ds_title] pairs
+ * If not defined, the list will be created from the RRDs
+ *
+ */ 
+
+/*
  * Local dependencies:
  *  rrdFlotSupport.py
  *
@@ -51,9 +58,21 @@
  *   }
  */
 
-function rrdFlotMatrix(html_id, rrd_files, graph_options, rrd_graph_options) {
+function rrdFlotMatrix(html_id, rrd_files, ds_list, graph_options, rrd_graph_options) {
   this.html_id=html_id;
   this.rrd_files=rrd_files;
+  if (ds_list==null) {
+    this.ds_list=[];
+    var rrd_file=this.rrd_files[0][1]; // get the first one... they are all the same
+    var nrDSs=rrd_file.getNrDSs();
+    for (var i=0; i<nrDSs; i++) {
+      var ds=this.rrd_files[0][1].getDS(i);
+      var name=ds.getName();
+      this.ds_list.push([name,name]);
+    }
+  } else {
+    this.ds_list=ds_list;
+  }
   this.graph_options=graph_options;
   if (rrd_graph_options==null) {
     this.rrd_graph_options=new Object(); // empty object, just not to be null
@@ -159,13 +178,9 @@ rrdFlotMatrix.prototype.populateDS = function() {
   // First clean up anything in the element
   while (form_el.lastChild!=null) form_el.removeChild(form_el.lastChild);
 
-  var rrd_file=this.rrd_files[0][1]; // get the first one... they are all the same
-  // now populate with RRA info
-  var nrDSs=rrd_file.getNrDSs();
-  for (var i=0; i<nrDSs; i++) {
-    var ds=this.rrd_files[0][1].getDS(i);
-    var name=ds.getName();
-    form_el.appendChild(new Option(name,name));
+  for (i in this.ds_list) {
+    var ds=this.ds_list[i];
+    form_el.appendChild(new Option(ds[1],ds[0]));
   }
 };
 

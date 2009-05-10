@@ -205,7 +205,7 @@ rrdFlot.prototype.drawFlotGraph = function() {
   var ds_positive_stack_list=[];
   var ds_negative_stack_list=[];
   var ds_single_list=[];
-  var ds_colors=[];
+  var ds_colors={};
   var oCB=document.getElementById(this.ds_cb_id);
   var nrDSs=oCB.ds.length;
   if (oCB.ds.length>0) {
@@ -226,14 +226,15 @@ rrdFlot.prototype.drawFlotGraph = function() {
 	} else {
 	  ds_single_list.push(ds_name);
 	}
-	ds_colors.push(i);
+	ds_colors[ds_name]=i;
       }
     }
   } else { // single element is not treated as an array
     if (oCB.ds.checked==true) {
       // no sense trying to stack a single element
-      ds_single_list.push(oCB.ds.value);
-      ds_colors.push(0);
+      var ds_name=oCB.ds.value;
+      ds_single_list.push(ds_name);
+      ds_colors[ds_name]=0;
     }
   }
   
@@ -244,7 +245,7 @@ rrdFlot.prototype.drawFlotGraph = function() {
   // fix the colors, based on the position in the RRD
   for (var i=0; i<flot_obj.data.length; i++) {
     var name=flot_obj.data[i].label; // at this point, label is the ds_name
-    var color=ds_colors[i]; // default color is the index
+    var color=ds_colors[name]; // default color as defined above
     if (this.ds_graph_options[name]!=null) {
       var dgo=this.ds_graph_options[name];
       if (dgo['color']!=null) {

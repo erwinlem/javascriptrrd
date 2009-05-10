@@ -40,8 +40,9 @@
 <UL>
  <LI>Functions providing support in converting raw data into Flot-friendly format:
     <A HREF="#rrdDS2FlotSeries">rrdDS2FlotSeries</A>,
-    <A HREF="#rrdRRA2FlotObj">rrdRRA2FlotObj</A> and
-     <A HREF="#rrdRRAStackFlotObj">rrdRRAStackFlotObj</A>.
+    <A HREF="#rrdRRA2FlotObj">rrdRRA2FlotObj</A>,
+     <A HREF="#rrdRRAStackFlotObj">rrdRRAStackFlotObj</A> and
+     <A HREF="#rrdRRAMultiStackFlotObj">rrdRRAMultiStackFlotObj</A>.
  <LI>A class providing support for handling the plotting:
      <A HREF="#rrdFlotSelection">rrdFlotSelection</A>.
 </UL>
@@ -351,6 +352,136 @@ Input parameters:
 				<TD WIDTH=80%>
 					<P>Should the DS names be included as labels in the output? 
                                            (If false, only the order distinguishes the requested DSs)</P>
+				</TD>
+			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>want_rounding</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>If not false, all timestamps will be truncated to the RRA step.</P>
+				</TD>
+			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>one_undefined_enough</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>If true, a whole stack is invalidated if a
+				           single element of the stack is invalid.</P>
+				</TD>
+			</TR>
+		</TBODY>
+	</TABLE>
+</DIV>
+<P>
+The output is an object containing:
+</P>
+<DIV ALIGN=RIGHT>
+	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
+		<COL WIDTH=51*>
+		<COL WIDTH=205*>
+		<THEAD>
+			<TR VALIGN=TOP>
+				<TH WIDTH=20%>
+					<P ALIGN=LEFT>Attribute</P>
+				</TH>
+				<TH WIDTH=80%>
+					<P ALIGN=LEFT>Description</P>
+				</TH>
+			</TR>
+		</THEAD>
+		<TBODY>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>data</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>A list of objects suitable to be fed to <A HREF="http://code.google.com/p/flot/">Flot</A>. Each element is an object composed of two attributes:<UL>
+                                         <LI>data - A list of (Timestamp in ms, value) pairs.</LI>
+                                         <LI>label - The (optional) DS name.</LI></UL></P>
+                                        <P>An example of use with Flot:<BR>
+<PRE>
+var fd=rrdDS2FlotObj(...);
+var plot = $.plot("#myplot", fd.data, options);
+</PRE>
+                                        </P>
+				</TD>
+			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>min</P>
+				</TD>
+				<TD WIDTH=80% ROWSPAN=2>
+					<P>Min and max timestamp in ms.</P>
+				</TD>
+			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>max</P>
+				</TD>
+                        </TR>
+		</TBODY>
+	</TABLE>
+</DIV>
+<H2 CLASS="heading-2-western"><A NAME="rrdRRAMultiStackFlotObj"></A>Function rrdRRAMultiStackFlotObj</H2>
+<P>This function extracts a DS from a list of RRDs, using a specific RRA index, then stacks them and
+returns an object that contains the data in format flot expects.</P>
+<P>
+Input parameters:
+</P>
+<DIV ALIGN=RIGHT>
+	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
+		<COL WIDTH=51*>
+		<COL WIDTH=205*>
+		<THEAD>
+			<TR VALIGN=TOP>
+				<TH WIDTH=20%>
+					<P ALIGN=LEFT>Parameter</P>
+				</TH>
+				<TH WIDTH=80%>
+					<P ALIGN=LEFT>Description</P>
+				</TH>
+			</TR>
+		</THEAD>
+		<TBODY>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>rrd_files</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>A list of RRDs. Each element of the list contains a [rrd_id,rrd_name] pair.
+				           <ul>
+					    <li>rrd_id - Logical name for the RRD.
+				            <li>rrd_name -An object of type <A HREF="rrdFile_js.html#RRDFile">RRDFile</A> or equivalent.
+					   <ul>
+					</P>
+				</TD>
+			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>rra_idx</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>Index of the desired RRA.</P>
+				</TD>
+			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>ds_id</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>DS indentifier  (as accepted by
+                                            <A HREF="rrdFile_js.html#RRDFile">RRDFile.getDS()</A>)</P>
+				</TD>
+			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>want_rrd_labels</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>Should the RRD names be included as labels in the output? 
+                                           (If false, only the order distinguishes the requested RRDs)</P>
 				</TD>
 			</TR>
 			<TR VALIGN=TOP>

@@ -3,7 +3,7 @@ javascriptRRD
 
 javascriptRRD package contains a set of Javascript libraries
 that can be used for reading RRD archives from any Web browser.
-Mozilla, Internet Explorer and Safari hava been tested.
+Mozilla, Internet Explorer and Safari havae been tested.
 
 Being Javascript an interpreted language, no compilation is needed.
 Just copy the files in the files located in the 

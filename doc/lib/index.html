@@ -18,7 +18,7 @@
 </HEAD>
 <BODY LANG="en-US" DIR="LTR">
 <H1 CLASS="western">javascriptRRD libraries</H1>
-<P>The javascriptRRD package contains two javascript modules:</P>
+<P>The javascriptRRD package contains base two javascript modules:</P>
 <UL>
 	<LI><P>The <A HREF="rrdFile_js.html">rrdFile module</A>, used to
 	extract information from <A HREF="http://oss.oetiker.ch/rrdtool/">RRD
@@ -28,10 +28,16 @@
 	API.</P>
 </UL>
 <P>Together they can be used to implement AJAX style applications.</P>
-<P>Graphing is currently not natively supported by the libraries, but
-can be easily achieved with third party libraries, like <A HREF="http://code.google.com/p/flot/">JFlot</A>.
-An <A HREF="../../src/examples/rrdJFlot.html">example</A> is provided
-in the src/examples directory.</P>
+<P>The package also provides two classes, based on
+   <A HREF="http://code.google.com/p/flot/">JFlot</A>,
+   that automate most of the graphing needs:</P>
+<UL>
+	<LI><P>The <A HREF="rrdFlot_js.html">rrdFlot module</A> can be used to plot a single RRD file.<BR>
+               See also the <A HREF="../../src/examples/rrdJFlot.html">rrdJFlot.html example</A>.</P>
+	<LI><P>The <A HREF="rrdFlotMatrix_js.html">rrdFlotMatrix module</A> can be used to plot a list of RRD files.<BR>
+               See also the <A HREF="../../src/examples/rrdMatrixFlot.html">rrdMatrixFlot.html example</A>.</P>
+</UL>
+
 <TABLE WIDTH=50% CELLPADDING=2 CELLSPACING=2>
         <TR>
                 <TD>

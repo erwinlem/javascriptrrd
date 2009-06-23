@@ -2,6 +2,7 @@
  * RRD graphing libraries, based on Flot
  * Part of the javascriptRRD package
  * Copyright (c) 2009 Frank Wuerthwein, fkw@ucsd.edu
+ *                    Igor Sfiligoi, isfiligoi@ucsd.edu
  *
  * Original repository: http://javascriptrrd.sourceforge.net/
  * 

@@ -338,6 +338,7 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   }
 
   // now connect the two    
+  $(graph_jq_id).unbind("plotselected"); // but first remove old function
   $(graph_jq_id).bind("plotselected", function (event, ranges) {
       // do the zooming
       rf_this.selection_range.setFromFlotRanges(ranges);
@@ -348,7 +349,8 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
       // don't fire event on the scale to prevent eternal loop
       rf_this.scale.setSelection(ranges, true);
   });
-    
+   
+  $(scale_jq_id).unbind("plotselected"); //same here 
   $(scale_jq_id).bind("plotselected", function (event, ranges) {
       rf_this.graph.setSelection(ranges);
   });

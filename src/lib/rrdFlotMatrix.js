@@ -2,6 +2,7 @@
  * RRD graphing libraries, based on Flot
  * Part of the javascriptRRD package
  * Copyright (c) 2009 Frank Wuerthwein, fkw@ucsd.edu
+ *                    Igor Sfiligoi, isfiligoi@ucsd.edu
  *
  * Original repository: http://javascriptrrd.sourceforge.net/
  * 
@@ -257,7 +258,10 @@ rrdFlotMatrix.prototype.drawFlotGraph = function() {
   // Extract ds info ... to be finished
   var ds_positive_stack=null;
 
-  var std_colors=["#00ff00","#00ffff","#0000ff","#ff00ff","#ff0000","#ffff00"];
+  var std_colors=["#00ff00","#00ffff","#0000ff","#ff00ff",
+		  "#808080","#ff0000","#ffff00","#e66266",
+		  "#33cccc","#fff8a9","#ccffff","#a57e81",
+		  "#7bea81","#8d4dff","#ffcc99","#000000"];
 
   // now get the list of selected RRDs
   var rrd_list=[];
@@ -269,7 +273,22 @@ rrdFlotMatrix.prototype.drawFlotGraph = function() {
       if (oCB.rrd[i].checked==true) {
 	//var rrd_idx=Number(oCB.rrd[i].value);
 	rrd_list.push(this.rrd_files[i]);
-        rrd_colors.push(std_colors[i%std_colors.length]);
+	color=std_colors[i%std_colors.length];
+	if ((i/std_colors.length)>=1) {
+	  // wraparound, change them a little
+	  idiv=Math.floor(i/std_colors.length);
+	  c1=parseInt(color[1]+color[2],16);
+	  c2=parseInt(color[3]+color[4],16);
+	  c3=parseInt(color[5]+color[6],16);
+	  m1=Math.floor((c1-128)/Math.sqrt(idiv+1))+128;
+	  m2=Math.floor((c2-128)/Math.sqrt(idiv+1))+128;
+	  m3=Math.floor((c3-128)/Math.sqrt(idiv+1))+128;
+	  if (m1>15) s1=(m1).toString(16); else s1="0"+(m1).toString(16);
+	  if (m2>15) s2=(m2).toString(16); else s2="0"+(m2).toString(16);
+	  if (m3>15) s3=(m3).toString(16); else s3="0"+(m3).toString(16);
+	  color="#"+s1+s2+s3;
+	}
+        rrd_colors.push(color);
       }
     }
   } else { // single element is not treated as an array

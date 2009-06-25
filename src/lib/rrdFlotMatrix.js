@@ -365,7 +365,7 @@ rrdFlotMatrix.prototype.drawFlotGraph = function() {
 rrdFlotMatrix.prototype.bindFlotGraph = function(flot_obj) {
   var rf_this=this; // use obj inside other functions
 
-  // DS
+  // Legend
   var oSelect=document.getElementById(this.legend_sel_id);
   var legend_id=oSelect.options[oSelect.selectedIndex].value;
 

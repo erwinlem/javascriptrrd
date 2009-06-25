@@ -210,9 +210,18 @@ rrdFlotMatrix.prototype.populateRRDcb = function() {
   // First clean up anything in the element
   while (form_el.lastChild!=null) form_el.removeChild(form_el.lastChild);
 
+  var table_el=document.createElement("Table");
+  var row_el=table_el.insertRow(-1);
+  row_el.vAlign="top";
+  var cell_el=null; // will define later
+
   // now populate with RRD info
   var nrRRDs=this.rrd_files.length;
   for (var i=0; i<nrRRDs; i++) {
+    if ((i%15)==0) { // one column every 15 elements
+      cell_el=row_el.insertCell(-1);
+    }
+
     var rrd_el=this.rrd_files[i];
     var rrd_file=rrd_el[1];
     var name=rrd_el[0];
@@ -238,10 +247,11 @@ rrdFlotMatrix.prototype.populateRRDcb = function() {
     cb_el.name = "rrd";
     cb_el.value = i;
     cb_el.checked = cb_el.defaultChecked = checked;
-    form_el.appendChild(cb_el);
-    form_el.appendChild(document.createTextNode(title));
-    form_el.appendChild(document.createElement('br'));
+    cell_el.appendChild(cb_el);
+    cell_el.appendChild(document.createTextNode(title));
+    cell_el.appendChild(document.createElement('br'));
   }
+  form_el.appendChild(table_el);
 };
 
 // ======================================

@@ -102,6 +102,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
   this.rrd_cb_id=this.html_id+"_rrd_cb";
   this.graph_id=this.html_id+"_graph";
   this.scale_id=this.html_id+"_scale";
+  this.legend_sel_id=this.html_id+"_legend_sel";
 
   // First clean up anything in the element
   while (base_el.lastChild!=null) base_el.removeChild(base_el.lastChild);
@@ -112,7 +113,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
   // DS rows: select DS
   var rowDS=external_table.insertRow(-1);
   var cellDS=rowDS.insertCell(-1);
-  cellDS.colSpan=3
+  cellDS.colSpan=4
   cellDS.appendChild(document.createTextNode("Element:"));
   var forDS=document.createElement("Select");
   forDS.id=this.ds_id;
@@ -122,7 +123,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
   // Header row: resulution select and DS selection title
   var rowHeader=external_table.insertRow(-1);
   var cellRes=rowHeader.insertCell(-1);
-  cellRes.colSpan=2
+  cellRes.colSpan=3;
   cellRes.appendChild(document.createTextNode("Resolution:"));
   var forRes=document.createElement("Select");
   forRes.id=this.res_id;
@@ -135,7 +136,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
   // Graph row: main graph and DS selection block
   var rowGraph=external_table.insertRow(-1);
   var cellGraph=rowGraph.insertCell(-1);
-  cellGraph.colSpan=2;
+  cellGraph.colSpan=3;
   var elGraph=document.createElement("Div");
   elGraph.style.width="500px";
   elGraph.style.height="300px";
@@ -151,6 +152,21 @@ rrdFlotMatrix.prototype.createHTML = function() {
 
   // Scale row: scaled down selection graph
   var rowScale=external_table.insertRow(-1);
+
+  var cellScaleLegend=rowScale.insertCell(-1);
+  cellScaleLegend.vAlign="top";
+  cellScaleLegend.appendChild(document.createTextNode("Legend:"));
+  cellScaleLegend.appendChild(document.createElement('br'));
+  var forScaleLegend=document.createElement("Select");
+  forScaleLegend.id=this.legend_sel_id;
+  forScaleLegend.appendChild(new Option("Top","nw"));
+  forScaleLegend.appendChild(new Option("Bottom","sw"));
+  forScaleLegend.appendChild(new Option("TopRight","ne"));
+  forScaleLegend.appendChild(new Option("BottomRight","se"));
+  forScaleLegend.appendChild(new Option("None","None"));
+  forScaleLegend.onchange= function () {rf_this.callback_legend_changed();};
+  cellScaleLegend.appendChild(forScaleLegend);
+
   var cellScale=rowScale.insertCell(-1);
   cellScale.align="right";
   var elScale=document.createElement("Div");
@@ -165,8 +181,8 @@ rrdFlotMatrix.prototype.createHTML = function() {
   elScaleReset.type = "button";
   elScaleReset.value = "Reset selection";
   elScaleReset.onclick = function () {rf_this.callback_scale_reset();}
-
   cellScaleReset.appendChild(elScaleReset);
+
 
   base_el.appendChild(external_table);
 };
@@ -349,16 +365,28 @@ rrdFlotMatrix.prototype.drawFlotGraph = function() {
 rrdFlotMatrix.prototype.bindFlotGraph = function(flot_obj) {
   var rf_this=this; // use obj inside other functions
 
+  // DS
+  var oSelect=document.getElementById(this.legend_sel_id);
+  var legend_id=oSelect.options[oSelect.selectedIndex].value;
+
   var graph_jq_id="#"+this.graph_id;
   var scale_jq_id="#"+this.scale_id;
 
   var graph_options = {
-    legend: {show:true, position:"nw",noColumns:3},
+    legend: {show:false, position:"nw",noColumns:3},
     lines: {show:true},
     xaxis: { mode: "time" },
     yaxis: { autoscaleMargin: 0.20},
     selection: { mode: "x" },
   };
+
+
+  if (legend_id=="None") {
+    // do nothing
+  } else {
+    graph_options.legend.show=true;
+    graph_options.legend.position=legend_id;
+  }
 
   if (this.selection_range.isSet()) {
     var selection_range=this.selection_range.getFlotRanges();
@@ -448,5 +476,9 @@ rrdFlotMatrix.prototype.callback_rrd_cb_changed = function() {
 
 rrdFlotMatrix.prototype.callback_scale_reset = function() {
   this.scale.clearSelection();
+};
+
+rrdFlotMatrix.prototype.callback_legend_changed = function() {
+  this.drawFlotGraph();
 };
 

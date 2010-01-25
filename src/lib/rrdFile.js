@@ -1,7 +1,8 @@
 /*
  * Client library for access to RRD archive files
  * Part of the javascriptRRD package
- * Copyright (c) 2009 Frank Wuerthwein, fkw@ucsd.edu
+ * Copyright (c) 2009-2010 Frank Wuerthwein, fkw@ucsd.edu
+ *                         Igor Sfiligoi, isfiligoi@ucsd.edu
  *
  * Original repository: http://javascriptrrd.sourceforge.net/
  * 
@@ -141,7 +142,7 @@ function RRDRRA(rrd_data,rra_ptr_idx,
   this.base_rrd_db_idx=header_size+prev_row_cnts*row_size;
 
   // get imediately, since it will be needed often
-  var cur_row=rrd_data.getLongAt(rra_ptr_idx);
+  this.cur_row=rrd_data.getLongAt(rra_ptr_idx);
 
   // calculate idx relative to base_rrd_db_idx
   // mostly used internally
@@ -149,7 +150,7 @@ function RRDRRA(rrd_data,rra_ptr_idx,
     if ((row_idx>=0) && (row_idx<this.row_cnt)) {
       if ((ds_idx>=0) && (ds_idx<ds_cnt)){
 	// it is round robin, starting from cur_row+1
-	var real_row_idx=row_idx+cur_row+1;
+	var real_row_idx=row_idx+this.cur_row+1;
 	if (real_row_idx>=this.row_cnt) real_row_idx-=this.row_cnt;
 	return row_size*real_row_idx+ds_idx*8;
       } else {

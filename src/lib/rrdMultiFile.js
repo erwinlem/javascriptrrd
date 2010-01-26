@@ -62,6 +62,7 @@ RRDRRASum.prototype.getEl = function(row_idx,ds_idx) {
 	outSum=undefined;
 	break;
       }
+    }
     outSum+=val;
   }
   return outSum;
@@ -70,9 +71,27 @@ RRDRRASum.prototype.getEl = function(row_idx,ds_idx) {
 // Low precision version of getEl
 // Uses getFastDoubleAt
 RRDRRASum.prototype.getElFast = function(row_idx,ds_idx) {
-  outSum=0.0;
-  for (rra in this.rra_list) {
-    outSum+=rra.getElFast(row_idx,ds_idx);
+  var outSum=0.0;
+  for (var i in this.rra_list) {
+    var offset=this.offset_list[i];
+    if ((row_id+offset)<this.row_cnt) {
+      var rra=this.rra_list[i];
+      val=rra.getElFast(row_idx+offset,ds_idx);
+    } else {
+      /* out of row range -> undefined*/
+      val=undefined;
+    }
+    /* treat all undefines as 0 for now */
+    if (val==undefined) {
+      if (this.treat_undefined_as_zero) {
+	val=0;
+      } else {
+	/* if even one element is undefined, the whole sum is undefined */
+	outSum=undefined;
+	break;
+      }
+    }
+    outSum+=val;
   }
   return outSum;
 }

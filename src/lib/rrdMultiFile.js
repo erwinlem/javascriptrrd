@@ -46,7 +46,7 @@ RRDRRASum.prototype.getEl = function(row_idx,ds_idx) {
   var outSum=0.0;
   for (var i in this.rra_list) {
     var offset=this.offset_list[i];
-    if ((row_id+offset)<this.row_cnt) {
+    if ((row_idx+offset)<this.row_cnt) {
       var rra=this.rra_list[i];
       val=rra.getEl(row_idx+offset,ds_idx);
     } else {

@@ -153,7 +153,7 @@ function RRDFileSum(file_list,treat_undefined_as_zero) {
 
     var rra_list=new Array();
     var offset_list=new Array();
-    for (var i in self.file_list) {
+    for (var i in this.file_list) {
       file=file_list[i];
       fileLastUpdate=file.getLastUpdate();
       if (realLastUpdate!=undefined) {

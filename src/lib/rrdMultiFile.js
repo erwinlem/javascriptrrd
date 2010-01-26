@@ -20,25 +20,25 @@ function RRDRRASum(rra_list,offset_list,treat_undefined_as_zero) {
   this.row_cnt= this.rra_list[0].getNrRows();
 }
 
-RRDRRA.prototype.getIdx = function() {
+RRDRRASum.prototype.getIdx = function() {
   return this.rra_list[0].getIdx();
 }
 
 // Get number of rows/columns
-RRDRRA.prototype.getNrRows = function() {
+RRDRRASum.prototype.getNrRows = function() {
   return this.row_cnt;
 }
-RRDRRA.prototype.getNrDSs = function() {
+RRDRRASum.prototype.getNrDSs = function() {
   return this.rra_list[0].getNrDSs();
 }
 
 // Get RRA step (expressed in seconds)
-RRDRRA.prototype.getStep = function() {
+RRDRRASum.prototype.getStep = function() {
   return this.rra_list[0].getStep();
 }
 
 // Get consolidation function name
-RRDRRA.prototype.getCFName = function() {
+RRDRRASum.prototype.getCFName = function() {
   return this.rra_list[0].getCFName();
 }
 

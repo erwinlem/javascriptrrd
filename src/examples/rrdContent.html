@@ -25,7 +25,7 @@
   </head>
 
   <body>
-    <h1 id="title">RRD Content</h1>
+    <h1 id="title">RRD Raw Content</h1>
 
     RRD URL:
     <input type="text" id="input_fname" value="example1.rrd"
@@ -36,6 +36,14 @@
         <tr>
 	  <td>DS: <select id="select_ds"></select></td>
 	  <td>RRA: <select id="select_rra"></select></td>
+	  <td>Columns: <select id="select_columns">
+                          <option value="1"/>1</option>
+                          <option value="2"/>2</option>
+                          <option value="4"/>4</option>
+                          <option value="5"/>5</option>
+                          <option value="10"/>10</option>
+                          <option value="20" selected/>20</option>
+                       </select></td>
 	  <td><button id="dsrra_button" onclick="element_update()" disabled=1>Update</button></td>
 	</tr>
     </table>
@@ -110,6 +118,8 @@
         ds_idx=Math.round(oSelDS.options[oSelDS.selectedIndex].value);
         oSelRRA=document.getElementById("select_rra");
         rra_idx=oSelRRA.options[oSelRRA.selectedIndex].value;
+        oSelClm=document.getElementById("select_columns");
+        clm_nr=Math.round(oSelClm.options[oSelClm.selectedIndex].value);
 
         // cleanup
         // rows may have been added during previous updates
@@ -128,13 +138,14 @@
 
         var oRow=undefined;
         for (var i=0; i<rows;i++) {
-          if ((i%20)==0) {
-            // One new row every 20
+          if ((i%clm_nr)==0) {
+            // One new row every clm_nr
             oRow=oTable.insertRow(-1);
             var oCell=oRow.insertCell(-1);
             oCell.innerHTML=i;
           }
           var oCell=oRow.insertCell(-1);
+          oCell.colSpan=20/clm_nr;
           var el=rra.getElFast(i,ds_idx);
           if (el!=undefined) {
            oCell.innerHTML=Math.round(rra.getElFast(i,ds_idx));

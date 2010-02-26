@@ -1,7 +1,7 @@
 /*
  * RRD graphing libraries, based on Flot
  * Part of the javascriptRRD package
- * Copyright (c) 2009 Frank Wuerthwein, fkw@ucsd.edu
+ * Copyright (c) 2010 Frank Wuerthwein, fkw@ucsd.edu
  *                    Igor Sfiligoi, isfiligoi@ucsd.edu
  *
  * Original repository: http://javascriptrrd.sourceforge.net/
@@ -24,6 +24,7 @@
  * External dependencies:
  *  [Flot]/jquery.py
  *  [Flot]/jquery.flot.js
+ *  [Flot]/jquery.flot.selection.js
  */
 
 /* graph_options defaults (see Flot docs for details)
@@ -136,12 +137,14 @@ rrdFlot.prototype.createHTML = function() {
   cellScale.align="right";
   var elScale=document.createElement("Div");
   elScale.style.width="250px";
-  elScale.style.height="75px";
+  elScale.style.height="110px";
   elScale.id=this.scale_id;
   cellScale.appendChild(elScale);
   
   var cellScaleReset=rowScale.insertCell(-1);
-  //cellScaleReset.vAlign="top";
+  cellScaleReset.vAlign="top";
+  cellScaleReset.appendChild(document.createTextNode(" "));
+  cellScaleReset.appendChild(document.createElement('br'));
   var elScaleReset=document.createElement("input");
   elScaleReset.type = "button";
   elScaleReset.value = "Reset selection";

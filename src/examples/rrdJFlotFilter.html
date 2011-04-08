@@ -89,7 +89,7 @@
       function DoNothing(ds) {
         this.getName = function() {return ds;}
         this.getDSNames = function() {return [ds];}
-        this.computeResult = function(val_list) {return val_list;}
+        this.computeResult = function(val_list) {return val_list[0];}
       }
 
       //Sum two DSs

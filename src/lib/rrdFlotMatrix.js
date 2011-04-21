@@ -60,9 +60,13 @@
  *   }
  */
 
-function rrdFlotMatrix(html_id, rrd_files, ds_list, graph_options, rrd_graph_options) {
+function rrdFlotMatrix(html_id, rrd_files, ds_list, graph_options, rrd_graph_options,rrdflot_defaults) {
   this.html_id=html_id;
   this.rrd_files=rrd_files;
+  if (rrdflot_defaults==null) {
+     this.rrdflot_defaults=new Object(); 
+  }
+  else {this.rrdflot_defaults=rrdflot_defaults;}
   if (ds_list==null) {
     this.ds_list=[];
     var rrd_file=this.rrd_files[0][1]; // get the first one... they are all the same
@@ -160,11 +164,11 @@ rrdFlotMatrix.prototype.createHTML = function() {
   cellScaleLegend.appendChild(document.createElement('br'));
   var forScaleLegend=document.createElement("Select");
   forScaleLegend.id=this.legend_sel_id;
-  forScaleLegend.appendChild(new Option("Top","nw"));
-  forScaleLegend.appendChild(new Option("Bottom","sw"));
-  forScaleLegend.appendChild(new Option("TopRight","ne"));
-  forScaleLegend.appendChild(new Option("BottomRight","se"));
-  forScaleLegend.appendChild(new Option("None","None"));
+  forScaleLegend.appendChild(new Option("Top","nw",this.rrdflot_defaults.legend=="Top"));
+  forScaleLegend.appendChild(new Option("Bottom","sw",this.rrdflot_defaults.legend=="Bottom"));
+  forScaleLegend.appendChild(new Option("TopRight","ne",this.rrdflot_defaults.legend=="TopRight"));
+  forScaleLegend.appendChild(new Option("BottomRight","se",this.rrdflot_defaults.legend=="BottomRight"));
+  forScaleLegend.appendChild(new Option("None","None",this.rrdflot_defaults.legend=="None"));
   forScaleLegend.onchange= function () {rf_this.callback_legend_changed();};
   cellScaleLegend.appendChild(forScaleLegend);
 

@@ -48,10 +48,15 @@
  *   }
  */
 
-function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options) {
+function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options, rrdflot_defaults) {
   this.html_id=html_id;
   this.rrd_file=rrd_file;
   this.graph_options=graph_options;
+  if (rrdflot_defaults==null) {
+    this.rrdflot_defaults=new Object(); // empty object, just not to be null
+  } else {
+    this.rrdflot_defaults=rrdflot_defaults;
+  }
   if (ds_graph_options==null) {
     this.ds_graph_options=new Object(); // empty object, just not to be null
   } else {
@@ -110,6 +115,8 @@ rrdFlot.prototype.createHTML = function() {
   cellGraph.appendChild(elGraph);
 
   var cellDScb=rowGraph.insertCell(-1);
+  
+
   cellDScb.vAlign="top";
   var formDScb=document.createElement("Form");
   formDScb.id=this.ds_cb_id;
@@ -125,11 +132,11 @@ rrdFlot.prototype.createHTML = function() {
   cellScaleLegend.appendChild(document.createElement('br'));
   var forScaleLegend=document.createElement("Select");
   forScaleLegend.id=this.legend_sel_id;
-  forScaleLegend.appendChild(new Option("Top","nw"));
-  forScaleLegend.appendChild(new Option("Bottom","sw"));
-  forScaleLegend.appendChild(new Option("TopRight","ne"));
-  forScaleLegend.appendChild(new Option("BottomRight","se"));
-  forScaleLegend.appendChild(new Option("None","None"));
+  forScaleLegend.appendChild(new Option("Top","nw",this.rrdflot_defaults.legend=="Top"));
+  forScaleLegend.appendChild(new Option("Bottom","sw",this.rrdflot_defaults.legend=="Bottom"));
+  forScaleLegend.appendChild(new Option("TopRight","ne",this.rrdflot_defaults.legend=="TopRight"));
+  forScaleLegend.appendChild(new Option("BottomRight","se",this.rrdflot_defaults.legend=="BottomRight"));
+  forScaleLegend.appendChild(new Option("None","None",this.rrdflot_defaults.legend=="None"));
   forScaleLegend.onchange= function () {rf_this.callback_legend_changed();};
   cellScaleLegend.appendChild(forScaleLegend);
 
@@ -166,6 +173,7 @@ rrdFlot.prototype.populateRes = function() {
   // now populate with RRA info
   var nrRRAs=this.rrd_file.getNrRRAs();
   for (var i=0; i<nrRRAs; i++) {
+
     var rra=this.rrd_file.getRRAInfo(i);
     var step=rra.getStep();
     var rows=rra.getNrRows();
@@ -178,12 +186,17 @@ rrdFlot.prototype.populateRes = function() {
 rrdFlot.prototype.populateDScb = function() {
   var form_el=document.getElementById(this.ds_cb_id);
 
-  // First clean up anything in the element
-  while (form_el.lastChild!=null) form_el.removeChild(form_el.lastChild);
+  var table_el=document.createElement("Table");
+  var row_el=table_el.insertRow(-1);
+  row_el.vAlign="top";
+  var cell_el=null; // will define later
 
   // now populate with DS info
   var nrDSs=this.rrd_file.getNrDSs();
   for (var i=0; i<nrDSs; i++) {
+    if ((i%7)==0) { // one column every 15 elements
+      cell_el=row_el.insertCell(-1);
+    }
     var ds=this.rrd_file.getDS(i);
     var name=ds.getName();
     var title=name;
@@ -208,7 +221,12 @@ rrdFlot.prototype.populateDScb = function() {
     cb_el.name = "ds";
     cb_el.value = name;
     cb_el.checked = cb_el.defaultChecked = checked;
+    //table_el.type = "checkbox";
+    //table_el.name = "ds";
+    //table_el.value = name;
+    //table_el.checked = table_el.defaultChecked = checked;
     form_el.appendChild(cb_el);
+    //form_el.appendChild(table_el);
     form_el.appendChild(document.createTextNode(title));
     form_el.appendChild(document.createElement('br'));
   }

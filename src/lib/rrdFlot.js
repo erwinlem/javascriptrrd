@@ -185,16 +185,21 @@ rrdFlot.prototype.populateRes = function() {
 
 rrdFlot.prototype.populateDScb = function() {
   var form_el=document.getElementById(this.ds_cb_id);
-
+ 
+  //Create a table within a table to arrange
+  // checkbuttons into two or more columns
   var table_el=document.createElement("Table");
   var row_el=table_el.insertRow(-1);
   row_el.vAlign="top";
   var cell_el=null; // will define later
 
+  if (this.rrdflot_defaults.num_legend_rows==null) {
+     this.rrdflot_defaults.num_legend_rows=8; 
+  }
   // now populate with DS info
   var nrDSs=this.rrd_file.getNrDSs();
   for (var i=0; i<nrDSs; i++) {
-    if ((i%7)==0) { // one column every 15 elements
+    if ((i%this.rrdflot_defaults.num_legend_rows)==0) { // one column every x DSs
       cell_el=row_el.insertCell(-1);
     }
     var ds=this.rrd_file.getDS(i);
@@ -221,15 +226,13 @@ rrdFlot.prototype.populateDScb = function() {
     cb_el.name = "ds";
     cb_el.value = name;
     cb_el.checked = cb_el.defaultChecked = checked;
-    //table_el.type = "checkbox";
-    //table_el.name = "ds";
-    //table_el.value = name;
-    //table_el.checked = table_el.defaultChecked = checked;
-    form_el.appendChild(cb_el);
-    //form_el.appendChild(table_el);
-    form_el.appendChild(document.createTextNode(title));
-    form_el.appendChild(document.createElement('br'));
+    cell_el.appendChild(cb_el);
+    cell_el.appendChild(document.createTextNode(title));
+    cell_el.appendChild(document.createElement('br'));
+
+    
   }
+  form_el.appendChild(table_el);
 };
 
 // ======================================

@@ -203,7 +203,11 @@ rrdFlot.prototype.populateDScb = function() {
       cell_el=row_el.insertCell(-1);
     }
     var ds=this.rrd_file.getDS(i);
-    var name=ds.getName();
+    if (this.rrdflot_defaults.multi_ds) { //null==false in boolean ops
+       var name=ds.getName()+"-"+ds.getType();
+       var name2=ds.getName();
+    }
+    else {var name=ds.getName();}
     var title=name;
     var checked=(i==0); // only first checked by default
     if (this.ds_graph_options[name]!=null) {
@@ -224,7 +228,7 @@ rrdFlot.prototype.populateDScb = function() {
     var cb_el = document.createElement("input");
     cb_el.type = "checkbox";
     cb_el.name = "ds";
-    cb_el.value = name;
+    cb_el.value = name2;
     cb_el.checked = cb_el.defaultChecked = checked;
     cell_el.appendChild(cb_el);
     cell_el.appendChild(document.createTextNode(title));

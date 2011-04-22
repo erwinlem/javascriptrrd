@@ -207,7 +207,7 @@ rrdFlot.prototype.populateDScb = function() {
        var name=ds.getName()+"-"+ds.getType();
        var name2=ds.getName();
     }
-    else {var name=ds.getName();}
+    else {var name=ds.getName(); var name2=ds.getName();}
     var title=name;
     var checked=(i==0); // only first checked by default
     if (this.ds_graph_options[name]!=null) {

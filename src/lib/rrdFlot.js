@@ -46,6 +46,15 @@
  *     yaxis: 1                     // can be 1 or 2
  *     stack: 'none'                // other options are 'positive' and 'negative'
  *   }
+/* rrdflot_defeaults defaults (see Flot docs for details)
+ * {
+ *     legend: "Top"         //Starting location of legend. Options are: 
+ *                           //"Top","Bottom","TopRight","BottomRight","None".
+ *     num_cb_rows: 12       //How many rows of DS checkboxes per column.
+ *     multi_ds: false       //"true" appends the name of the aggregation function to the 
+ *                           //name of the DS element. Useful for when an element is displayed
+ *                           //more than once but under different aggregation functions.
+ * }
  */
 
 function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options, rrdflot_defaults) {
@@ -193,13 +202,13 @@ rrdFlot.prototype.populateDScb = function() {
   row_el.vAlign="top";
   var cell_el=null; // will define later
 
-  if (this.rrdflot_defaults.num_legend_rows==null) {
-     this.rrdflot_defaults.num_legend_rows=8; 
+  if (this.rrdflot_defaults.num_cb_rows==null) {
+     this.rrdflot_defaults.num_cb_rows=12; 
   }
   // now populate with DS info
   var nrDSs=this.rrd_file.getNrDSs();
   for (var i=0; i<nrDSs; i++) {
-    if ((i%this.rrdflot_defaults.num_legend_rows)==0) { // one column every x DSs
+    if ((i%this.rrdflot_defaults.num_cb_rows)==0) { // one column every x DSs
       cell_el=row_el.insertCell(-1);
     }
     var ds=this.rrd_file.getDS(i);

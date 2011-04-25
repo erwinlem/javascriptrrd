@@ -123,6 +123,25 @@ creates an interactive
 </PRE></P>
 				</TD>
 			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>rrdflot_defaults (optional)</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>Dictionary of rrd_flot options. 
+                                        <P>The recognized elements and the default values are:
+<PRE>
+   {
+     legend: "Top"         //Starting location of legend. Options are: 
+                           //"Top","Bottom","TopRight","BottomRight","None".
+     num_cb_rows: 12       //How many rows of DS checkboxes per column.
+     multi_ds: false       //"true" appends the name of the aggregation function to the 
+                           //name of the DS element. Useful for when an element is displayed
+                           //more than once but under different aggregation functions.
+   }
+</PRE></P>
+				</TD>
+			</TR>
       </TABLE>
 </DIV>
 <P>Once instatiated, the object will automatically draw the plot and handle user interaction.</P>

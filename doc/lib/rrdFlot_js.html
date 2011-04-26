@@ -136,8 +136,10 @@ creates an interactive
                            //"Top","Bottom","TopRight","BottomRight","None".
      num_cb_rows: 12       //How many rows of DS checkboxes per column.
      multi_ds: false       //"true" appends the name of the aggregation function to the 
-                           //name of the DS element. Useful for when an element is displayed
-                           //more than once but under different aggregation functions.
+                           //name of the DS element. 
+     multi_rra: false      //"true" appends the name of the RRA consolidation function (CF) 
+                           //(AVERAGE, MIN, MAX or LAST) to the name of the RRA. Useful for 
+                           //RRAs over the same interval with different CFs.  
    }
 </PRE></P>
 				</TD>

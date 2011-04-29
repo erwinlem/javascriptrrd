@@ -46,6 +46,16 @@
  *     yaxis: 1                     // can be 1 or 2
  *     stack: 'none'                // other options are 'positive' and 'negative'
  *   }
+ *
+ * rrdflot_defeaults defaults (see Flot docs for details) 	 
+ * { 	 
+ *     legend: "Top"         //Starting location of legend. Options are: 	 
+ *                           //"Top","Bottom","TopRight","BottomRight","None". 	 
+ *     num_cb_rows: 12       //How many rows of DS checkboxes per column. 	 
+ *     multi_ds: false       //"true" appends the name of the aggregation function to the 	 
+ *                           //name of the DS element. Useful for when an element is displayed 	 
+ *                           //more than once but under different aggregation functions. 	 
+ * }
  */
 
 function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options, rrdflot_defaults) {
@@ -178,10 +188,7 @@ rrdFlot.prototype.populateRes = function() {
     var step=rra.getStep();
     var rows=rra.getNrRows();
     var period=step*rows;
-    if (this.rrdflot_defaults.multi_rra) {
-       var rra_label=rfs_format_time(step)+" ("+rfs_format_time(period)+" total)-"+rra.getCFName();
-    }
-    else {var rra_label=rfs_format_time(step)+" ("+rfs_format_time(period)+" total)";}
+    var rra_label=rfs_format_time(step)+" ("+rfs_format_time(period)+" total)";
     form_el.appendChild(new Option(rra_label,i));
   }
 };
@@ -196,13 +203,13 @@ rrdFlot.prototype.populateDScb = function() {
   row_el.vAlign="top";
   var cell_el=null; // will define later
 
-  if (this.rrdflot_defaults.num_legend_rows==null) {
-     this.rrdflot_defaults.num_legend_rows=12; 
+  if (this.rrdflot_defaults.num_cb_rows==null) {
+     this.rrdflot_defaults.num_cb_rows=12; 
   }
   // now populate with DS info
   var nrDSs=this.rrd_file.getNrDSs();
   for (var i=0; i<nrDSs; i++) {
-    if ((i%this.rrdflot_defaults.num_legend_rows)==0) { // one column every x DSs
+    if ((i%this.rrdflot_defaults.num_cb_rows)==0) { // one column every x DSs
       cell_el=row_el.insertCell(-1);
     }
     var ds=this.rrd_file.getDS(i);
@@ -210,7 +217,7 @@ rrdFlot.prototype.populateDScb = function() {
        var name=ds.getName()+"-"+ds.getType();
        var name2=ds.getName();
     }
-    else {var name=ds.getName();}
+    else {var name=ds.getName(); var name2=ds.getName();}
     var title=name;
     var checked=(i==0); // only first checked by default
     if (this.ds_graph_options[name]!=null) {

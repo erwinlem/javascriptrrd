@@ -197,7 +197,7 @@ rrdFlot.prototype.populateDScb = function() {
   var cell_el=null; // will define later
 
   if (this.rrdflot_defaults.num_legend_rows==null) {
-     this.rrdflot_defaults.num_legend_rows=8; 
+     this.rrdflot_defaults.num_legend_rows=12; 
   }
   // now populate with DS info
   var nrDSs=this.rrd_file.getNrDSs();

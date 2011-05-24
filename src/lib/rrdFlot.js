@@ -47,7 +47,8 @@
  *     stack: 'none'                // other options are 'positive' and 'negative'
  *   }
  *
- * rrdflot_defeaults defaults (see Flot docs for details) 	 
+ * //overwrites other defaults; mostly used for linking via the URL
+ * rrdflot_defaults defaults (see Flot docs for details) 	 
  * { 	 
  *     legend: "Top"         //Starting location of legend. Options are: 	 
  *                           //"Top","Bottom","TopRight","BottomRight","None". 	 
@@ -55,8 +56,17 @@
  *     multi_ds: false       //"true" appends the name of the aggregation function to the 	 
  *                           //name of the DS element. Useful for when an element is displayed 	 
  *                           //more than once but under different aggregation functions. 	 
+ *     use_checked_DSs: true //boolean to use checked_DSs below (which override all other checking procedure)
+ *     checked_DSs: []       //array of DSs names to be plotted (so that they can be specified via URL link.)
+ *     use_rra: true         //use the rra below
+ *     specified_rra: idx    //index (int) of rra to be plotted
  * }
  */
+
+var local_checked_DSs = [];
+var selected_rra = 0;
+var window_min=0;
+var window_max=0;
 
 function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options, rrdflot_defaults) {
   this.html_id=html_id;
@@ -74,6 +84,7 @@ function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options, rrdflot_def
   }
   this.selection_range=new rrdFlotSelection();
 
+  graph_info={};
   this.createHTML();
   this.populateRes();
   this.populateDScb();
@@ -100,7 +111,7 @@ rrdFlot.prototype.createHTML = function() {
   // Now create the layout
   var external_table=document.createElement("Table");
 
-  // Header rwo: resulution select and DS selection title
+  // Header two: resulution select and DS selection title
   var rowHeader=external_table.insertRow(-1);
   var cellRes=rowHeader.insertCell(-1);
   cellRes.colSpan=3;
@@ -191,6 +202,7 @@ rrdFlot.prototype.populateRes = function() {
     var rra_label=rfs_format_time(step)+" ("+rfs_format_time(period)+" total)";
     form_el.appendChild(new Option(rra_label,i));
   }
+    if(this.rrdflot_defaults.use_rra) {form_el.selectedIndex = this.rrdflot_defaults.rra;}
 };
 
 rrdFlot.prototype.populateDScb = function() {
@@ -218,8 +230,12 @@ rrdFlot.prototype.populateDScb = function() {
        var name2=ds.getName();
     }
     else {var name=ds.getName(); var name2=ds.getName();}
-    var title=name;
-    var checked=(i==0); // only first checked by default
+    var title=name; 
+    if(this.rrdflot_defaults.use_checked_DSs) {
+       if(this.rrdflot_defaults.checked_DSs.length==0) {
+          var checked=(i==0); // only first checked by default
+       } else{checked=false;}
+    } else {var checked=(i==0);}
     if (this.ds_graph_options[name]!=null) {
       var dgo=this.ds_graph_options[name];
       if (dgo['title']!=null) {
@@ -229,10 +245,22 @@ rrdFlot.prototype.populateDScb = function() {
 	// use label as a second choiceit
 	title=dgo['label'];
       } // else leave the ds name
-      if (dgo['checked']!=null) {
-	// if the user provided the title, use it
-	checked=dgo['checked'];
+      if(this.rrdflot_defaults.use_checked_DSs) {
+         if(this.rrdflot_defaults.checked_DSs.length==0) {
+           // if the user provided the title, use it
+           checked=dgo['checked'];
+         }
+      } else {
+         if (dgo['checked']!=null) {
+            checked=dgo['checked']; 
+         }
       }
+    }
+    if(this.rrdflot_defaults.use_checked_DSs) {
+       if(this.rrdflot_defaults.checked_DSs==null) {continue;}
+       for(var j=0;j<this.rrdflot_defaults.checked_DSs.length;j++){
+             if (name==this.rrdflot_defaults.checked_DSs[j]) {checked=true;}
+       }
     }
 
     var cb_el = document.createElement("input");
@@ -255,7 +283,11 @@ rrdFlot.prototype.drawFlotGraph = function() {
   // Res contains the RRA idx
   var oSelect=document.getElementById(this.res_id);
   var rra_idx=Number(oSelect.options[oSelect.selectedIndex].value);
-
+  selected_rra=rra_idx;
+  if(this.rrdflot_defaults.use_rra) {
+    oSelect.options[oSelect.selectedIndex].value = this.rrdflot_defaults.rra;
+    rra_idx = this.rrdflot_defaults.rra;
+  }
   // now get the list of selected DSs
   var ds_positive_stack_list=[];
   var ds_negative_stack_list=[];
@@ -263,11 +295,13 @@ rrdFlot.prototype.drawFlotGraph = function() {
   var ds_colors={};
   var oCB=document.getElementById(this.ds_cb_id);
   var nrDSs=oCB.ds.length;
+  local_checked_DSs=[];
   if (oCB.ds.length>0) {
     for (var i=0; i<oCB.ds.length; i++) {
       if (oCB.ds[i].checked==true) {
 	var ds_name=oCB.ds[i].value;
 	var ds_stack_type='none';
+        local_checked_DSs.push(ds_name);;
 	if (this.ds_graph_options[ds_name]!=null) {
 	  var dgo=this.ds_graph_options[ds_name];
 	  if (dgo['stack']!=null) {
@@ -290,6 +324,7 @@ rrdFlot.prototype.drawFlotGraph = function() {
       var ds_name=oCB.ds.value;
       ds_single_list.push(ds_name);
       ds_colors[ds_name]=0;
+      local_checked_DSs.push(ds_name);
     }
   }
   
@@ -358,8 +393,16 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
 
   if (this.selection_range.isSet()) {
     var selection_range=this.selection_range.getFlotRanges();
+    if(this.rrdflot_defaults.use_windows) {
+       graph_options.xaxis.min = this.rrdflot_defaults.window_min;  
+       graph_options.xaxis.max = this.rrdflot_defaults.window_max;  
+    } else {
     graph_options.xaxis.min=selection_range.xaxis.from;
     graph_options.xaxis.max=selection_range.xaxis.to;
+    }
+  } else if(this.rrdflot_defaults.use_windows) {
+    graph_options.xaxis.min = this.rrdflot_defaults.window_min;  
+    graph_options.xaxis.max = this.rrdflot_defaults.window_max;  
   } else {
     graph_options.xaxis.min=flot_obj.min;
     graph_options.xaxis.max=flot_obj.max;
@@ -371,7 +414,7 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
 	graph_options.legend.position=this.graph_options.legend.position;
       }
       if (this.graph_options.legend.noColumns!=null) {
-	graph_options.legend.noColumns=this.graph_options.legend.noColumns;
+	gcale_data=flot_data;
       }
     }
     if (this.graph_options.yaxis!=null) {
@@ -387,17 +430,38 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   var scale_options = {
     legend: {show:false},
     lines: {show:true},
-    xaxis: { mode: "time", min:flot_obj.min, max:flot_obj.max },
+    xaxis: {mode: "time", min:flot_obj.min, max:flot_obj.max },
     selection: { mode: "x" },
   };
-    
+  var linked_scale_options = {
+    legend: {show:false},
+    lines: {show:true},
+    xaxis: {mode: "time", min:this.rrdflot_defaults.window_min, max: this.rrdflot_defaults.window_max },
+    selection: { mode: "x" },
+  }; 
+
   var flot_data=flot_obj.data;
+  //document.write(flot_data);
 
   var graph_data=this.selection_range.trim_flot_data(flot_data);
   var scale_data=flot_data;
 
   this.graph = $.plot($(graph_jq_id), graph_data, graph_options);
   this.scale = $.plot($(scale_jq_id), scale_data, scale_options);
+ 
+  
+  if(this.rrdflot_defaults.use_windows) {
+    ranges = {};
+    ranges.xaxis = [];
+    ranges.xaxis.from = this.rrdflot_defaults.window_min;
+    ranges.xaxis.to = this.rrdflot_defaults.window_max;
+    rf_this.scale.setSelection(ranges,true);
+    window_min = ranges.xaxis.from;
+    window_max = ranges.xaxis.to;
+  } else {
+    window_min=0;
+    window_max=0;
+    }
 
   if (this.selection_range.isSet()) {
     this.scale.setSelection(this.selection_range.getFlotRanges(),true); //don't fire event, no need
@@ -410,10 +474,12 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
       rf_this.selection_range.setFromFlotRanges(ranges);
       graph_options.xaxis.min=ranges.xaxis.from;
       graph_options.xaxis.max=ranges.xaxis.to;
+      window_min = ranges.xaxis.from;
+      window_max = ranges.xaxis.to;
       rf_this.graph = $.plot($(graph_jq_id), rf_this.selection_range.trim_flot_data(flot_data), graph_options);
       
       // don't fire event on the scale to prevent eternal loop
-      rf_this.scale.setSelection(ranges, true);
+      rf_this.scale.setSelection(ranges, true); //puts the transparent window on minigraph
   });
    
   $(scale_jq_id).unbind("plotselected"); //same here 
@@ -428,11 +494,14 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
       graph_options.xaxis.min=flot_obj.min;
       graph_options.xaxis.max=flot_obj.max;
       rf_this.graph = $.plot($(graph_jq_id), rf_this.selection_range.trim_flot_data(flot_data), graph_options);
+      window_min = 0;
+      window_max = 0;
   });
 };
 
 // callback functions that are called when one of the selections changes
 rrdFlot.prototype.callback_res_changed = function() {
+  this.rrdflot_defaults.use_rra = false;
   this.drawFlotGraph();
 };
 
@@ -448,3 +517,17 @@ rrdFlot.prototype.callback_legend_changed = function() {
   this.drawFlotGraph();
 };
 
+function getGraphInfo() {
+   var graph_info = {};
+   graph_info['dss'] = local_checked_DSs;
+   graph_info['rra'] = selected_rra;
+   graph_info['window_min'] = window_min;
+   graph_info['window_max'] = window_max;
+   return graph_info;
+}
+
+function resetWindow() {
+  window_min = 0;
+  window_max = 0; 
+
+}

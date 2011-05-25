@@ -441,7 +441,6 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   }; 
 
   var flot_data=flot_obj.data;
-  //document.write(flot_data);
 
   var graph_data=this.selection_range.trim_flot_data(flot_data);
   var scale_data=flot_data;
@@ -458,10 +457,7 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
     rf_this.scale.setSelection(ranges,true);
     window_min = ranges.xaxis.from;
     window_max = ranges.xaxis.to;
-  } else {
-    window_min=0;
-    window_max=0;
-    }
+  }
 
   if (this.selection_range.isSet()) {
     this.scale.setSelection(this.selection_range.getFlotRanges(),true); //don't fire event, no need

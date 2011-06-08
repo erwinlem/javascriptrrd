@@ -1,0 +1,180 @@
+<DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+ Example HTML/javascript file that display the
+ content of a RRD archive file in a graph
+ using the Flot libraries. This page adds two examples
+ to RRDJFlot.html of using RRDFilterOp to apply operations
+ (here, summing) to several or all of the DS in the RRD.
+ Part of the javascriptRRD package
+ Copyright (c) 2010 Frank Wuerthwein, fkw@ucsd.edu
+                    Igor Sfiligoi, isfiligoi@ucsd.edu
+
+ Original repository: http://javascriptrrd.sourceforge.net/
+ 
+ MIT License [http://www.opensource.org/licenses/mit-license.php]
+
+-->
+
+<!--
+ This page requires Flot.
+
+ Repository: http://code.google.com/p/flot/
+
+-->
+
+<html>
+  
+    <script type="text/javascript" src="../lib/binaryXHR.js"></script>
+    <script type="text/javascript" src="../lib/rrdFile.js"></script>
+
+    <!-- rrdFlot class needs the following four include files !-->
+    <script type="text/javascript" src="../lib/rrdFlotSupport.js"></script>
+    <script type="text/javascript" src="../lib/rrdFlot.js"></script>
+    <script type="text/javascript" src="../lib/rrdFile.js"></script>
+    <script type="text/javascript" src="../lib/rrdFilter.js"></script>
+    <script type="text/javascript" src="../../flot/jquery.js"></script>
+    <script type="text/javascript" src="../../flot/jquery.flot.js"></script>
+    <script type="text/javascript" src="../../flot/jquery.flot.selection.js"></script>
+  <head>
+    <title>RRD Graphs with Flot</title>
+  </head>
+
+  <body>
+    <h1 id="title">RRD Graphs with Flot, with RRA Filter Operations</h1>
+
+    RRD URL:
+    <input type="text" id="input_fname" value="example3.rrd"
+           onchange="fname_update()">
+    <p>
+     <tr>
+       <th>Timezone</th>
+       <td valign="middle">
+         <select id="timezone">
+          <option value="3">+3 Moscow</option>
+          <option value="2">+2 East Eur</option>
+          <option value="1">+1 West Eur</option>
+          <option value="0" selected=true> 0 GMT</option>
+          <option value="-5">-5 East Coast</option>
+          <option value="-6">-6 Central</option>
+          <option value="-7">-7 Mountain</option>
+          <option value="-8">-8 Pacific</option>
+         </select>
+       </td>
+     </tr>
+     <p>
+     <button onclick="fname_update()">Update</button>
+    <hr>
+
+    <table id="infotable" border=1>
+        <tr><td colspan="21"><b>Javascript needed for this page to work</b></td></tr>
+	<tr><td><b>RRD file</b></td><td id="fname" colspan="5">None</td></tr>
+    </table>
+
+    <div id="mygraph"></div>
+
+    <script type="text/javascript">
+
+      // Remove the Javascript warning
+      document.getElementById("infotable").deleteRow(0);
+
+      // fname and rrd_data are the global variable used by all the functions below
+      fname=document.getElementById("input_fname").value;
+      rrd_data=undefined;
+
+      // This function updates the Web Page with the data from the RRD archive header
+      // when a new file is selected
+      function update_fname() {
+        // Finally, update the file name and enable the update button
+        document.getElementById("fname").firstChild.data=fname;
+
+        var graph_opts={legend: { noColumns:4}};
+        var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
+                                         lines: { show: true, fill: true, fillColor:"#ffff80"} },
+                           'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
+                                    lines: { show: true, fill: true} },
+                           'Running':{color: "#000000",yaxis:2}};
+
+        
+        // the rrdFlot object creates and handles the graph
+        var f=new rrdFlot("mygraph",rrd_data,graph_opts,ds_graph_opts);
+      }
+
+      //RRA Filter - leaves RRA alone.
+      function RRADoNothing(rra_idx) {
+         this.getIdx = function() {return rra_idx;}
+         this.getStep = function() {return null;}
+      }
+      /* RRA Filter - Creates a new RRA with a different step size (in seconds) 
+      / based on another RRA, whose data the new RRA averages. 
+      / rra_idx should be index of RRA with largest step size that doesn't exceed new step size.
+      */
+      function RRA_Avg(rra_idx,new_step_in_seconds) {
+         this.getIdx = function() {return rra_idx;}
+         this.getStep = function() {return new_step_in_seconds;}
+      }
+ 
+      // This is the callback function that,
+      // given a binary file object,
+      // verifies that it is a valid RRD archive
+      // and performs the update of the Web page
+      function update_fname_handler(bf) {
+          var i_rrd_data=undefined;
+          try {
+            var i_rrd_data=new RRDFile(bf);            
+          } catch(err) {
+            alert("File "+fname+" is not a valid RRD archive!");
+          }
+
+          if (i_rrd_data!=undefined) {
+            rrd_data=i_rrd_data;
+          
+            //Add RRA filters for longer averaged-out RRAs
+            //This pages was made to run example3.rra, with RRA steps of 
+            //5 mins (300 seconds), 45 mins (2700s) and 8 hours (28800s).
+
+            var rra_op_list = [];
+            
+            //Want to keep regular RRAs, so apply 'DoNothing" filters and push onto operator list. 
+            //I will keep the RRAs in order by step size.
+            rra_op_list.push(new RRADoNothing(0)); //0th RRA, 5 min step.
+
+            //Now, we want to add a few new Averaging filters, kept in order.  
+            //It's best to use the RRA with the next smallest step size as a basis.
+            //It's also best to make steps integer multiples of the original RRA step sizes.
+            //For istance, using a 45 minute step, a 6 hour (= 45mins x 8) step 
+            //    would be better than 4 hour step (=45 mins x 5.33...)
+            rra_op_list.push(new RRA_Avg(0,1800)); //30 minutes (based on 5 minutes)
+            rra_op_list.push(new RRADoNothing(1)); //Original 45 minutes
+            rra_op_list.push(new RRA_Avg(1,21600)); //6 hours (based on 45 mins) 
+            rra_op_list.push(new RRADoNothing(2)); //Original 8 hours
+            rra_op_list.push(new RRA_Avg(2,86400)); //24 hours. (based on 8 hours)
+            rra_op_list.push(new RRA_Avg(2,259200)); //3 days. (based on 8 hours)
+            rra_op_list.push(new RRA_Avg(2,604800)); //1 week. (based on 8 hours)
+
+            //Now, we apply those averaging filters.  
+            rrd_data = new RRDRRAFilterAvg(rrd_data,rra_op_list); //Adds 2 extra RRAs (averaged)
+
+            //We also want to use a timezone button so people in other timezones can
+            //shift the graph to their local time. So we grab the timezone and plug it in to RRAFilterShift:
+            var timezone_selection = document.getElementById("timezone");
+            timezone_num = timezone_selection.options[timezone_selection.selectedIndex].value;
+
+            rrd_data = new RRAFilterShift(rrd_data, timezone_num, [0,1,2,3,4,5,6,7]); //8 RRAs total including averaged ones
+
+            update_fname()
+          }
+      }
+
+      // this function is invoked when the RRD file name changes
+      function fname_update() {
+        fname=document.getElementById("input_fname").value;
+        try {
+          FetchBinaryURLAsync(fname,update_fname_handler);
+        } catch (err) {
+           alert("Failed loading "+fname+"\n"+err);
+        }
+      }
+
+    </script>
+  </body>
+</html>

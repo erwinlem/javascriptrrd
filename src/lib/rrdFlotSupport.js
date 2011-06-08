@@ -349,8 +349,10 @@ rrdFlotSelection.prototype.trim_data = function(data_list) {
 
   var out_data=[];
   for (var i=0; i<data_list.length; i++) {
+    
     if (data_list[i]==null) continue; // protect
-    var nr=data_list[i][0];
+    //data_list[i][0]+=3550000*5;
+    var nr=data_list[i][0]; //date in unix time
     if ((nr>=this.selection_min) && (nr<=this.selection_max)) {
       out_data.push(data_list[i]);
     }
@@ -358,8 +360,35 @@ rrdFlotSelection.prototype.trim_data = function(data_list) {
   return out_data;
 };
 
+
+// Given an array of flot lines, limit to the selection
+rrdFlotSelection.prototype.trim_flot_timezone_data = function(flot_data,shift) {
+  var out_data=[];
+  for (var i=0; i<flot_data.length; i++) {
+    var data_el=flot_data[i];
+    out_data.push({label : data_el.label, data:this.trim_timezone_data(data_el.data,shift), color:data_el.color, lines:data_el.lines, yaxis:data_el.yaxis});
+  }
+  return out_data;
+};
+
+// Limit to selection the flot series data element
+rrdFlotSelection.prototype.trim_timezone_data = function(data_list,shift) {
+  if (this.selection_min==null) return data_list; // no selection => no filtering
+
+  var out_data=[];
+  for (var i=0; i<data_list.length; i++) {
+    if (data_list[i]==null) continue; // protect
+    var nr=data_list[i][0]+shift;
+    if ((nr>=this.selection_min) && (nr<=this.selection_max)) {
+      out_data.push(data_list[i]);
+    }
+  }
+  return out_data;
+};
+
+
 // ======================================
-// Miscelabeous helper functions
+// Miscelaneous helper functions
 // ======================================
 
 function rfs_format_time(s) {

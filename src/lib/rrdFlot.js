@@ -49,24 +49,38 @@
  *
  * //overwrites other defaults; mostly used for linking via the URL
  * rrdflot_defaults defaults (see Flot docs for details) 	 
- * { 	 
- *     legend: "Top"         //Starting location of legend. Options are: 	 
- *                           //"Top","Bottom","TopRight","BottomRight","None". 	 
- *     num_cb_rows: 12       //How many rows of DS checkboxes per column. 	 
- *     multi_ds: false       //"true" appends the name of the aggregation function to the 	 
- *                           //name of the DS element. Useful for when an element is displayed 	 
- *                           //more than once but under different aggregation functions. 	 
- *     use_checked_DSs: true //boolean to use checked_DSs below (which override all other checking procedure)
- *     checked_DSs: []       //array of DSs names to be plotted (so that they can be specified via URL link.)
- *     use_rra: true         //use the rra below
- *     specified_rra: idx    //index (int) of rra to be plotted
- * }
+ * {
+ *    legend: "Top"            //Starting location of legend. Options are: 
+ *                             //   "Top","Bottom","TopRight","BottomRight","None".
+ *    num_cb_rows: 12          //How many rows of DS checkboxes per column.
+ *    use_elem_buttons: false  //To be used in conjunction with num_cb_rows: This option
+ *                             //    creates a button above every column, which selects
+ *                             //    every element in the column. 
+ *    multi_ds: false          //"true" appends the name of the aggregation function to the 
+ *                             //    name of the DS element. 
+ *    multi_rra: false         //"true" appends the name of the RRA consolidation function (CF) 
+ *                             //    (AVERAGE, MIN, MAX or LAST) to the name of the RRA. Useful 
+ *                             //    for RRAs over the same interval with different CFs.  
+ *    use_checked_DSs: false   //Use the list checked_DSs below.
+ *    checked_DSs: []          //List of elements to be checked by default when graph is loaded. 
+ *                             //    Overwrites graph options. 
+ *    use_rra: false           //Whether to use the rra index specified below.
+ *    rra: 0                   //RRA (rra index in rrd) to be selected when graph is loaded. 
+ *    use_windows: false       //Whether to use the window zoom specifications below.
+ *    window_min: 0            //Sets minimum for window zoom. X-axis usually in unix time. 
+ *    window_max: 0            //Sets maximum for window zoom.
+ *    graph_height: "300px"    //Height of main graph. 
+ *    graph_width: "500px"     //Width of main graph.
+ *    scale_height: "110px"    //Height of small scaler graph.
+ *    scale_width: "250px"     //Width of small scaler graph.
+ * } 
  */
 
 var local_checked_DSs = [];
 var selected_rra = 0;
 var window_min=0;
 var window_max=0;
+var elem_group=null;
 
 function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options, rrdflot_defaults) {
   this.html_id=html_id;
@@ -104,6 +118,7 @@ rrdFlot.prototype.createHTML = function() {
   this.graph_id=this.html_id+"_graph";
   this.scale_id=this.html_id+"_scale";
   this.legend_sel_id=this.html_id+"_legend_sel";
+  this.elem_group_id=this.html_id+"_elem_group";
 
   // First clean up anything in the element
   while (base_el.lastChild!=null) base_el.removeChild(base_el.lastChild);
@@ -130,8 +145,12 @@ rrdFlot.prototype.createHTML = function() {
   var cellGraph=rowGraph.insertCell(-1);
   cellGraph.colSpan=3;
   var elGraph=document.createElement("Div");
-  elGraph.style.width="500px";
-  elGraph.style.height="300px";
+  if(this.rrdflot_defaults.graph_width!=null) {
+     elGraph.style.width=this.rrdflot_defaults.graph_width;
+  } else {elGraph.style.width="500px";}
+  if(this.rrdflot_defaults.graph_height!=null) {
+     elGraph.style.height=this.rrdflot_defaults.graph_height;
+  } else {elGraph.style.height="300px";}
   elGraph.id=this.graph_id;
   cellGraph.appendChild(elGraph);
 
@@ -164,8 +183,12 @@ rrdFlot.prototype.createHTML = function() {
   var cellScale=rowScale.insertCell(-1);
   cellScale.align="right";
   var elScale=document.createElement("Div");
-  elScale.style.width="250px";
-  elScale.style.height="110px";
+  if(this.rrdflot_defaults.scale_width!=null) {
+     elScale.style.width=this.rrdflot_defaults.scale_width;
+  } else {elScale.style.width="250px";}
+  if(this.rrdflot_defaults.scale_height!=null) {
+     elScale.style.height=this.rrdflot_defaults.scale_height;
+  } else {elScale.style.height="110px";}
   elScale.id=this.scale_id;
   cellScale.appendChild(elScale);
   
@@ -206,6 +229,7 @@ rrdFlot.prototype.populateRes = function() {
 };
 
 rrdFlot.prototype.populateDScb = function() {
+  var rf_this=this; // use obj inside other functions
   var form_el=document.getElementById(this.ds_cb_id);
  
   //Create a table within a table to arrange
@@ -220,9 +244,28 @@ rrdFlot.prototype.populateDScb = function() {
   }
   // now populate with DS info
   var nrDSs=this.rrd_file.getNrDSs();
+  var elem_group_number = 0;
+ 
   for (var i=0; i<nrDSs; i++) {
+
     if ((i%this.rrdflot_defaults.num_cb_rows)==0) { // one column every x DSs
-      cell_el=row_el.insertCell(-1);
+      if(this.rrdflot_defaults.use_element_buttons) {
+        cell_el=row_el.insertCell(-1); //make next element column 
+        if(nrDSs>this.rrdflot_defaults.num_cb_rows) { //if only one column, no need for a button
+          elem_group_number = (i/this.rrdflot_defaults.num_cb_rows)+1;
+          var elGroupSelect = document.createElement("input");
+          elGroupSelect.type = "button";
+          elGroupSelect.value = "Group "+elem_group_number;
+          elGroupSelect.onclick = (function(e) { //lambda function!!
+             return function() {rf_this.callback_elem_group_changed(e);};})(elem_group_number);
+
+          cell_el.appendChild(elGroupSelect);
+          cell_el.appendChild(document.createElement('br')); //add space between the two
+        }
+      } else {
+         //just make next element column
+         cell_el=row_el.insertCell(-1); 
+      }
     }
     var ds=this.rrd_file.getDS(i);
     if (this.rrdflot_defaults.multi_ds) { //null==false in boolean ops
@@ -262,7 +305,6 @@ rrdFlot.prototype.populateDScb = function() {
              if (name==this.rrdflot_defaults.checked_DSs[j]) {checked=true;}
        }
     }
-
     var cb_el = document.createElement("input");
     cb_el.type = "checkbox";
     cb_el.name = "ds";
@@ -271,8 +313,6 @@ rrdFlot.prototype.populateDScb = function() {
     cell_el.appendChild(cb_el);
     cell_el.appendChild(document.createTextNode(title));
     cell_el.appendChild(document.createElement('br'));
-
-    
   }
   form_el.appendChild(table_el);
 };
@@ -288,6 +328,7 @@ rrdFlot.prototype.drawFlotGraph = function() {
     oSelect.options[oSelect.selectedIndex].value = this.rrdflot_defaults.rra;
     rra_idx = this.rrdflot_defaults.rra;
   }
+
   // now get the list of selected DSs
   var ds_positive_stack_list=[];
   var ds_negative_stack_list=[];
@@ -433,15 +474,11 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
     xaxis: {mode: "time", min:flot_obj.min, max:flot_obj.max },
     selection: { mode: "x" },
   };
-  var linked_scale_options = {
-    legend: {show:false},
-    lines: {show:true},
-    xaxis: {mode: "time", min:this.rrdflot_defaults.window_min, max: this.rrdflot_defaults.window_max },
-    selection: { mode: "x" },
-  }; 
+
+  //this.selection_range.selection_min=flot_obj.min;
+  //this.selection_range.selection_max=flot_obj.max;
 
   var flot_data=flot_obj.data;
-
   var graph_data=this.selection_range.trim_flot_data(flot_data);
   var scale_data=flot_data;
 
@@ -512,6 +549,18 @@ rrdFlot.prototype.callback_scale_reset = function() {
 rrdFlot.prototype.callback_legend_changed = function() {
   this.drawFlotGraph();
 };
+rrdFlot.prototype.callback_elem_group_changed = function(num) { //,window_min,window_max) {
+
+  var oCB=document.getElementById(this.ds_cb_id);
+  var nrDSs=oCB.ds.length;
+  if (oCB.ds.length>0) {
+    for (var i=0; i<oCB.ds.length; i++) {
+      if(Math.floor(i/this.rrdflot_defaults.num_cb_rows)==num-1) {oCB.ds[i].checked=true; }
+      else {oCB.ds[i].checked=false;}
+    }
+  }
+  this.drawFlotGraph()
+};
 
 function getGraphInfo() {
    var graph_info = {};
@@ -525,5 +574,5 @@ function getGraphInfo() {
 function resetWindow() {
   window_min = 0;
   window_max = 0; 
-
 }
+

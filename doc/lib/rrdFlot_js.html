@@ -128,20 +128,36 @@ creates an interactive
 					<P>rrdflot_defaults (optional)</P>
 				</TD>
 				<TD WIDTH=80%>
-					<P>Dictionary of rrd_flot options. 
+					<P>Dictionary of rrd_flot options. All are optional. 
                                         <P>The recognized elements and the default values are:
 <PRE>
    {
-     legend: "Top"         //Starting location of legend. Options are: 
-                           //"Top","Bottom","TopRight","BottomRight","None".
-     num_cb_rows: 12       //How many rows of DS checkboxes per column.
-     multi_ds: false       //"true" appends the name of the aggregation function to the 
-                           //name of the DS element. 
-     multi_rra: false      //"true" appends the name of the RRA consolidation function (CF) 
-                           //(AVERAGE, MIN, MAX or LAST) to the name of the RRA. Useful for 
-                           //RRAs over the same interval with different CFs.  
-   }
+     legend: "Top"            //Starting location of legend. Options are: 
+                              //   "Top","Bottom","TopRight","BottomRight","None".
+     num_cb_rows: 12          //How many rows of DS checkboxes per column.
+     use_elem_buttons: false  //To be used in conjunction with num_cb_rows: This option
+                              //    creates a button above every column, which selects
+                              //    every element in the column. 
+     multi_ds: false          //"true" appends the name of the aggregation function to the 
+                              //    name of the DS element. 
+     multi_rra: false         //"true" appends the name of the RRA consolidation function (CF) 
+                              //    (AVERAGE, MIN, MAX or LAST) to the name of the RRA. Useful 
+                              //    for RRAs over the same interval with different CFs.  
+     use_checked_DSs: false   //Use the list checked_DSs below.
+     checked_DSs: []          //List of elements to be checked by default when graph is loaded. 
+                              //    Overwrites graph options. 
+     use_rra: false           //Whether to use the rra index specified below.
+     rra: 0                   //RRA (rra index in rrd) to be selected when graph is loaded. 
+     use_windows: false       //Whether to use the window zoom specifications below.
+     window_min: 0            //Sets minimum for window zoom. X-axis usually in unix time. 
+     window_max: 0            //Sets maximum for window zoom.
+     graph_height: "300px"    //Height of main graph. 
+     graph_width: "500px"     //Width of main graph.
+     scale_height: "110px"    //Height of small scaler graph.
+     scale_width: "250px"     //Width of small scaler graph.
+  } 
 </PRE></P>
+See the <A HREF=:../../src/examples/rrdJFlotDefaults.html">rrdflot_defaults in action.</A>
 				</TD>
 			</TR>
       </TABLE>

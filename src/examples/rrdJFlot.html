@@ -73,10 +73,12 @@
                                     lines: { show: true, fill: true} },
                            'Running':{color: "#000000",yaxis:2}};
 
+        
+
         // the rrdFlot object creates and handles the graph
         var f=new rrdFlot("mygraph",rrd_data,graph_opts,ds_graph_opts);
       }
-
+ 
       // This is the callback function that,
       // given a binary file object,
       // verifies that it is a valid RRD archive

@@ -73,6 +73,7 @@
  *    graph_width: "500px"     //Width of main graph.
  *    scale_height: "110px"    //Height of small scaler graph.
  *    scale_width: "250px"     //Width of small scaler graph.
+ *    timezone: 0              //timezone.
  * } 
  */
 
@@ -81,6 +82,7 @@ var selected_rra = 0;
 var window_min=0;
 var window_max=0;
 var elem_group=null;
+var timezone_shift=0;
 
 function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options, rrdflot_defaults) {
   this.html_id=html_id;
@@ -118,6 +120,7 @@ rrdFlot.prototype.createHTML = function() {
   this.graph_id=this.html_id+"_graph";
   this.scale_id=this.html_id+"_scale";
   this.legend_sel_id=this.html_id+"_legend_sel";
+  this.time_sel_id=this.html_id+"_time_sel";
   this.elem_group_id=this.html_id+"_elem_group";
 
   // First clean up anything in the element
@@ -170,6 +173,7 @@ rrdFlot.prototype.createHTML = function() {
   cellScaleLegend.vAlign="top";
   cellScaleLegend.appendChild(document.createTextNode("Legend:"));
   cellScaleLegend.appendChild(document.createElement('br'));
+
   var forScaleLegend=document.createElement("Select");
   forScaleLegend.id=this.legend_sel_id;
   forScaleLegend.appendChild(new Option("Top","nw",this.rrdflot_defaults.legend=="Top"));
@@ -179,6 +183,23 @@ rrdFlot.prototype.createHTML = function() {
   forScaleLegend.appendChild(new Option("None","None",this.rrdflot_defaults.legend=="None"));
   forScaleLegend.onchange= function () {rf_this.callback_legend_changed();};
   cellScaleLegend.appendChild(forScaleLegend);
+
+
+  cellScaleLegend.appendChild(document.createElement('br'));
+  cellScaleLegend.appendChild(document.createTextNode("Timezone:"));
+  cellScaleLegend.appendChild(document.createElement('br'));
+
+  var timezone=document.createElement("Select");
+  timezone.id=this.time_sel_id;
+
+  var timezones = ["+12","+11","+10","+9","+8","+7","+6","+5","+4","+3","+2","+1","0",
+                  "-1","-2","-3","-4","-5","-6","-7","-8","-9","-10","-11","-12"];
+  for(var j=0; j<24; j++) {
+     timezone.appendChild(new Option(timezones[j],timezones[j],this.rrdflot_defaults.timezone==timezones[j]));
+  }
+  timezone.onchange= function () {rf_this.callback_timezone_changed();};
+
+  cellScaleLegend.appendChild(timezone);
 
   var cellScale=rowScale.insertCell(-1);
   cellScale.align="right";
@@ -368,10 +389,14 @@ rrdFlot.prototype.drawFlotGraph = function() {
       local_checked_DSs.push(ds_name);
     }
   }
-  
+
+  var timeSelect=document.getElementById(this.time_sel_id);
+  timezone_shift=timeSelect.options[timeSelect.selectedIndex].value;
+
   // then extract RRA data about those DSs
   var flot_obj=rrdRRAStackFlotObj(this.rrd_file,rra_idx,
-				  ds_positive_stack_list,ds_negative_stack_list,ds_single_list);
+				  ds_positive_stack_list,ds_negative_stack_list,ds_single_list,
+                                  timezone_shift*3600);
 
   // fix the colors, based on the position in the RRD
   for (var i=0; i<flot_obj.data.length; i++) {
@@ -549,6 +574,11 @@ rrdFlot.prototype.callback_scale_reset = function() {
 rrdFlot.prototype.callback_legend_changed = function() {
   this.drawFlotGraph();
 };
+
+rrdFlot.prototype.callback_timezone_changed = function() {
+  this.drawFlotGraph();
+};
+
 rrdFlot.prototype.callback_elem_group_changed = function(num) { //,window_min,window_max) {
 
   var oCB=document.getElementById(this.ds_cb_id);
@@ -568,11 +598,12 @@ function getGraphInfo() {
    graph_info['rra'] = selected_rra;
    graph_info['window_min'] = window_min;
    graph_info['window_max'] = window_max;
+   graph_info['timezone'] = timezone_shift;
    return graph_info;
-}
+};
 
 function resetWindow() {
   window_min = 0;
   window_max = 0; 
-}
+};
 

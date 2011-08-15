@@ -438,6 +438,7 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   // Legend
   var oSelect=document.getElementById(this.legend_sel_id);
   var legend_id=oSelect.options[oSelect.selectedIndex].value;
+  var tooltip_enabled=this.graph_options.tooltip; //tooltip status
 
   var graph_jq_id="#"+this.graph_id;
   var scale_jq_id="#"+this.scale_id;
@@ -448,6 +449,9 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
     xaxis: { mode: "time" },
     yaxis: { autoscaleMargin: 0.20},
     selection: { mode: "x" },
+    tooltip: true,
+    tooltipOpts: { content: "<h4>%s</h4> Value: %y.3" },
+    grid: { hoverable: true },
   };
 
   if (legend_id=="None") {
@@ -455,6 +459,13 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
   } else {
     graph_options.legend.show=true;
     graph_options.legend.position=legend_id;
+  }
+
+  if (tooltip_enabled=="None"||tooltip_enabled==true) {
+    //nothing is the default -> tooltips displayed
+  } else if (tooltip_enabled==false) {
+    graph_options.grid.hoverable=false;
+    graph_options.tooltip=false;
   }
 
   if (this.selection_range.isSet()) {

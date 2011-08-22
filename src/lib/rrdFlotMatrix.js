@@ -389,7 +389,7 @@ rrdFlotMatrix.prototype.bindFlotGraph = function(flot_obj) {
     grid: { hoverable: true },
   };
   
-  if (this.graph_options!="None") {
+  if (this.graph_options!=null) {
     if (typeof(this.graph_options.tooltip)=='boolean'&&this.graph_options.tooltip==true) {
       //nothing
     }
@@ -404,10 +404,6 @@ rrdFlotMatrix.prototype.bindFlotGraph = function(flot_obj) {
       graph_options.grid.hoverable=false;
       graph_options.tooltip=false;
     }
-  }
-  else {
-    graph_options.grid.hoverable=false;
-    graph_options.tooltip=false;
   }
 
   if (legend_id=="None") {

@@ -375,8 +375,6 @@ rrdFlotMatrix.prototype.bindFlotGraph = function(flot_obj) {
   // Legend
   var oSelect=document.getElementById(this.legend_sel_id);
   var legend_id=oSelect.options[oSelect.selectedIndex].value;
-  var tooltip_enabled=this.graph_options.tooltip; //tooltip status.
-
   var graph_jq_id="#"+this.graph_id;
   var scale_jq_id="#"+this.scale_id;
 
@@ -390,20 +388,33 @@ rrdFlotMatrix.prototype.bindFlotGraph = function(flot_obj) {
     tooltipOpts: { content: "<h4>%s</h4> Value: %y.3" },
     grid: { hoverable: true },
   };
-
+  
+  if (this.graph_options!="None") {
+    if (typeof(this.graph_options.tooltip)=='boolean'&&this.graph_options.tooltip==true) {
+      //nothing
+    }
+    else if(typeof(this.graph_options.tooltip)=='boolean'&&this.graph_options.tooltip==false) {
+      graph_options.grid.hoverable=false;
+      graph_options.tooltip=false;
+    }
+    else if(typeof(this.graph_options.tooltip)=='undefined') {
+      //defaults to true
+    }
+    else {
+      graph_options.grid.hoverable=false;
+      graph_options.tooltip=false;
+    }
+  }
+  else {
+    graph_options.grid.hoverable=false;
+    graph_options.tooltip=false;
+  }
 
   if (legend_id=="None") {
     // do nothing
   } else {
     graph_options.legend.show=true;
     graph_options.legend.position=legend_id;
-  }
-
-  if (tooltip_enabled=="None"||tooltip_enabled==true) {
-    //nothing is the default -> tooltips displayed
-  } else if (tooltip_enabled==false) {
-    graph_options.grid.hoverable=false;
-    graph_options.tooltip=false;
   }
 
   if (this.selection_range.isSet()) {

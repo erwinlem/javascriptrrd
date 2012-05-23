@@ -66,7 +66,8 @@ function rrdRRA2FlotObj(rrd_file,rra_idx,ds_list,want_ds_labels,want_rounding) {
 
   var out_el={data:[], min:first_el*1000.0, max:last_update*1000.0};
 
-  for (ds_list_idx in ds_list) {
+  var ds_list_len = ds_list.length;
+  for (var ds_list_idx=0; ds_list_idx<ds_list_len; ++ds_list_idx) { 
     var ds_id=ds_list[ds_list_idx];
     var ds=rrd_file.getDS(ds_id);
     var ds_name=ds.getName();
@@ -119,12 +120,14 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
 
   // first the stacks stack
   var stack_els=[ds_positive_stack_list,ds_negative_stack_list];
-  for (stack_list_id in stack_els) {
+  var stack_els_len = stack_els.length;
+  for (var stack_list_id=0; stack_list_id<stack_els_len; ++stack_list_id) {
     var stack_list=stack_els[stack_list_id];
     var tmp_flot_els=[];
     var tmp_ds_ids=[];
     var tmp_nr_ids=stack_list.length;
-    for (ds_list_idx in stack_list) {
+    var stack_list_len = stack_list.length;
+    for (var ds_list_idx=0; ds_list_idx<stack_list_len; ++ds_list_idx) {
       var ds_id=stack_list[ds_list_idx];
       var ds=rrd_file.getDS(ds_id);
       var ds_name=ds.getName();
@@ -179,7 +182,8 @@ function rrdRRAStackFlotObj(rrd_file,rra_idx,
     }
   } //end for stack_list_id
 
-  for (ds_list_idx in ds_single_list) {
+  var ds_single_list_len = ds_single_list.length;
+  for (var ds_list_idx=0; ds_list_idx<ds_single_list_len; ++ds_list_idx) { 
     var ds_id=ds_single_list[ds_list_idx];
     var ds=rrd_file.getDS(ds_id);
     var ds_name=ds.getName();

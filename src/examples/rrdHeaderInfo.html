@@ -105,7 +105,7 @@
           try {
             var rrd_data=new RRDFile(bf);            
           } catch(err) {
-            alert("File "+fname+" is not a valid RRD archive!");
+            alert("File "+fname+" is not a valid RRD archive!\n"+err);
           }
           if (rrd_data!=undefined) {
             update_info(fname,rrd_data)

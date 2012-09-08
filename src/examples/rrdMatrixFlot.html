@@ -83,7 +83,7 @@
           try {
             var i_rrd_data=new RRDFile(bf);            
           } catch(err) {
-            alert("File at idx "+idx+" is not a valid RRD archive!");
+            alert("File at idx "+idx+" is not a valid RRD archive!\n"+err);
           }
           if (i_rrd_data!=undefined) {
             rrd_data[idx]=i_rrd_data;

@@ -134,6 +134,7 @@ creates an interactive
                                         <P>The recognized elements and the default values are:
 <PRE>
    {
+     graph_only: false        // If true, limit the display to the graph only
      legend: "Top"            //Starting location of legend. Options are: 
                               //   "Top","Bottom","TopRight","BottomRight","None".
      num_cb_rows: 12          //How many rows of DS checkboxes per column.
@@ -157,7 +158,7 @@ creates an interactive
      graph_width: "500px"     //Width of main graph.
      scale_height: "110px"    //Height of small scaler graph.
      scale_width: "250px"     //Width of small scaler graph.
-     timezone: "0"            //Timezone to plot. Options are "-11" through "+12"
+     timezone: local time     //Timezone to plot. Options are -11 through +12
   } 
 </PRE></P>
 See the <A HREF=:../../src/examples/rrdJFlotDefaults.html">rrdflot_defaults in action.</A>

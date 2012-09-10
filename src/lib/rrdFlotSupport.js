@@ -14,7 +14,7 @@
 /*
  *
  * Flot is a javascript plotting library developed and maintained by
- * Ole Laursen [http://code.google.com/p/flot/]
+ * Ole Laursen [http://www.flotcharts.org/]
  *
  */
 

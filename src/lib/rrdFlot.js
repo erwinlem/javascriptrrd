@@ -50,6 +50,7 @@
  * //overwrites other defaults; mostly used for linking via the URL
  * rrdflot_defaults defaults (see Flot docs for details) 	 
  * {
+ *    graph_only: false        // If true, limit the display to the graph only
  *    legend: "Top"            //Starting location of legend. Options are: 
  *                             //   "Top","Bottom","TopRight","BottomRight","None".
  *    num_cb_rows: 12          //How many rows of DS checkboxes per column.
@@ -104,7 +105,11 @@ function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options, rrdflot_def
   this.createHTML();
   this.populateRes();
   this.populateDScb();
-  this.drawFlotGraph()
+  this.drawFlotGraph();
+
+  if (this.rrdflot_defaults.graph_only==true) {
+    this.cleanHTMLCruft();
+  }
 }
 
 
@@ -128,6 +133,7 @@ rrdFlot.prototype.createHTML = function() {
 
   // Now create the layout
   var external_table=document.createElement("Table");
+  this.external_table=external_table;
 
   // Header two: resulution select and DS selection title
   var rowHeader=external_table.insertRow(-1);
@@ -139,7 +145,7 @@ rrdFlot.prototype.createHTML = function() {
   //forRes.onChange= this.callback_res_changed;
   forRes.onchange= function () {rf_this.callback_res_changed();};
   cellRes.appendChild(forRes);
-
+  
   var cellDSTitle=rowHeader.insertCell(-1);
   cellDSTitle.appendChild(document.createTextNode("Select elements to plot:"));
 
@@ -241,6 +247,19 @@ rrdFlot.prototype.createHTML = function() {
 
   base_el.appendChild(external_table);
 };
+
+// ===============================================
+// Remove all HTMl elements but the graph
+rrdFlot.prototype.cleanHTMLCruft = function() {
+  var rf_this=this; // use obj inside other functions
+
+  // delete top and bottom rows... graph is in the middle
+  this.external_table.deleteRow(-1);
+  this.external_table.deleteRow(0);
+
+  var ds_el=document.getElementById(this.ds_cb_id);
+  ds_el.removeChild(ds_el.lastChild);
+}
 
 // ======================================
 // Populate RRA and RD info

@@ -73,7 +73,7 @@
  *    graph_width: "500px"     //Width of main graph.
  *    scale_height: "110px"    //Height of small scaler graph.
  *    scale_width: "250px"     //Width of small scaler graph.
- *    timezone: 0              //timezone.
+ *    timezone: local          //timezone.
  * } 
  */
 
@@ -194,8 +194,23 @@ rrdFlot.prototype.createHTML = function() {
 
   var timezones = ["+12","+11","+10","+9","+8","+7","+6","+5","+4","+3","+2","+1","0",
                   "-1","-2","-3","-4","-5","-6","-7","-8","-9","-10","-11","-12"];
+  var tz_found=false;
+  var true_tz;
   for(var j=0; j<24; j++) {
-     timezone.appendChild(new Option(timezones[j],timezones[j],this.rrdflot_defaults.timezone==timezones[j]));
+    if (Math.ceil(this.rrdflot_defaults.timezone)==Math.ceil(timezones[j])) {
+      tz_found=true;
+      true_tz=Math.ceil(this.rrdflot_defaults.timezone);
+      break;
+    }
+  }
+  if (!tz_found) {
+    // the passed timezone does not make sense
+    // find the local time
+    var d= new Date();
+    true_tz=d.getTimezoneOffset()/60;
+  }
+  for(var j=0; j<24; j++) {
+    timezone.appendChild(new Option(timezones[j],timezones[j],true_tz==Math.ceil(timezones[j])));
   }
   timezone.onchange= function () {rf_this.callback_timezone_changed();};
 

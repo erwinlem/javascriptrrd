@@ -1,6 +1,6 @@
 
 Name: javascriptrrd
-Version: 0.6.1
+Version: 0.6.2
 Release: 1
 Summary: A package to render RRD databases in javascript using Flot
 

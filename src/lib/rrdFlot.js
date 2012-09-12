@@ -213,7 +213,7 @@ rrdFlot.prototype.createHTML = function() {
     // the passed timezone does not make sense
     // find the local time
     var d= new Date();
-    true_tz=Math.ceil(d.getTimezoneOffset()/60);
+    true_tz=-Math.ceil(d.getTimezoneOffset()/60);
   }
   for(var j=0; j<24; j++) {
     timezone.appendChild(new Option(timezones[j],timezones[j],true_tz==Math.ceil(timezones[j])));

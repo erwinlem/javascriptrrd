@@ -486,28 +486,20 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
     grid: { hoverable: true },
   };
   
-  if (this.graph_options!=null) {
-    if (typeof(this.graph_options.tooltip)=='boolean'&&this.graph_options.tooltip==true) {
-      //nothing
-    }
-    else if(typeof(this.graph_options.tooltip)=='boolean'&&this.graph_options.tooltip==false) {
-      graph_options.grid.hoverable=false;
-      graph_options.tooltip=false;
-    }
-    else if(typeof(this.graph_options.tooltip)=='undefined') {
-      //defaults to true
-    }
-    else {
-      graph_options.grid.hoverable=false;
-      graph_options.tooltip=false;
-    }
-  }
-
   if (legend_id=="None") {
     // do nothing
   } else {
     graph_options.legend.show=true;
     graph_options.legend.position=legend_id;
+  }
+
+  if (this.graph_options!=null) {
+    graph_options=populateGraphOptions(graph_options,this.graph_options);
+  }
+
+  if (graph_options.tooltip==false) {
+    // avoid the need for the caller specify both
+    graph_options.grid.hoverable=false;
   }
 
   if (this.selection_range.isSet()) {
@@ -527,29 +519,11 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
     graph_options.xaxis.max=flot_obj.max;
   }
 
-  if (this.graph_options!=null) {
-    if (this.graph_options.legend!=null) {
-      if (this.graph_options.legend.position!=null) {
-	graph_options.legend.position=this.graph_options.legend.position;
-      }
-      if (this.graph_options.legend.noColumns!=null) {
-	gcale_data=flot_data;
-      }
-    }
-    if (this.graph_options.yaxis!=null) {
-      if (this.graph_options.yaxis.autoscaleMargin!=null) {
-	graph_options.yaxis.autoscaleMargin=this.graph_options.yaxis.autoscaleMargin;
-      }
-    }
-    if (this.graph_options.lines!=null) {
-      graph_options.lines=this.graph_options.lines;
-    }
-  }
-
   var scale_options = {
     legend: {show:false},
     lines: {show:true},
     xaxis: {mode: "time", min:flot_obj.min, max:flot_obj.max },
+    yaxis: graph_options.yaxis,
     selection: { mode: "x" },
   };
 
@@ -660,3 +634,23 @@ function resetWindow() {
   window_max = 0; 
 };
 
+function populateGraphOptions(me, other) {
+  for (e in other) {
+    if (me[e]!=undefined) {
+      if (typeof(other[e])=="object") {
+	me[e]=populateGraphOptions(me[e],other[e]);
+      } else {
+	me[e]=other[e];
+      }
+    } else {
+      /// create a new one
+      if (typeof(other[e])=="object") {
+	// This will do a deep copy
+	me[e]=populateGraphOptions({},other[e]);
+      } else {
+	me[e]=other[e];
+      }
+    }
+  }
+  return me;
+};

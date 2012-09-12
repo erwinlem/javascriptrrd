@@ -31,7 +31,9 @@
  * {
  *  legend: { position:"nw",noColumns:3},
  *  lines: { show:true },
- *  yaxis: { autoscaleMargin: 0.20}
+ *  yaxis: { autoscaleMargin: 0.20},
+ *  tooltip: true,
+ *  tooltipOpts: { content: "<h4>%s</h4> Value: %y.3" }
  * }
  *
  * ds_graph_options is a dictionary of DS_name, 

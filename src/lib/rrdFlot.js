@@ -184,11 +184,11 @@ rrdFlot.prototype.createHTML = function() {
 
   var forScaleLegend=document.createElement("Select");
   forScaleLegend.id=this.legend_sel_id;
-  forScaleLegend.appendChild(new Option("Top","nw",this.rrdflot_defaults.legend=="Top"));
-  forScaleLegend.appendChild(new Option("Bottom","sw",this.rrdflot_defaults.legend=="Bottom"));
-  forScaleLegend.appendChild(new Option("TopRight","ne",this.rrdflot_defaults.legend=="TopRight"));
-  forScaleLegend.appendChild(new Option("BottomRight","se",this.rrdflot_defaults.legend=="BottomRight"));
-  forScaleLegend.appendChild(new Option("None","None",this.rrdflot_defaults.legend=="None"));
+  forScaleLegend.appendChild(new Option("Top","nw",this.rrdflot_defaults.legend=="Top",this.rrdflot_defaults.legend=="Top"));
+  forScaleLegend.appendChild(new Option("Bottom","sw",this.rrdflot_defaults.legend=="Bottom",this.rrdflot_defaults.legend=="Bottom"));
+  forScaleLegend.appendChild(new Option("TopRight","ne",this.rrdflot_defaults.legend=="TopRight",this.rrdflot_defaults.legend=="TopRight"));
+  forScaleLegend.appendChild(new Option("BottomRight","se",this.rrdflot_defaults.legend=="BottomRight",this.rrdflot_defaults.legend=="BottomRight"));
+  forScaleLegend.appendChild(new Option("None","None",this.rrdflot_defaults.legend=="None",this.rrdflot_defaults.legend=="None"));
   forScaleLegend.onchange= function () {rf_this.callback_legend_changed();};
   cellScaleLegend.appendChild(forScaleLegend);
 
@@ -218,7 +218,7 @@ rrdFlot.prototype.createHTML = function() {
     true_tz=-Math.ceil(d.getTimezoneOffset()/60);
   }
   for(var j=0; j<24; j++) {
-    timezone.appendChild(new Option(timezones[j],timezones[j],true_tz==Math.ceil(timezones[j])));
+    timezone.appendChild(new Option(timezones[j],timezones[j],true_tz==Math.ceil(timezones[j]),true_tz==Math.ceil(timezones[j])));
   }
   timezone.onchange= function () {rf_this.callback_timezone_changed();};
 

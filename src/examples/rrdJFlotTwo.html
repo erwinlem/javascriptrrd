@@ -95,6 +95,10 @@
       // and performs the update of the Web page
       function update_fname_handler1(bf) {
           var i_rrd_data=undefined;
+          if (bf.getLength()<1) {
+            alert("File "+fname1+" is empty (possibly loading failed)!");
+            return 1;
+          }
           try {
             var i_rrd_data=new RRDFile(bf);            
           } catch(err) {
@@ -108,6 +112,10 @@
 
       function update_fname_handler2(bf) {
           var i_rrd_data=undefined;
+          if (bf.getLength()<1) {
+            alert("File "+fname2+" is empty (possibly loading failed)!");
+            return 1;
+          }
           try {
             var i_rrd_data=new RRDFile(bf);            
           } catch(err) {

@@ -204,6 +204,8 @@ function RRDHeader(rrd_data) {
 
 // Internal, used for initialization
 RRDHeader.prototype.validate_rrd = function() {
+  if (this.rrd_data.getLength()<1) throw new InvalidRRD("Empty file.");
+  if (this.rrd_data.getLength()<16) throw new InvalidRRD("File too short.");
   if (this.rrd_data.getCStringAt(0,4)!=="RRD") throw new InvalidRRD("Wrong magic id.");
 
   this.rrd_version=this.rrd_data.getCStringAt(4,5);

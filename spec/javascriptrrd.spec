@@ -52,7 +52,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_defaultdocdir}/javascriptrrd/flot
 
 %changelog
-* Sun Apr 7th 2013 Igor Sfiligoi <isfiligoi@ucsd.edu> 0.6.4-1
+* Sun Apr 7 2013 Igor Sfiligoi <isfiligoi@ucsd.edu> 0.6.4-1
 Updated to th 0.6.4 release.
 
 * Wed Aug 24 2011 Igor Sfiligoi <isfiligoi@ucsd.edu> 0.6.1-1

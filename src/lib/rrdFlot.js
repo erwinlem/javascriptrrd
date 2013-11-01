@@ -56,7 +56,7 @@
  *    legend: "Top"            //Starting location of legend. Options are: 
  *                             //   "Top","Bottom","TopRight","BottomRight","None".
  *    num_cb_rows: 12          //How many rows of DS checkboxes per column.
- *    use_elem_buttons: false  //To be used in conjunction with num_cb_rows: This option
+ *    use_element_buttons: false  //To be used in conjunction with num_cb_rows: This option
  *                             //    creates a button above every column, which selects
  *                             //    every element in the column. 
  *    multi_ds: false          //"true" appends the name of the aggregation function to the 

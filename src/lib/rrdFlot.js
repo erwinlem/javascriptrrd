@@ -280,6 +280,7 @@ rrdFlot.prototype.populateRes = function() {
     var rows=rra.getNrRows();
     var period=step*rows;
     var rra_label=rfs_format_time(step)+" ("+rfs_format_time(period)+" total)";
+    if (this.rrdflot_defaults.multi_rra) rra_label+=" "+rra.getCFName();
     form_el.appendChild(new Option(rra_label,i));
   }
     if(this.rrdflot_defaults.use_rra) {form_el.selectedIndex = this.rrdflot_defaults.rra;}

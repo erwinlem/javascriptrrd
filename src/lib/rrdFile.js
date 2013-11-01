@@ -217,6 +217,10 @@ RRDHeader.prototype.validate_rrd = function() {
   if (this.rrd_data.getLongAt(12)==0) {
     // not a double here... likely 64 bit
     this.float_align=8;
+    if (! (this.rrd_data.getDoubleAt(16)==8.642135e+130)) {
+      // uhm... wrong endian?
+      this.rrd_data.switch_endian=true;
+    }
     if (this.rrd_data.getDoubleAt(16)==8.642135e+130) {
       // now, is it all 64bit or only float 64 bit?
       if (this.rrd_data.getLongAt(28)==0) {
@@ -233,6 +237,10 @@ RRDHeader.prototype.validate_rrd = function() {
     }
   } else {
     /// should be 32 bit alignment
+    if (! (this.rrd_data.getDoubleAt(12)==8.642135e+130)) {
+      // uhm... wrong endian?
+      this.rrd_data.switch_endian=true;
+    }
     if (this.rrd_data.getDoubleAt(12)==8.642135e+130) {
       this.float_align=4;
       this.int_align=4;

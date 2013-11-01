@@ -640,14 +640,14 @@ function resetWindow() {
 function populateGraphOptions(me, other) {
   for (e in other) {
     if (me[e]!=undefined) {
-      if (typeof(other[e])=="object") {
+      if (Object.prototype.toString.call(other[e])=="[object Object]") {
 	me[e]=populateGraphOptions(me[e],other[e]);
       } else {
 	me[e]=other[e];
       }
     } else {
       /// create a new one
-      if (typeof(other[e])=="object") {
+      if (Object.prototype.toString.call(other[e])=="[object Object]") {
 	// This will do a deep copy
 	me[e]=populateGraphOptions({},other[e]);
       } else {

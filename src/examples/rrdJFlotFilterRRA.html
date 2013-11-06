@@ -108,12 +108,12 @@
             //This pages was made to run example3.rra, with RRA steps of 
             //5 mins (300 seconds), 45 mins (2700s) and 8 hours (28800s).
 
-            var rra_steps_list = [[0,null], [0,1800],  // org(5mins), 30mins
-                                  [1,null], [1,21600], // org(45mins), 6h
-                                  [2,null], [2,86400], [2,259200], [2,604800]]; // org(8h), 24h, 3d, 1w
+            var rra_steps_list = [0, [0,1800],  // org(5mins), 30mins
+                                  1, [1,21600], // org(45mins), 6h
+                                  2, [2,86400], [2,259200], [2,604800]]; // org(8h), 24h, 3d, 1w
 
             //Now, we apply those averaging filters.  
-            rrd_data = new RRDRRAFilterAvgNewSteps(rrd_data,rra_steps_list);
+            rrd_data = new RRDRRAFilterAvg(rrd_data,rra_steps_list);
 
             update_fname()
           }

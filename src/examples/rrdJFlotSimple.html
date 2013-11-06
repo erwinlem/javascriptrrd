@@ -23,16 +23,9 @@
 
 <html>
   
-    <script type="text/javascript" src="../lib/binaryXHR.js"></script>
-    <script type="text/javascript" src="../lib/rrdFile.js"></script>
+    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
+    <!-- the above script replaces the rrdfFlotAsync,rrdFlot, rrdFlotSelection, rrdFile, binaryXHR and all the jquery libraries -->
 
-    <!-- rrdFlot class needs the following four include files !-->
-    <script type="text/javascript" src="../lib/rrdFlotSupport.js"></script>
-    <script type="text/javascript" src="../lib/rrdFlot.js"></script>
-    <script type="text/javascript" src="../../flot/jquery.js"></script>
-    <script type="text/javascript" src="../../flot/jquery.flot.js"></script>
-    <script type="text/javascript" src="../../flot/jquery.flot.selection.js"></script>
-    <script type="text/javascript" src="../../flot/jquery.flot.tooltip.js"></script>
   <head>
     <title>RRD Graphs with Flot - Simplified version</title>
   </head>
@@ -74,67 +67,18 @@
       // Remove the Javascript warning
       document.getElementById("infotable").deleteRow(0);
 
-      // fname and rrd_data are the global variable used by all the functions below
-      fname="example3.rrd"
-      rrd_data=undefined;
+      var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
+                                       lines: { show: true, fill: true, fillColor:"#ffff80"} }}
 
-      // This function updates the Web Page with the data from the RRD archive header
-      // when a new file is selected
-      function update_fname() {
-        // Finally, update the file name and enable the update button
+      var graph_opts1={legend: { noColumns:4}, yaxis:{max:250,min:-200}};
+      var rrdflot_defaults1={graph_only:true,use_checked_DSs:true,checked_DSs:['SignChanger'],use_rra:true,rra:1}
+      // the rrdFlotAsync object creates and handles the graph
+      var f1=new rrdFlotAsync("mygraph1","example3.rrd",graph_opts1,ds_graph_opts,rrdflot_defaults1);
 
-        var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
-                                         lines: { show: true, fill: true, fillColor:"#ffff80"} },
-                           'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
-                                    lines: { show: true, fill: true} },
-                           'Running':{color: "#000000",yaxis:2}};
-
-        
-
-        var graph_opts1={legend: { noColumns:4}, yaxis:{max:250,min:-200}};
-        var rrdflot_defaults1={graph_only:true,use_checked_DSs:true,checked_DSs:['SignChanger'],use_rra:true,rra:1}
-        // the rrdFlot object creates and handles the graph
-        var f=new rrdFlot("mygraph1",rrd_data,graph_opts1,ds_graph_opts,rrdflot_defaults1);
-
-        var graph_opts2={legend: { noColumns:4}, yaxis:{min:100},tooltipOpts:{content:"MyValue: %y.3"}};
-        var rrdflot_defaults2={graph_only:true,use_checked_DSs:true,checked_DSs:['Oscilator'],use_rra:true,rra:0}
-        // the rrdFlot object creates and handles the graph
-        var f=new rrdFlot("mygraph2",rrd_data,graph_opts2,ds_graph_opts,rrdflot_defaults2);
-      }
- 
-      // This is the callback function that,
-      // given a binary file object,
-      // verifies that it is a valid RRD archive
-      // and performs the update of the Web page
-      function update_fname_handler(bf) {
-          var i_rrd_data=undefined;
-          if (bf.getLength()<1) {
-            alert("File "+fname+" is empty (possibly loading failed)!");
-            return 1;
-          }
-          try {
-            var i_rrd_data=new RRDFile(bf);            
-          } catch(err) {
-            alert("File "+fname+" is not a valid RRD archive!\n"+err);
-          }
-          if (i_rrd_data!=undefined) {
-            rrd_data=i_rrd_data;
-            update_fname()
-          }
-      }
-
-      // this function is invoked when the RRD file name changes
-      function fname_update() {
-        try {
-          FetchBinaryURLAsync(fname,update_fname_handler);
-        } catch (err) {
-           alert("Failed loading "+fname+"\n"+err);
-        }
-      }
-
-
-fname_update();
-
+      var graph_opts2={legend: { noColumns:4}, yaxis:{min:100},tooltipOpts:{content:"MyValue: %y.3"}};
+      var rrdflot_defaults2={graph_only:true,use_checked_DSs:true,checked_DSs:['Oscilator'],use_rra:true,rra:0}
+      // the rrdFlotAsync object creates and handles the graph
+      var f2=new rrdFlotAsync("mygraph2","example3.rrd",graph_opts2,ds_graph_opts,rrdflot_defaults2);
     </script>
   </body>
 </html>

@@ -29,6 +29,7 @@
     <!-- rrdFlot class needs the following four include files !-->
     <script type="text/javascript" src="../lib/rrdFlotSupport.js"></script>
     <script type="text/javascript" src="../lib/rrdFlot.js"></script>
+    <script type="text/javascript" src="../lib/rrdFlotAsync.js"></script>
     <script type="text/javascript" src="../../flot/jquery.js"></script>
     <script type="text/javascript" src="../../flot/jquery.flot.js"></script>
     <script type="text/javascript" src="../../flot/jquery.flot.selection.js"></script>
@@ -62,55 +63,20 @@
       fname=document.getElementById("input_fname").value;
       rrd_data=undefined;
 
-      // This function updates the Web Page with the data from the RRD archive header
-      // when a new file is selected
-      function update_fname() {
-        // Finally, update the file name and enable the update button
-        document.getElementById("fname").firstChild.data=fname;
+      var graph_opts={legend: { noColumns:4}};
+      var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
+                                       lines: { show: true, fill: true, fillColor:"#ffff80"} },
+                         'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
+                                  lines: { show: true, fill: true} },
+                         'Running':{color: "#000000",yaxis:2}};
 
-        var graph_opts={legend: { noColumns:4}};
-        var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
-                                         lines: { show: true, fill: true, fillColor:"#ffff80"} },
-                           'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
-                                    lines: { show: true, fill: true} },
-                           'Running':{color: "#000000",yaxis:2}};
-
-        
-
-        // the rrdFlot object creates and handles the graph
-        var f=new rrdFlot("mygraph",rrd_data,graph_opts,ds_graph_opts);
-      }
- 
-      // This is the callback function that,
-      // given a binary file object,
-      // verifies that it is a valid RRD archive
-      // and performs the update of the Web page
-      function update_fname_handler(bf) {
-          var i_rrd_data=undefined;
-          if (bf.getLength()<1) {
-            alert("File "+fname+" is empty (possibly loading failed)!");
-            return 1;
-          }
-          try {
-            var i_rrd_data=new RRDFile(bf);            
-          } catch(err) {
-            alert("File "+fname+" is not a valid RRD archive!\n"+err);
-            return 1;
-          }
-          if (i_rrd_data!=undefined) {
-            rrd_data=i_rrd_data;
-            update_fname()
-          }
-      }
+      flot_obj=new rrdFlotAsync("mygraph",null,graph_opts,ds_graph_opts);
 
       // this function is invoked when the RRD file name changes
       function fname_update() {
         fname=document.getElementById("input_fname").value;
-        try {
-          FetchBinaryURLAsync(fname,update_fname_handler);
-        } catch (err) {
-           alert("Failed loading "+fname+"\n"+err);
-        }
+        flot_obj.reload(fname);
+        document.getElementById("fname").firstChild.data=fname;
       }
 
     </script>

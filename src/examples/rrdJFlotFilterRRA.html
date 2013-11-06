@@ -47,22 +47,6 @@
     RRD URL:
     <input type="text" id="input_fname" value="example3.rrd"
            onchange="fname_update()">
-    <p>
-     <tr>
-       <th>Timezone</th>
-       <td valign="middle">
-         <select id="timezone">
-          <option value="3">+3 Moscow</option>
-          <option value="2">+2 East Eur</option>
-          <option value="1">+1 West Eur</option>
-          <option value="0" selected=true> 0 GMT</option>
-          <option value="-5">-5 East Coast</option>
-          <option value="-6">-6 Central</option>
-          <option value="-7">-7 Mountain</option>
-          <option value="-8">-8 Pacific</option>
-         </select>
-       </td>
-     </tr>
      <p>
      <button onclick="fname_update()">Update</button>
     <hr>
@@ -101,20 +85,6 @@
         var f=new rrdFlot("mygraph",rrd_data,graph_opts,ds_graph_opts);
       }
 
-      //RRA Filter - leaves RRA alone.
-      function RRADoNothing(rra_idx) {
-         this.getIdx = function() {return rra_idx;}
-         this.getStep = function() {return null;}
-      }
-      /* RRA Filter - Creates a new RRA with a different step size (in seconds) 
-      / based on another RRA, whose data the new RRA averages. 
-      / rra_idx should be index of RRA with largest step size that doesn't exceed new step size.
-      */
-      function RRA_Avg(rra_idx,new_step_in_seconds) {
-         this.getIdx = function() {return rra_idx;}
-         this.getStep = function() {return new_step_in_seconds;}
-      }
- 
       // This is the callback function that,
       // given a binary file object,
       // verifies that it is a valid RRD archive
@@ -138,34 +108,12 @@
             //This pages was made to run example3.rra, with RRA steps of 
             //5 mins (300 seconds), 45 mins (2700s) and 8 hours (28800s).
 
-            var rra_op_list = [];
-            
-            //Want to keep regular RRAs, so apply 'DoNothing" filters and push onto operator list. 
-            //I will keep the RRAs in order by step size.
-            rra_op_list.push(new RRADoNothing(0)); //0th RRA, 5 min step.
-
-            //Now, we want to add a few new Averaging filters, kept in order.  
-            //It's best to use the RRA with the next smallest step size as a basis.
-            //It's also best to make steps integer multiples of the original RRA step sizes.
-            //For istance, using a 45 minute step, a 6 hour (= 45mins x 8) step 
-            //    would be better than 4 hour step (=45 mins x 5.33...)
-            rra_op_list.push(new RRA_Avg(0,1800)); //30 minutes (based on 5 minutes)
-            rra_op_list.push(new RRADoNothing(1)); //Original 45 minutes
-            rra_op_list.push(new RRA_Avg(1,21600)); //6 hours (based on 45 mins) 
-            rra_op_list.push(new RRADoNothing(2)); //Original 8 hours
-            rra_op_list.push(new RRA_Avg(2,86400)); //24 hours. (based on 8 hours)
-            rra_op_list.push(new RRA_Avg(2,259200)); //3 days. (based on 8 hours)
-            rra_op_list.push(new RRA_Avg(2,604800)); //1 week. (based on 8 hours)
+            var rra_steps_list = [[0,null], [0,1800],  // org(5mins), 30mins
+                                  [1,null], [1,21600], // org(45mins), 6h
+                                  [2,null], [2,86400], [2,259200], [2,604800]]; // org(8h), 24h, 3d, 1w
 
             //Now, we apply those averaging filters.  
-            rrd_data = new RRDRRAFilterAvg(rrd_data,rra_op_list); //Adds 2 extra RRAs (averaged)
-
-            //We also want to use a timezone button so people in other timezones can
-            //shift the graph to their local time. So we grab the timezone and plug it in to RRAFilterShift:
-            var timezone_selection = document.getElementById("timezone");
-            timezone_num = timezone_selection.options[timezone_selection.selectedIndex].value;
-
-            rrd_data = new RRAFilterShift(rrd_data, timezone_num, [0,1,2,3,4,5,6,7]); //8 RRAs total including averaged ones
+            rrd_data = new RRDRRAFilterAvgNewSteps(rrd_data,rra_steps_list);
 
             update_fname()
           }

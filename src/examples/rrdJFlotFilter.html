@@ -143,10 +143,10 @@
              var DS_list = []; //list of DSs to sum in MultiSumDS
              var i = 0;
  
-             //create a new rrdlist, which contains all original elements
+             //create a new rrdlist, which contains almost all original elements
              //    plus additional operated-on DSs from RRDFilterOp 
              for (i=0;i<rrd_data.getNrDSs();i++) {
-	        op_list.push(i);
+	        if (i!=1) op_list.push(i);
                 DS_list.push(rrd_data.getDS(i))
              }
              op_list.push(new MultiSumDS(DS_list));

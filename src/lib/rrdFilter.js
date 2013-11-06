@@ -124,10 +124,12 @@ RRDFilterDS.prototype.getRRA = function(idx) {return new RRDRRAFilterDS(this.rrd
 //   getDSName()             - list of DSs used in computing the result (names or indexes)
 //   computeResult(val_list) - val_list contains the values of the requested DSs (in the same order) 
 
+// If the element is a string or a number, it will just use that ds
+
 // Example class that implements the interface:
 //   function DoNothing(ds_name) { //Leaves the DS alone.
 //     this.getName = function() {return ds_name;}
-//     this.getDSNames = function() {return [ds1_name];}
+//     this.getDSNames = function() {return [ds_name];}
 //     this.computeResult = function(val_list) {return val_list[0];}
 //   }
 //   function sumDS(ds1_name,ds2_name) { //Sums the two DSs.
@@ -141,7 +143,26 @@ RRDFilterDS.prototype.getRRA = function(idx) {return new RRDRRAFilterDS(this.rrd
 // var ds1_name = rrd_data.getDS(1).getName();
 // rrd_data = new RRDFilterOp(rrd_data, [new DoNothing(ds0_name), 
 //                DoNothing(ds1_name), sumDS(ds0_name, ds1_name]);
+//
+// You get the same resoult with
+// rrd_data = new RRDFilterOp(rrd_data, [ds0_name,1,new sumDS(ds0_name, ds1_name)]);
 ////////////////////////////////////////////////////////////////////
+
+// this implements the conceptual NoNothing above
+function RRDFltOpIdent(ds_name) {
+     this.getName = function() {return ds_name;}
+     this.getDSNames = function() {return [ds_name];}
+     this.computeResult = function(val_list) {return val_list[0];}
+}
+
+// similar to the above, but extracts the name from the index
+// requires two parametes, since it it need context
+function RRDFltOpIdentId(rrd_data,id) {
+     this.ds_name=rrd_data.getDS(id).getName();
+     this.getName = function() {return this.ds_name;}
+     this.getDSNames = function() {return [this.ds_name];}
+     this.computeResult = function(val_list) {return val_list[0];}
+}
 
 //Private
 function RRDDSFilterOp(rrd_file,op_obj,my_idx) {
@@ -207,8 +228,13 @@ RRDRRAFilterOp.prototype.getElFast = function(row_idx,ds_idx) {
 function RRDFilterOp(rrd_file,op_obj_list) {
   this.rrd_file=rrd_file;
   this.ds_list=[];
-  for (var i=0; i<op_obj_list.length; i++) {
-    this.ds_list.push(new RRDDSFilterOp(rrd_file,op_obj_list[i],i));
+  for (i in op_obj_list) {
+    var el=op_obj_list[i];
+    var outel=null;
+    if (typeof(el)=="string") {outel=new RRDFltOpIdent(el);}
+    else if (typeof(el)=="number") {outel=new RRDFltOpIdentId(this.rrd_file,el);}
+    else {outel=el;}
+    this.ds_list.push(new RRDDSFilterOp(rrd_file,outel,i));
   }
 }
 RRDFilterOp.prototype.getMinStep = function() {return this.rrd_file.getMinStep();}

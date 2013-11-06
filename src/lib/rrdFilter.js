@@ -34,6 +34,7 @@
 // ================================================================
 // Filter out a subset of DSs (identified either by idx or by name)
 
+// Internal
 function RRDRRAFilterDS(rrd_rra,ds_list) {
   this.rrd_rra=rrd_rra;
   this.ds_list=ds_list;
@@ -61,6 +62,8 @@ RRDRRAFilterDS.prototype.getElFast = function(row_idx,ds_idx) {
 }
 
 // --------------------------------------------------
+// Public
+// NOTE: This class is deprecated, use RRDFilterOp instead
 function RRDFilterDS(rrd_file,ds_id_list) {
   this.rrd_file=rrd_file;
   this.ds_list=[];
@@ -308,6 +311,10 @@ RRAFilterShift.prototype.getRRA = function(idx) {return this.rrd_file.getRRA(idx
 //   getIdx()               - Index of RRA to use
 //   getStep()              - new step size (return null to use step size of RRA specified by getIdx() 
 
+// If a number is passed, it implies to just use the RRA as it is
+// If an array is passed, it is assumed to be [rra_id,new_step_in_seconds] 
+//    and a RRDRRAFltAvgOpNewStep object will be instantiated internally
+
 /* Example classes that implements the interface:
 *
 *      //This RRA Filter object leaves the original RRA unchanged.
@@ -392,13 +399,19 @@ RRAFilterAvg.prototype.getElFast = function(row,ds) {
 }
 
 //----------------------------------------------------------------------------
-//Public functions - use these ones for RRA averaging
+//Public function - use this one for RRA averaging
 function RRDRRAFilterAvg(rrd_file, op_obj_list) {
   this.rrd_file = rrd_file;
-  this.op_obj_list = op_obj_list;
+  this.op_obj_list = new Array();
   this.rra_list=[];
-  for (var i=0; i<op_obj_list.length; i++) {
-    this.rra_list.push(new RRAFilterAvg(rrd_file,op_obj_list[i]));
+  for (var i in op_obj_list) {
+    var el=op_obj_list[i];
+    var outel=null;
+    if (Object.prototype.toString.call(el)=="[object Number]") {outel=new RRDRRAFltAvgOpNewStep(el,null);}
+    else if (Object.prototype.toString.call(el)=="[object Array]") {outel=new RRDRRAFltAvgOpNewStep(el[0],el[1]);}
+    else {outel=el;}
+    this.op_obj_list.push(outel);
+    this.rra_list.push(new RRAFilterAvg(rrd_file,outel));
   }
 }
 RRDRRAFilterAvg.prototype.getMinStep = function() {return this.rrd_file.getMinStep();} //other RRA steps change, not min
@@ -418,26 +431,4 @@ RRDRRAFilterAvg.prototype.getRRA = function(idx) {
   }
 }
 
-/*
- * simplified version of the above class
- * each element in the rra_list is
- *  (rra_id,new_step)
- * if value is null, then it is as if it was a pass through  
- */
-function RRDRRAFilterAvgNewSteps(rrd_file, rra_list) {
-  var obj_list=new Array();
-  for (i in rra_list) {
-    var el=rra_list[i];
-    obj_list.push(new RRDRRAFltAvgOpNewStep(el[0],el[1]));
-  }
-  this.fobj=new RRDRRAFilterAvg(rrd_file,obj_list);
-}
-RRDRRAFilterAvgNewSteps.prototype.getMinStep = function() {return this.fobj.getMinStep();}
-RRDRRAFilterAvgNewSteps.prototype.getLastUpdate = function() {return this.fobj.getLastUpdate();}
-RRDRRAFilterAvgNewSteps.prototype.getNrDSs = function() {return this.fobj.getNrDSs();}
-RRDRRAFilterAvgNewSteps.prototype.getDSNames = function() {return this.fobj.getDSNames();}
-RRDRRAFilterAvgNewSteps.prototype.getDS = function(id) {return this.fobj.getDS(id);}
-RRDRRAFilterAvgNewSteps.prototype.getNrRRAs = function() {return this.fobj.getNrRRAs();}
-RRDRRAFilterAvgNewSteps.prototype.getRRAInfo = function(idx) { return this.fobj.getRRAInfo(idx);}
-RRDRRAFilterAvgNewSteps.prototype.getRRA = function(idx) { return this.fobj.getRRA(idx);}
 

@@ -254,6 +254,8 @@ RRDFilterOp.prototype.getRRAInfo = function(idx) {return this.rrd_file.getRRAInf
 RRDFilterOp.prototype.getRRA = function(idx) {return new RRDRRAFilterOp(this.rrd_file.getRRA(idx),this.ds_list);}
 
 // ================================================================
+// NOTE: This function is archaic, and will likely be deprecated in future releases
+//
 // Shift RRAs in rra_list by the integer shift_int (in seconds).
 // Only change is getLastUpdate - this takes care of everything.
 // Example: To shift the first three 3 RRAs in the file by one hour, 
@@ -300,8 +302,16 @@ RRAFilterShift.prototype.getRRA = function(idx) {return this.rrd_file.getRRA(idx
 *      }
 *      //For example, if you have two RRAs, one with a 5 second step,
 *      //and another with a 60 second step, and you'd like a 30 second step,
-*      //rrd_data = new RRDRRAFilterShift(rrd_data,[new RRADoNothing(0), new RRDDoNothing(1),new RRA_Avg(1,30)];)
+*      //rrd_data = new RRDRRAFilterAvg(rrd_data,[new RRADoNothing(0), new RRDDoNothing(1),new RRA_Avg(1,30)];)
 */
+
+// Users can use this one directly for simple use cases
+// It is equivalent to RRADoNothing and RRA_Avg above
+function RRDRRAFltAvgOpNewStep(rra_idx,new_step_in_seconds) {
+  this.getIdx = function() {return rra_idx;}
+  this.getStep = function() {return new_step_in_seconds;}
+}
+
 
 //Private Function
 function RRAInfoFilterAvg(rrd_file, rra, op_obj, idx) {
@@ -356,7 +366,7 @@ RRAFilterAvg.prototype.getElFast = function(row,ds) {
 }
 
 //----------------------------------------------------------------------------
-//Public function - use this one for RRA averaging
+//Public functions - use these ones for RRA averaging
 function RRDRRAFilterAvg(rrd_file, op_obj_list) {
   this.rrd_file = rrd_file;
   this.op_obj_list = op_obj_list;
@@ -381,3 +391,27 @@ RRDRRAFilterAvg.prototype.getRRA = function(idx) {
     return this.rra_list[idx];
   }
 }
+
+/*
+ * simplified version of the above class
+ * each element in the rra_list is
+ *  (rra_id,new_step)
+ * if value is null, then it is as if it was a pass through  
+ */
+function RRDRRAFilterAvgNewSteps(rrd_file, rra_list) {
+  var obj_list=new Array();
+  for (i in rra_list) {
+    var el=rra_list[i];
+    obj_list.push(new RRDRRAFltAvgOpNewStep(el[0],el[1]));
+  }
+  this.fobj=new RRDRRAFilterAvg(rrd_file,obj_list);
+}
+RRDRRAFilterAvgNewSteps.prototype.getMinStep = function() {return this.fobj.getMinStep();}
+RRDRRAFilterAvgNewSteps.prototype.getLastUpdate = function() {return this.fobj.getLastUpdate();}
+RRDRRAFilterAvgNewSteps.prototype.getNrDSs = function() {return this.fobj.getNrDSs();}
+RRDRRAFilterAvgNewSteps.prototype.getDSNames = function() {return this.fobj.getDSNames();}
+RRDRRAFilterAvgNewSteps.prototype.getDS = function(id) {return this.fobj.getDS();}
+RRDRRAFilterAvgNewSteps.prototype.getNrRRAs = function() {return this.fobj.getNrRRAs();}
+RRDRRAFilterAvgNewSteps.prototype.getRRAInfo = function(idx) { return this.fobj.getRRAInfo(idx);}
+RRDRRAFilterAvgNewSteps.prototype.getRRA = function(idx) { return this.fobj.getRRA(idx);}
+

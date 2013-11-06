@@ -50,10 +50,6 @@
       // Remove the Javascript warning
       document.getElementById("infotable").deleteRow(0);
 
-      // fname and rrd_data are the global variable used by all the functions below
-      fname=document.getElementById("input_fname").value;
-      rrd_data=undefined;
-
       var graph_opts={legend: { noColumns:4}};
       var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
                                        lines: { show: true, fill: true, fillColor:"#ffff80"} },
@@ -65,7 +61,7 @@
 
       // this function is invoked when the RRD file name changes
       function fname_update() {
-        fname=document.getElementById("input_fname").value;
+        var fname=document.getElementById("input_fname").value;
         flot_obj.reload(fname);
         document.getElementById("fname").firstChild.data=fname;
       }

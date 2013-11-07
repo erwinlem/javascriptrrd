@@ -13,12 +13,30 @@
  * Local dependencies:
  *  binaryXHR.js
  *  rrdFile.js and/or rrdMultiFile.js
+ *  optionally rrdFilter.js
  *  rrdFlot.js
  *
  * Those modules may have other requirements.
  *
  */
 
+
+/*
+ * customization_callback = function(obj)
+ *  This function, if defined, is called after the data has been loaded 
+ *    and before the rrdFlot object is instantiated
+ *
+ *  The object passed as the sole argument is guaranteed to have the following arguments
+ *    obj.rrd_data
+ *    obj.graph_options
+ *    obj.ds_graph_options
+ *    obj.rrdflot_defaults
+ *    obj.ds_op_list
+ *    obj.rra_op_list
+ *
+ *  The purpose of this callback is to give the caller the option of personalizing
+ *    the Flot graph based on the content of the rrd_data
+ *    
 /* Internal helper function */
 function rrdFlotAsyncCallback(bf,obj) {
   var i_rrd_data=undefined;
@@ -38,18 +56,22 @@ function rrdFlotAsyncCallback(bf,obj) {
   }
 }
 
-/*
- * For further documentation about the arguments
- * see rrdFlot.js
- */
-
 /* Use url==null if you do not know the url yet */
-function rrdFlotAsync(html_id, url, graph_options, ds_graph_options, rrdflot_defaults) {
+function rrdFlotAsync(html_id, url, 
+		      graph_options, ds_graph_options, rrdflot_defaults, // see rrdFlot.js::rrdFlot for documentation of these
+		      ds_op_list,                                        // if defined, see rrdFilter.js::RRDFilterOp for documentation
+		      rra_op_list,                                       // if defined, see rrdFilter.js::RRDRRAFilterAvg for documentation
+                      customization_callback                             // if defined, see above
+		      ) {
   this.html_id=html_id;
   this.url=url;
   this.graph_options=graph_options;
   this.ds_graph_options=ds_graph_options;
   this.rrdflot_defaults=rrdflot_defaults;
+  this.ds_op_list=ds_op_list;
+  this.rra_op_list=rra_op_list;
+
+  this.customization_callback=customization_callback;
 
   this.rrd_flot_obj=null;
   this.rrd_data=null;
@@ -70,14 +92,20 @@ rrdFlotAsync.prototype.reload = function(url) {
 
 rrdFlotAsync.prototype.callback = function() {
   if (this.rrd_flot_obj!=null) delete this.rrd_flot_obj;
-  this.rrd_flot_obj=new rrdFlot(this.html_id, this.rrd_data, this.graph_options, this.ds_graph_options, this.rrdflot_defaults);
+
+  if (this.customization_callback!=undefined) this.customization_callback(this);
+
+  var irrd_data=this.rrd_data;
+  if (this.ds_op_list!=undefined) irrd_data=new RRDFilterOp(irrd_data,this.ds_op_list);
+  if (this.rra_op_list!=undefined) irrd_data=new RRDRRAFilterAvg(irrd_data,this.rra_op_list);
+  this.rrd_flot_obj=new rrdFlot(this.html_id, irrd_data, this.graph_options, this.ds_graph_options, this.rrdflot_defaults);
 };
 
 
 // ================================================================================================================
 
 /* Internal helper function */
-function rrdFlotSumAsyncCallback(bf,arr) {
+function rrdFlotMultiAsyncCallback(bf,arr) {
   var obj=arr[0];
   var idx=arr[1];
 
@@ -102,20 +130,26 @@ function rrdFlotSumAsyncCallback(bf,arr) {
   }
 }
 
-/*
- * For further documentation about the arguments
- * see rrdFlot.js
- */
-
 /* Use url_list==null if you do not know the urls yet */
-function rrdFlotSumAsync(html_id, url_list, graph_options, ds_graph_options, rrdflot_defaults) {
+function rrdFlotSumAsync(html_id, url_list, 
+			 graph_options, ds_graph_options, rrdflot_defaults, // see rrdFlot.js::rrdFlot for documentation of these
+			 ds_op_list,                                        // if defined, see rrdFilter.js::RRDFilterOp for documentation
+			 rra_op_list,                                       // if defined, see rrdFilter.js::RRDRRAFilterAvg for documentation
+			 customization_callback                             // if defined, see above
+		      ) {
   this.html_id=html_id;
   this.url_list=url_list;
   this.graph_options=graph_options;
   this.ds_graph_options=ds_graph_options;
   this.rrdflot_defaults=rrdflot_defaults;
+  this.ds_op_list=ds_op_list;
+  this.rra_op_list=rra_op_list;
+
+  this.customization_callback=customization_callback;
 
   this.rrd_flot_obj=null;
+  this.rrd_data=null; //rrd_data will contain the sum of all the loaded data
+
   this.loaded_data=null;
 
   if (url_list!=null) {
@@ -131,7 +165,7 @@ rrdFlotSumAsync.prototype.reload = function(url_list) {
   this.files_loaded=0;
   for (i in url_list) {
     try {
-      FetchBinaryURLAsync(url_list[i],rrdFlotSumAsyncCallback,[this,i]);
+      FetchBinaryURLAsync(url_list[i],rrdFlotMultiAsyncCallback,[this,i]);
     } catch (err) {
       alert("Failed loading "+url_list[i]+". You may get a partial result in the graph.\n"+err);
       this.files_needed--;
@@ -148,6 +182,14 @@ rrdFlotSumAsync.prototype.callback = function() {
     if (el!=undefined) real_data_arr.push(el);
   }
   var rrd_sum=new RRDFileSum(real_data_arr);
+  if (this.rrd_data!=null) delete this.rrd_data;
+  this.rrd_data=rrd_sum;
+
+  if (this.customization_callback!=undefined) this.customization_callback(this);
+
+  rrd_sum=this.rrd_data; // customization_callback may have altered it
+  if (this.ds_op_list!=undefined) rrd_sum=new RRDFilterOp(rrd_sum,this.ds_op_list);
+  if (this.rra_op_list!=undefined) rrd_sum=new RRDRRAFilterAvg(rrd_sum,this.rra_op_list);
   this.rrd_flot_obj=new rrdFlot(this.html_id, rrd_sum, this.graph_options, this.ds_graph_options, this.rrdflot_defaults);
 };
 

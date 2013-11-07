@@ -109,7 +109,7 @@
         
       // we don't know what DSs we will get, so we have to use the callback
       // in principle, we could personalize ds_graph_opts in the callback as well, but we keep it simple here
-      flot_obj=new rrdFlotAsync("mygraph",null,graph_opts,ds_graph_opts,null,null,null,mycallback);
+      flot_obj=new rrdFlotAsync("mygraph",null,null,graph_opts,ds_graph_opts,null,null,null,mycallback);
 
       // this function is invoked when the RRD file name changes
       function fname_update() {

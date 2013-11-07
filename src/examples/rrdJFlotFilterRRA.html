@@ -67,7 +67,7 @@
 			    1, [1,21600], // org(45mins), 6h
 			    2, [2,86400], [2,259200], [2,604800]]; // org(8h), 24h, 3d, 1w
 
-      flot_obj=new rrdFlotAsync("mygraph",null,graph_opts,ds_graph_opts,null,null,rra_steps_list);
+      flot_obj=new rrdFlotAsync("mygraph",null,null,graph_opts,ds_graph_opts,null,null,rra_steps_list);
 
       // this function is invoked when the RRD file name changes
       function fname_update() {

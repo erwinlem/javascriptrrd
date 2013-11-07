@@ -58,7 +58,7 @@
                          'Running':{color: "#000000",yaxis:2}};
 
       // the rrdFlot object creates and handles the graph
-      flot_obj=new rrdFlotSumAsync("mygraph",null,graph_opts,ds_graph_opts);
+      flot_obj=new rrdFlotSumAsync("mygraph",null,null,null,graph_opts,ds_graph_opts);
 
       // this function is invoked when the RRD file name changes
       function fname_update() {

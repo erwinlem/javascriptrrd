@@ -23,16 +23,8 @@
 
 <html>
   
-    <script type="text/javascript" src="../lib/binaryXHR.js"></script>
-    <script type="text/javascript" src="../lib/rrdFile.js"></script>
-
-    <!-- rrdFlotMatrix class needs the following four include files !-->
-    <script type="text/javascript" src="../lib/rrdFlotSupport.js"></script>
-    <script type="text/javascript" src="../lib/rrdFlotMatrix.js"></script>
-    <script type="text/javascript" src="../../flot/jquery.js"></script>
-    <script type="text/javascript" src="../../flot/jquery.flot.js"></script>
-    <script type="text/javascript" src="../../flot/jquery.flot.selection.js"></script>
-    <script type="text/javascript" src="../../flot/jquery.flot.tooltip.js"></script>
+    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
+    <!-- the above script replaces the rrdfFlotAsync,rrdFlotMatrix, rrdFlotSelection, rrdFile, binaryXHR and all the jquery libraries -->
   <head>
     <title>Graph multiple RRDs with Flot</title>
   </head>
@@ -61,42 +53,8 @@
         form_el.appendChild(new Option("example4","example4"));
        }
     
-      // fname_group and rrd_data are the global variable used by all the functions below
-      fname_group=null;
-      rrd_data=[];
 
-      // This function updates the Web Page with the data from the RRD archive header
-      // when a new file is selected
-      function update_fname() {
-        // Finally, update the file name and enable the update button
-        document.getElementById("fname").firstChild.data="Group "+fname_group;
-
-        // the rrdFlot object creates and handles the graph
-        var f=new rrdFlotMatrix("mygraph",[['s1',rrd_data[0]],['s2',rrd_data[1]],['s3',rrd_data[2]]],null,{legend:{position:'ne'}},{'s2':{checked:false},'s1':{title:'First rrd'}});
-      }
-
-      // This is the callback function that,
-      // given a binary file object,
-      // verifies that it is a valid RRD archive
-      // and performs the update of the Web page
-      function update_fname_handler(bf,idx) {
-          var i_rrd_data=undefined;
-          if (bf.getLength()<1) {
-            alert("File at idx "+idx+" is empty (possibly loading failed)!");
-            return 1;
-          }
-          try {
-            var i_rrd_data=new RRDFile(bf);            
-          } catch(err) {
-            alert("File at idx "+idx+" is not a valid RRD archive!\n"+err);
-          }
-          if (i_rrd_data!=undefined) {
-            rrd_data[idx]=i_rrd_data;
-          }
-          if ((rrd_data[0]!=undefined) && (rrd_data[1]!=undefined) && (rrd_data[2]!=undefined)) {
-            update_fname()
-          }
-      }
+      flot_obj=new rrdFlotMatrixAsync("mygraph",null,null,{legend:{position:'ne'}},{'s2':{checked:false},'s1':{title:'First rrd'}});
 
       // this function is invoked when the RRD file name changes
       function fname_update() {
@@ -104,30 +62,13 @@
         // First clean up anything in the element
         while (base_el.lastChild!=null) base_el.removeChild(base_el.lastChild);
 
-        rrd_data[0]=rrd_data[1]=rrd_data[2]=undefined;
-    
         fname_group=document.getElementById("input_fname").value;
-
         fname1=fname_group+"_s1.rrd";
         fname2=fname_group+"_s2.rrd";
         fname3=fname_group+"_s3.rrd";
 
-        document.getElementById("fname").firstChild.data="Loading group "+fname_group;
-        try {
-          FetchBinaryURLAsync(fname1,update_fname_handler,0);
-        } catch (err) {
-           alert("Failed loading "+fname1+"\n"+err);
-        }
-        try {
-          FetchBinaryURLAsync(fname2,update_fname_handler,1);
-        } catch (err) {
-           alert("Failed loading "+fname2+"\n"+err);
-        }
-        try {
-          FetchBinaryURLAsync(fname3,update_fname_handler,2);
-        } catch (err) {
-           alert("Failed loading "+fname3+"\n"+err);
-        }
+        flot_obj.reload([['s1',fname1],['s2',fname2],['s3',fname3]]);
+        document.getElementById("fname").firstChild.data=fname_group;
       }
     </script>
   </body>

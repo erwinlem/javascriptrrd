@@ -52,6 +52,7 @@
 
 
 <H4 CLASS="heading-2-western">Internal classes for Developers, Listed at the End:</H4>
+<UL>
 <LI>RRDRRAFilterDS
 <LI>RRDRRAFilterOp
 <LI>RRDDSFilterOp
@@ -62,6 +63,7 @@
 <HR>
 <H3> RRD Filter Classes: <H3>
 <H2 CLASS="heading-2-western"><A NAME="RRDFilterDS"></A>Class RRDFilterDS</H2>
+<P> Note: This class is deprecated. Use <A HREF="#RRDFilterOp">RRDFilterOp</A> instead.</P>
 <P> This class filters out a subset of DSs from an RRD identified by index or name. </P>
 <P>This class implements the following methods:</P>
 <DIV ALIGN=RIGHT>
@@ -162,7 +164,7 @@
 </DIV>
 <P>
 <H2 CLASS="heading-2-western"><A NAME="RRDFilterOp"></A>Class RRDFilterOp</H2>
-<P>This class filters all of the DSs in an RRD by a list of filter objects.</UL>
+<P>This class filters all of the DSs in an RRD by a list of filter objects.</P>
 <PRE>
  The filter object must implement the following interface
    getName()               - Symbolic name give to this function
@@ -170,9 +172,9 @@
    computeResult(val_list) - val_list contains the values of the requested DSs (in the same order) 
 
  Example classes that implement the interface:
-   function DoNothing(ds_name) { //Leaves the DS alone.
+   function Itentity(ds_name) { //Leaves the DS alone.
      this.getName = function() {return ds_name;}
-     this.getDSNames = function() {return [ds1_name];}
+     this.getDSNames = function() {return [ds_name];}
      this.computeResult = function(val_list) {return val_list[0];}
    }
    function sumDS(ds1_name,ds2_name) { //Sums the two DSs.
@@ -184,8 +186,14 @@
  Lets say you have 2 DSs. To add a summed DS of DS1 and DS2: 
  var ds0_name = rrd_data.getDS(0).getName();
  var ds1_name = rrd_data.getDS(1).getName();
- rrd_data = new RRDFilterOp(rrd_data, [new DoNothing(ds0_name), 
-                     DoNothing(ds1_name), sumDS(ds0_name, ds1_name]);
+ rrd_data = new RRDFilterOp(rrd_data, [new Identity(ds0_name), 
+                     new Itentity(ds1_name), new sumDS(ds0_name, ds1_name]);
+</PRE>
+<P>If a string is passed, it is assumed to be the name of a DS, and the Identity transformation is applied.<BR>
+   If an integer is passed, it is assumed to be the index or a DS, and the Identity equivalent is applied.<BR>
+   So this gives an equivalent result:</P>
+<PRE>
+ rrd_data = new RRDFilterOp(rrd_data, [ds0_name,1, new sumDS(ds0_name, ds1_name]);
 </PRE>
 <P>Its arguments are: rrd_file and op_obj_list (list of ds filters).
 <P>This class implements the following methods:</P>
@@ -289,7 +297,7 @@
 <HR>
 <H3 CLASS="heading-2-western">RRA Filters:</H3>
 <H2 CLASS="heading-2-western"><A NAME="RRAFilterShift"></A>Class RRAFilterShift</H2>
-<P>This class creates new, time-shifted RRAs. Originally developed for timezone shifting. 
+<P>This class creates new, time-shifted RRAs. Originally developed for timezone shifting. Currently to be considered deprecated. 
 <P>Arguments:
 <UL><LI>1. The RRD File
 <LI>2. Shift Int - the number of seconds to shift by (1 hour = 3600s).
@@ -401,7 +409,7 @@
 <P>Examples of RRA Filter Objects: </P>
 <PRE>
       //This RRA Filter object leaves the original RRA unchanged.
-      function RRADoNothing(rra_idx) {
+      function RRAIdentity(rra_idx) {
          this.getIdx = function() {return rra_idx;}
          this.getStep = function() {return null;} 
       }
@@ -417,10 +425,18 @@
       }
 </PRE>
 <P>For instance, if you have 3 RRAs with 5 second, 60 second and 3600 second intervals, and would like an RRA with 1800 second steps along with them, create: 
-<PRE> new RRDRRAFilterAvg(rrd_file, object_list);
-      object_list = [new RRADoNothing(0), new RRADoNothing(1), new RRADoNothing(2), new RRA_Avg(1,1800)].  
+<PRE>
+      object_list = [new RRAIdentity(0), new RRAIdentity(1), new RRAItentity(2), new RRA_Avg(1,1800)].  
+      new RRDRRAFilterAvg(rrd_file, object_list);
 </PRE>
 <P>It's best to use the RRA with the next smallest step size as a basis. It's also best to make steps integer multiples of the original RRA step sizes. For instance, using a 45 minute step, a 6 hour (= 45mins x 8) step would be better than 4 hour step (=45 mins x 5.33...).
+<P>Given that the above classes are likely the most useful ones, the user can use an integer instead of a RRAIdentity object,
+   and an Array(2) instead of the RRA_Avg object:</P>
+<PRE> 
+      object_list = [0,1,2,[1,1800]]
+      new RRDRRAFilterAvg(rrd_file, object_list);
+</PRE>
+
 <P>This class implements the following methods:</P>
 <DIV ALIGN=RIGHT>
 	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>

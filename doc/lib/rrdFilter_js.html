@@ -62,106 +62,6 @@
 <H2> Main Classes: <H2>
 <HR>
 <H3> RRD Filter Classes: <H3>
-<H2 CLASS="heading-2-western"><A NAME="RRDFilterDS"></A>Class RRDFilterDS</H2>
-<P> Note: This class is deprecated. Use <A HREF="#RRDFilterOp">RRDFilterOp</A> instead.</P>
-<P> This class filters out a subset of DSs from an RRD identified by index or name. </P>
-<P>This class implements the following methods:</P>
-<DIV ALIGN=RIGHT>
-	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
-		<COL WIDTH=51*>
-		<COL WIDTH=205*>
-		<THEAD>
-			<TR VALIGN=TOP>
-				<TH WIDTH=20%>
-					<P ALIGN=LEFT>Method</P>
-				</TH>
-				<TH WIDTH=80%>
-					<P ALIGN=LEFT>Description</P>
-				</TH>
-			</TR>
-		</THEAD>
-                <TBODY>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getMinSteps()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the base <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#I__step__s_step__default__300_seconds_">interval
-                                        in seconds</A> that was used to feed the RRD file.</P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getLastUpdate()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the timestamp of the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdlastupdate.en.html">last
-                                        update</A>.</P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getNrDSs()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the number of <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
-                                        Sources</A> present in the RRD file.
-                                        </P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getDSNames()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the names of the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
-                                        Sources</A> present in the RRD file.
-                                        </P>
-                                </TD>
-<TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getDS(id)</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>If id is a number, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
-                                        the information about the id-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
-                                        Source</A>.</P>
-                                        <P>If id is a string, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
-                                        the information about the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
-                                        Source</A> with the requested name.</P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getNrRRAs()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the number of <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
-                                        Robin Archives</A> present in the RRD file.</P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getRRAInfo(n)</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return an object of type <A HREF="#RRDRRAInfo">RRDRRAInfo</A>
-                                        holding the information about the n-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
-                                        Robin Archive</A>.</P>
-                                </TD>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getRRA(n)</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return an object of type <A HREF="#RRDRRA">RRDRRA</A> that
-                                        can be used to access the values stored in the n-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
-                                        Robin Archive</A>.</P>
-                                </TD>
-                        </TR>
-                </TBODY>
-	</TABLE>
-</DIV>
 <P>
 <H2 CLASS="heading-2-western"><A NAME="RRDFilterOp"></A>Class RRDFilterOp</H2>
 <P>This class filters all of the DSs in an RRD by a list of filter objects.</P>
@@ -296,111 +196,6 @@
 
 <HR>
 <H3 CLASS="heading-2-western">RRA Filters:</H3>
-<H2 CLASS="heading-2-western"><A NAME="RRAFilterShift"></A>Class RRAFilterShift</H2>
-<P>This class creates new, time-shifted RRAs. Originally developed for timezone shifting. Currently to be considered deprecated. 
-<P>Arguments:
-<UL><LI>1. The RRD File
-<LI>2. Shift Int - the number of seconds to shift by (1 hour = 3600s).
-<LI>3. RRA index List - A list of the RRAs (by their indicies) to be shifted; usually all RRAs in the File are included. </UL>
-
-<P>This class implements the following methods:</P>
-<DIV ALIGN=RIGHT>
-	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
-		<COL WIDTH=51*>
-		<COL WIDTH=205*>
-		<THEAD>
-			<TR VALIGN=TOP>
-				<TH WIDTH=20%>
-					<P ALIGN=LEFT>Method</P>
-				</TH>
-				<TH WIDTH=80%>
-					<P ALIGN=LEFT>Description</P>
-				</TH>
-			</TR>
-		</THEAD>
-                <TBODY>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getMinSteps()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the base <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#I__step__s_step__default__300_seconds_">interval
-                                        in seconds</A> that was used to feed the RRD file.</P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getLastUpdate()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the timestamp of the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdlastupdate.en.html">last
-                                        update</A>.</P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getNrDSs()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the number of <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
-                                        Sources</A> present in the RRD file.
-                                        </P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getDSNames()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the names of the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
-                                        Sources</A> present in the RRD file.
-                                        </P>
-                                </TD>
-<TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getDS(id)</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>If id is a number, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
-                                        the information about the id-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
-                                        Source</A>.</P>
-                                        <P>If id is a string, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
-                                        the information about the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
-                                        Source</A> with the requested name.</P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getNrRRAs()</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return the number of <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
-                                        Robin Archives</A> present in the RRD file.</P>
-                                </TD>
-                        </TR>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getRRAInfo(n)</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return an object of type <A HREF="#RRDRRAInfo">RRDRRAInfo</A>
-                                        holding the information about the n-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
-                                        Robin Archive</A>.</P>
-                                </TD>
-                        <TR VALIGN=TOP>
-                                <TD WIDTH=20%>
-                                        <P>getRRA(n)</P>
-                                </TD>
-                                <TD WIDTH=80%>
-                                        <P>Return an object of type <A HREF="#RRDRRA">RRDRRA</A> that
-                                        can be used to access the values stored in the n-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
-                                        Robin Archive</A>.</P>
-                                </TD>
-                        </TR>
-                </TBODY>
-	</TABLE>
-</DIV> 
-<HR>
 <H2 CLASS="heading-2-western"><A NAME="RRDRRAFilterAvg"></A>Class RRDRRAFilterAvg</H2>
 <P>This class creates new RRAs (based on original RRAs in the RRD File) that have different time steps. This is useful for creating new RRA graphs with different time steps without actually creating and filling new RRAs.
 <P>Arguments:
@@ -535,6 +330,213 @@
 	</TABLE>
 </DIV> 
 
+
+<HR>
+<H2 CLASS="heading-2-western"><A NAME="RRDFilterDS"></A>Class RRDFilterDS</H2>
+<P> Note: This class is deprecated. Use <A HREF="#RRDFilterOp">RRDFilterOp</A> instead.</P>
+<P> This class filters out a subset of DSs from an RRD identified by index or name. </P>
+<P>This class implements the following methods:</P>
+<DIV ALIGN=RIGHT>
+	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
+		<COL WIDTH=51*>
+		<COL WIDTH=205*>
+		<THEAD>
+			<TR VALIGN=TOP>
+				<TH WIDTH=20%>
+					<P ALIGN=LEFT>Method</P>
+				</TH>
+				<TH WIDTH=80%>
+					<P ALIGN=LEFT>Description</P>
+				</TH>
+			</TR>
+		</THEAD>
+                <TBODY>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getMinSteps()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the base <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#I__step__s_step__default__300_seconds_">interval
+                                        in seconds</A> that was used to feed the RRD file.</P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getLastUpdate()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the timestamp of the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdlastupdate.en.html">last
+                                        update</A>.</P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getNrDSs()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the number of <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+                                        Sources</A> present in the RRD file.
+                                        </P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getDSNames()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the names of the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+                                        Sources</A> present in the RRD file.
+                                        </P>
+                                </TD>
+<TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getDS(id)</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>If id is a number, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
+                                        the information about the id-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+                                        Source</A>.</P>
+                                        <P>If id is a string, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
+                                        the information about the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+                                        Source</A> with the requested name.</P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getNrRRAs()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the number of <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
+                                        Robin Archives</A> present in the RRD file.</P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getRRAInfo(n)</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return an object of type <A HREF="#RRDRRAInfo">RRDRRAInfo</A>
+                                        holding the information about the n-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
+                                        Robin Archive</A>.</P>
+                                </TD>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getRRA(n)</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return an object of type <A HREF="#RRDRRA">RRDRRA</A> that
+                                        can be used to access the values stored in the n-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
+                                        Robin Archive</A>.</P>
+                                </TD>
+                        </TR>
+                </TBODY>
+	</TABLE>
+</DIV>
+
+<H2 CLASS="heading-2-western"><A NAME="RRAFilterShift"></A>Class RRAFilterShift</H2>
+<P>This class creates new, time-shifted RRAs. Originally developed for timezone shifting. Currently to be considered deprecated. 
+<P>Arguments:
+<UL><LI>1. The RRD File
+<LI>2. Shift Int - the number of seconds to shift by (1 hour = 3600s).
+<LI>3. RRA index List - A list of the RRAs (by their indicies) to be shifted; usually all RRAs in the File are included. </UL>
+
+<P>This class implements the following methods:</P>
+<DIV ALIGN=RIGHT>
+	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
+		<COL WIDTH=51*>
+		<COL WIDTH=205*>
+		<THEAD>
+			<TR VALIGN=TOP>
+				<TH WIDTH=20%>
+					<P ALIGN=LEFT>Method</P>
+				</TH>
+				<TH WIDTH=80%>
+					<P ALIGN=LEFT>Description</P>
+				</TH>
+			</TR>
+		</THEAD>
+                <TBODY>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getMinSteps()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the base <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#I__step__s_step__default__300_seconds_">interval
+                                        in seconds</A> that was used to feed the RRD file.</P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getLastUpdate()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the timestamp of the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdlastupdate.en.html">last
+                                        update</A>.</P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getNrDSs()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the number of <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+                                        Sources</A> present in the RRD file.
+                                        </P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getDSNames()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the names of the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+                                        Sources</A> present in the RRD file.
+                                        </P>
+                                </TD>
+<TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getDS(id)</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>If id is a number, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
+                                        the information about the id-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+                                        Source</A>.</P>
+                                        <P>If id is a string, return an object of type <A HREF="#RRDDS">RRDDS</A> holding
+                                        the information about the <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+                                        Source</A> with the requested name.</P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getNrRRAs()</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return the number of <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
+                                        Robin Archives</A> present in the RRD file.</P>
+                                </TD>
+                        </TR>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getRRAInfo(n)</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return an object of type <A HREF="#RRDRRAInfo">RRDRRAInfo</A>
+                                        holding the information about the n-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
+                                        Robin Archive</A>.</P>
+                                </TD>
+                        <TR VALIGN=TOP>
+                                <TD WIDTH=20%>
+                                        <P>getRRA(n)</P>
+                                </TD>
+                                <TD WIDTH=80%>
+                                        <P>Return an object of type <A HREF="#RRDRRA">RRDRRA</A> that
+                                        can be used to access the values stored in the n-th <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
+                                        Robin Archive</A>.</P>
+                                </TD>
+                        </TR>
+                </TBODY>
+	</TABLE>
+</DIV> 
 
 <HR>
 <H3 CLASS="heading-2-western">Internal Methods for Developers</H3>

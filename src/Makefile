@@ -33,5 +33,9 @@ lib/javascriptrrd.wlibs.js: lib/javascriptrrd.js \
 	touch -a ../flot/jquery.flot.canvas.min.js
 	touch -a ../flot/jquery.flot.canvas.js
 
+# in the past we were not shipping the min version, so just use the unminimized one, if needed
+../flot/jquery.flot.tooltip.min.js:
+	cp ../flot/jquery.flot.tooltip.js ../flot/jquery.flot.tooltip.min.js
+
 clean:
 	rm -f lib/javascriptrrd.js lib/javascriptrrd.wlibs.js

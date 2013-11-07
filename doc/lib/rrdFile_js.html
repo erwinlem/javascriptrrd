@@ -45,7 +45,7 @@ information.</P>
 <H2 CLASS="heading-2-western"><A NAME="RRDFile"></A>Class RRDFile</H2>
 <P>This is the main class of the package. It is also the only class
 the user ever needs to explicitly instantiate.</P>
-<P>The RRDFile constructor has a single argument:</P>
+<P>The RRDFile constructor has two arguments (only one required):</P>
 <UL>
 	<LI><P>A binary file object.</P>
 	<P>Any object implementing an interface providing the following
@@ -64,10 +64,12 @@ the user ever needs to explicitly instantiate.</P>
 	<P>The <A HREF="binaryXHR_js.html">binaryXHR module</A>, provided
 	with this package, provides the class <A HREF="binaryXHR_js.html#BinaryFile">BinaryFile</A>
 	that implements this interface.</P>
-</UL>
 <P>If the binary file is not a proper <A HREF="http://oss.oetiker.ch/rrdtool/">RRD
 file</A>, an <A HREF="#InvalidRRD">InvalidRRD</A> exception will be
 thrown.</P>
+       <LI><P>Options object (optional)</P>
+           <P>Currently with no semantics; defined for future expandability only.</P>
+</UL>
 <P>This class also implements the following methods:</P>
 <DIV ALIGN=RIGHT>
 	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
@@ -167,6 +169,9 @@ thrown.</P>
 		</TBODY>
 	</TABLE>
 </DIV>
+<HR>
+<H2><i>Internal classes</i></H2>
+
 <H2 CLASS="heading-2-western"><A NAME="RRDDS"></A>Class RRDDS</H2>
 <P>This class implements the methods needed to access the information
 about a <A HREF="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">RRD

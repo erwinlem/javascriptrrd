@@ -50,12 +50,20 @@ the user ever needs to explicitly instantiate.</P>
 <UL>
 	<LI><P>A list of similar <A HREF="rrdFile_js.html#RRDFile">RRDFile</A>
 	objects.<BR>They must all have the same DSes and the same RRAs.</P>
-	<LI><P>A boolean (default=true) – This value defines how to treat
-	undefined values. If true, they are counted as zeros and the sum
+        <LI><P>An options object - If defined, it can contain any of the following:
+            <UL>
+	      <LI>treat_undefined_as_zero - This value defines how to treat
+	undefined values. If true (or undefined), they are counted as zeros and the sum
 	will always succeed. If it is false, any undefined value in one of
-	the input objects will result in the sum being marked as undefined.</P>
+	the input objects will result in the sum being marked as undefined.
+            </UL>
+            </P>
+            <P>For backwards compatibility, a boolean value is intrpreted as <i>treat_undefined_as_zero</i></P>
 </UL>
 <P>This class implements the same interface as <A HREF="rrdFile_js.html#RRDFile">RRDFile</A>.</P>
+<HR>
+<H2><I>Internal classes</I></H2>
+
 <H2 CLASS="heading-2-western"><A NAME="RRDRRASum"></A>Class RRDRRASum</H2>
 <P>This class implements the same interface as <A HREF="rrdFile_js.html#RRDRRA">RRDRRA.</A></P>
 <TABLE WIDTH=50% CELLPADDING=2 CELLSPACING=2>

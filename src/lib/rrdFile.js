@@ -389,7 +389,10 @@ RRDHeader.prototype.getRRAInfo = function(idx) {
 // 
 // Arguments:
 //   bf must be an object compatible with the BinaryFile interface
-function RRDFile(bf) {
+//   file_options - currently no semantics... introduced for future expandability
+function RRDFile(bf,file_options) {
+  this.file_options=file_options;
+
   var rrd_data=bf
 
   this.rrd_header=new RRDHeader(rrd_data);

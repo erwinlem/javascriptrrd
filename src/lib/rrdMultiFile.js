@@ -107,11 +107,29 @@ function rrdFileSort(f1, f2) {
  * They must all have the same DSes and the same RRAs
  */ 
 
-function RRDFileSum(file_list,treat_undefined_as_zero) {
-  if (treat_undefined_as_zero==undefined) {
+
+/*
+ * sumfile_options, if defined, must be an object containing any of these
+ *   treat_undefined_as_zero
+ *
+ */
+
+// For backwards comatibility, if sumfile_options is a boolean,
+// it is interpreted like the "old treat_undefined_as_zero" argument
+
+function RRDFileSum(file_list,sumfile_options) {
+  if (sumfile_options==undefined) {
+    sumfile_options={};
+  } elif (typeof(sumfile_options)=="boolean") {
+    sumfile_options={treat_undefined_as_zero:sumfile_options};
+  }
+  this.sumfile_options=sumfile_options;
+
+  
+  if (this.sumfile_options.treat_undefined_as_zero==undefined) {
     this.treat_undefined_as_zero=true;
-  } else {
-    this.treat_undefined_as_zero=treat_undefined_as_zero;
+   } else {
+    this.treat_undefined_as_zero=this.sumfile_options.treat_undefined_as_zero;
   }
   this.file_list=file_list;
   this.file_list.sort();

@@ -45,7 +45,7 @@ function rrdFlotAsyncCallback(bf,obj) {
     return 1;
   }
   try {
-    i_rrd_data=new RRDFile(bf);            
+    i_rrd_data=new RRDFile(bf,obj.file_options);
   } catch(err) {
     alert("File "+obj.url+" is not a valid RRD archive!\n"+err);
   }
@@ -58,6 +58,7 @@ function rrdFlotAsyncCallback(bf,obj) {
 
 /* Use url==null if you do not know the url yet */
 function rrdFlotAsync(html_id, url, 
+		      file_options,                                      // see rrdFile.js::RRDFile for documentation
 		      graph_options, ds_graph_options, rrdflot_defaults, // see rrdFlot.js::rrdFlot for documentation of these
 		      ds_op_list,                                        // if defined, see rrdFilter.js::RRDFilterOp for documentation
 		      rra_op_list,                                       // if defined, see rrdFilter.js::RRDRRAFilterAvg for documentation
@@ -65,6 +66,7 @@ function rrdFlotAsync(html_id, url,
 		      ) {
   this.html_id=html_id;
   this.url=url;
+  this.file_options=file_options;
   this.graph_options=graph_options;
   this.ds_graph_options=ds_graph_options;
   this.rrdflot_defaults=rrdflot_defaults;
@@ -116,7 +118,7 @@ function rrdFlotMultiAsyncCallback(bf,arr) {
     alert("File "+obj.url_list[idx]+" is empty (possibly loading failed)! You may get a parial result in the graph.");
   } else {
     try {
-      i_rrd_data=new RRDFile(bf);
+      i_rrd_data=new RRDFile(bf,obj.file_options);
     } catch(err) {
       alert("File "+obj.url_list[idx]+" is not a valid RRD archive! You may get a partial result in the graph.\n"+err);
     }
@@ -150,7 +152,9 @@ function rrdFlotMultiAsyncReload(obj,url_list) {
 
 
 /* Use url_list==null if you do not know the urls yet */
-function rrdFlotSumAsync(html_id, url_list, 
+function rrdFlotSumAsync(html_id, url_list,
+			 file_options,                                      // see rrdFile.js::RRDFile for documentation
+			 sumfile_options,                                   // see rrdMultiFile.js::RRDFileSum for documentation
 			 graph_options, ds_graph_options, rrdflot_defaults, // see rrdFlot.js::rrdFlot for documentation of these
 			 ds_op_list,                                        // if defined, see rrdFilter.js::RRDFilterOp for documentation
 			 rra_op_list,                                       // if defined, see rrdFilter.js::RRDRRAFilterAvg for documentation
@@ -158,6 +162,8 @@ function rrdFlotSumAsync(html_id, url_list,
 		      ) {
   this.html_id=html_id;
   this.url_list=url_list;
+  this.file_options=file_options;
+  this.sumfile_options=sumfile_options;
   this.graph_options=graph_options;
   this.ds_graph_options=ds_graph_options;
   this.rrdflot_defaults=rrdflot_defaults;
@@ -187,7 +193,7 @@ rrdFlotSumAsync.prototype.callback = function() {
     var el=this.loaded_data[i];
     if (el!=undefined) real_data_arr.push(el);
   }
-  var rrd_sum=new RRDFileSum(real_data_arr);
+  var rrd_sum=new RRDFileSum(real_data_arr,this.sumfile_options);
   if (this.rrd_data!=null) delete this.rrd_data;
   this.rrd_data=rrd_sum;
 
@@ -204,6 +210,7 @@ rrdFlotSumAsync.prototype.callback = function() {
 /* Use url_list==null if you do not know the urls yet */
 function rrdFlotMatrixAsync(html_id, 
 			    url_pair_list, ds_list,                            // see rrdFlotMatrix.js::rrdFlotMatrix for documentation of these
+			    file_options,                                      // see rrdFile.js::RRDFile for documentation
 			    graph_options, rrd_graph_options, rrdflot_defaults, // see rrdFlotMatrix.js::rrdFlotMatrix for documentation of these
 			    ds_op_list,                                        // if defined, see rrdFilter.js::RRDFilterOp for documentation
 			    rra_op_list,                                       // if defined, see rrdFilter.js::RRDRRAFilterAvg for documentation
@@ -212,6 +219,7 @@ function rrdFlotMatrixAsync(html_id,
   this.html_id=html_id;
   this.url_pair_list=url_pair_list;
   this.ds_list=ds_list;
+  this.file_options=file_options;
   this.graph_options=graph_options;
   this.rrd_graph_options=rrd_graph_options;
   this.rrdflot_defaults=rrdflot_defaults;

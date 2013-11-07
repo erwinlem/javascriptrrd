@@ -120,7 +120,7 @@ function rrdFileSort(f1, f2) {
 function RRDFileSum(file_list,sumfile_options) {
   if (sumfile_options==undefined) {
     sumfile_options={};
-  } elif (typeof(sumfile_options)=="boolean") {
+  } else if (typeof(sumfile_options)=="boolean") {
     sumfile_options={treat_undefined_as_zero:sumfile_options};
   }
   this.sumfile_options=sumfile_options;

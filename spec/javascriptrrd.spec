@@ -1,13 +1,13 @@
 
 Name: javascriptrrd
-Version: 0.6.4
+Version: 1.1.0
 Release: 1
 Summary: A package to render RRD databases in javascript using Flot
 
 Group: Amusements/Graphics
 License: MIT
 # To make source tar ball (Be sure to get version with flot):
-# mv javascriptrrd-0.6.4-with-flot-0.7.7-tooltip-0.4.4.tgz javascriptrrd-0.6.4.tar.gz
+# mv javascriptrrd-1.1.0-with-flot-0.7.7-tooltip-0.4.4.tgz javascriptrrd-1.1.0.tar.gz
 Source0: %{name}-%{version}.tar.gz
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_defaultdocdir}/javascriptrrd/flot
 
 %changelog
+* Fri Nov 8 2013 Igor Sfiligoi <isfiligoi@ucsd.edu> 1.1.0-1
+Updated to the 1.1.0 release. Not using Flot 0.8 yet, since it is not backward compatible.
+
 * Sun Apr 7 2013 Igor Sfiligoi <isfiligoi@ucsd.edu> 0.6.4-1
 Updated to th 0.6.4 release.
 

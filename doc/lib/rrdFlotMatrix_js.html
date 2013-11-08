@@ -51,7 +51,7 @@ creates an interactive
 </UL></P>
 
 <H2 CLASS="heading-2-western"><A NAME="rrdFlotMatrix"></A>Class rrdFlotMatrix</H2>
-<P>The rrdFlotMatrix constructor has two to five arguments:</P>
+<P>The rrdFlotMatrix constructor has two to six arguments:</P>
 <DIV ALIGN=RIGHT>
 	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
 		<COL WIDTH=51*>
@@ -141,6 +141,41 @@ creates an interactive
      color: rrd_index                                   // see Flot docs for details
      lines: { show:true, fill: true, fillColor:color }  // see Flot docs for details
    }
+</PRE></P>
+				</TD>
+			</TR>
+			<TR VALIGN=TOP>
+				<TD WIDTH=20%>
+					<P>rrdflot_defaults (optional)</P>
+				</TD>
+				<TD WIDTH=80%>
+					<P>Dictionary of rrd_flot options. All are optional.</P>
+                                        <P>The recognized elements and the default values are:
+<PRE>
+ {
+    graph_only: false        // If true, limit the display to the graph only
+    legend: "Top"            //Starting location of legend. Options are: 
+                             //   "Top","Bottom","TopRight","BottomRight","None".
+    num_cb_rows: 12          //How many rows of DS checkboxes per column.
+    use_element_buttons: false  //To be used in conjunction with num_cb_rows: This option
+                             //    creates a button above every column, which selects
+                             //    every element in the column. 
+    multi_rra: false         //"true" appends the name of the RRA consolidation function (CF) 
+                             //    (AVERAGE, MIN, MAX or LAST) to the name of the RRA. Useful 
+                             //    for RRAs over the same interval with different CFs.  
+    use_checked_RRDs: false   //Use the list checked_RRDs below.
+    checked_RRDs: []          //List of elements to be checked by default when graph is loaded. 
+                             //    Overwrites graph options. 
+    use_rra: false           //Whether to use the rra index specified below.
+    rra: 0                   //RRA (rra index in rrd) to be selected when graph is loaded. 
+    use_windows: false       //Whether to use the window zoom specifications below.
+    window_min: 0            //Sets minimum for window zoom. X-axis usually in unix time. 
+    window_max: 0            //Sets maximum for window zoom.
+    graph_height: "300px"    //Height of main graph. 
+    graph_width: "500px"     //Width of main graph.
+    scale_height: "110px"    //Height of small scaler graph.
+    scale_width: "250px"     //Width of small scaler graph.
+ } 
 </PRE></P>
 				</TD>
 			</TR>

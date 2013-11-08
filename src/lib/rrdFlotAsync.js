@@ -209,8 +209,9 @@ rrdFlotSumAsync.prototype.callback = function() {
 
 /* Use url_list==null if you do not know the urls yet */
 function rrdFlotMatrixAsync(html_id, 
-			    url_pair_list, ds_list,                            // see rrdFlotMatrix.js::rrdFlotMatrix for documentation of these
+			    url_pair_list,                                     // see rrdFlotMatrix.js::rrdFlotMatrix for documentation
 			    file_options,                                      // see rrdFile.js::RRDFile for documentation
+			    ds_list,                                           // see rrdFlotMatrix.js::rrdFlotMatrix for documentation
 			    graph_options, rrd_graph_options, rrdflot_defaults, // see rrdFlotMatrix.js::rrdFlotMatrix for documentation of these
 			    ds_op_list,                                        // if defined, see rrdFilter.js::RRDFilterOp for documentation
 			    rra_op_list,                                       // if defined, see rrdFilter.js::RRDRRAFilterAvg for documentation
@@ -218,8 +219,8 @@ function rrdFlotMatrixAsync(html_id,
 			    ) {
   this.html_id=html_id;
   this.url_pair_list=url_pair_list;
-  this.ds_list=ds_list;
   this.file_options=file_options;
+  this.ds_list=ds_list;
   this.graph_options=graph_options;
   this.rrd_graph_options=rrd_graph_options;
   this.rrdflot_defaults=rrdflot_defaults;

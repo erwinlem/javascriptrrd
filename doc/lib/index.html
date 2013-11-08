@@ -18,7 +18,10 @@
 </HEAD>
 <BODY LANG="en-US" DIR="LTR">
 <H1 CLASS="western">javascriptRRD libraries</H1>
-<P>The javascriptRRD package contains base three javascript modules:</P>
+
+<P><b>Spoiler:</b> Look toward the end of the page.</P>
+
+<P>The javascriptRRD package contains base three javascript modules that can be user to read RRD files:</P>
 <UL>
 	<LI><P>The <A HREF="rrdFile_js.html">rrdFile module</A>, used to
 	extract information from <A HREF="http://oss.oetiker.ch/rrdtool/">RRD
@@ -31,20 +34,23 @@
 </UL>
 <P>Together they can be used to implement AJAX style applications.</P>
 
-<P> The <A HREF="rrdFilter_js.html">rrdFilter module</A> can be used to filter datasources (DSs) and apply user-customized filter objects such as mathematical operations. This module also has methods to Filter RRAs for time shifts (for timezone implementation) and/or Averaging (for creating new, averaged RRAs with different step sizes). See the <A HREF="../../src/examples/rrdJFlotFilter.html">rrdJFlotFilter.html (DS Filters) example</A> and the <A HREF="../../src/examples/rrdJFlotFilterRRA.html">rrdJFlotFilterRRA (RRA Filters) example</A>.</P>
+<P> The <A HREF="rrdFilter_js.html">rrdFilter module</A> can be used to filter datasources (DSs) and apply user-customized filter objects such as mathematical operations. This module also has methods to average RRAs (for creating new, averaged RRAs with different step sizes). </P>
 
 <P>The package also provides two classes, based on
    <A HREF="http://www.flotcharts.org/">Flot</A>,
-   that automate most of the graphing needs:</P>
+   that automate most of the graphing needs, once the files have been read:</P>
 <UL>
-	<LI><P>The <A HREF="rrdFlot_js.html">rrdFlot module</A> can be used to plot a single RRD file.<BR>
-               See also the <A HREF="../../src/examples/rrdJFlot.html">rrdJFlot.html example</A> and the <A HREF="../../src/examples/rrdJFlotDefaults.html">same graph with all rrdflot_defaults available options shown.</A></P>
-	<LI><P>The <A HREF="rrdFlotMatrix_js.html">rrdFlotMatrix module</A> can be used to plot a list of RRD files.<BR>
-               See also the <A HREF="../../src/examples/rrdMatrixFlot.html">rrdMatrixFlot.html example</A>.</P>
-
-        <LI><P>More examples can be found on the
-               <A HREF="../../src/examples/index.html">examples web page</a>, with mode helpful comments in the code.</P>
+	<LI><P>The <A HREF="rrdFlot_js.html">rrdFlot module</A> can be used to plot a single RRD file.
+	<LI><P>The <A HREF="rrdFlotMatrix_js.html">rrdFlotMatrix module</A> can be used to plot a list of RRD files.
 </UL>
+
+<P>
+Most users are however expected to use the <b>helper classes in the <A HREF="rrdFlotAsync_js.html">rrdFlotAsync module</A></b>.<br>
+The classes there combine loading the files with graphing them.</P>
+
+<P>Example Web pages using the above modules can be found linked from the 
+<A HREF="../../src/examples/index.html">examples web page</a>.</P>
+
 
 <TABLE WIDTH=50% CELLPADDING=2 CELLSPACING=2>
         <TR>

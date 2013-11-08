@@ -20,18 +20,14 @@ wlibs: lib/javascriptrrd.wlibs.js
 
 lib/javascriptrrd.wlibs.js: lib/javascriptrrd.js \
    ../flot/jquery.min.js ../flot/jquery.flot.min.js  ../flot/jquery.flot.time.min.js \
-   ../flot/jquery.flot.selection.min.js ../flot/jquery.flot.canvas.min.js ../flot/jquery.flot.tooltip.min.js
+   ../flot/jquery.flot.selection.min.js ../flot/jquery.flot.tooltip.min.js
 	cat $^ > $@
 
-#the flot.time lnd flout.canvas ibraries only got added in v0.8 flot
+#the flot.time binaru only got added in v0.8 flot
 #create an empty file if it does not exist for consistency
 ../flot/jquery.flot.time.min.js:
 	touch -a ../flot/jquery.flot.time.min.js
 	touch -a ../flot/jquery.flot.time.js
-
-../flot/jquery.flot.canvas.min.js:
-	touch -a ../flot/jquery.flot.canvas.min.js
-	touch -a ../flot/jquery.flot.canvas.js
 
 # in the past we were not shipping the min version, so just use the unminimized one, if needed
 ../flot/jquery.flot.tooltip.min.js:

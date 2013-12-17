@@ -1,7 +1,7 @@
 javascriptRRD is licensed under the MIT License
 [http://www.opensource.org/licenses/mit-license.php]
 
-Copyright (c) 2012 Frank Wuerthwein, fkw@ucsd.edu
+Copyright (c) 2013 Frank Wuerthwein, fkw@ucsd.edu
                    Igor Sfiligoi, isfiligoi@ucsd.edu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

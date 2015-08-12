@@ -152,7 +152,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
   while (base_el.lastChild!=null) base_el.removeChild(base_el.lastChild);
 
   // Now create the layout
-  var external_table=document.createElement("Table");
+  var external_table=document.createElement("table");
   this.external_table=external_table;
 
   // DS rows: select DS
@@ -160,7 +160,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
   var cellDS=rowDS.insertCell(-1);
   cellDS.colSpan=4
   cellDS.appendChild(document.createTextNode("Element:"));
-  var forDS=document.createElement("Select");
+  var forDS=document.createElement("select");
   forDS.id=this.ds_id;
   forDS.onchange= function () {rf_this.callback_ds_changed();};
   cellDS.appendChild(forDS);
@@ -170,7 +170,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
   var cellRes=rowHeader.insertCell(-1);
   cellRes.colSpan=3;
   cellRes.appendChild(document.createTextNode("Resolution:"));
-  var forRes=document.createElement("Select");
+  var forRes=document.createElement("select");
   forRes.id=this.res_id;
   forRes.onchange= function () {rf_this.callback_res_changed();};
   cellRes.appendChild(forRes);
@@ -182,7 +182,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
   var rowGraph=external_table.insertRow(-1);
   var cellGraph=rowGraph.insertCell(-1);
   cellGraph.colSpan=3;
-  var elGraph=document.createElement("Div");
+  var elGraph=document.createElement("div");
   if(this.rrdflot_defaults.graph_width!=null) {
      elGraph.style.width=this.rrdflot_defaults.graph_width;
   } else {elGraph.style.width="500px";}
@@ -194,7 +194,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
 
   var cellRRDcb=rowGraph.insertCell(-1);
   cellRRDcb.vAlign="top";
-  var formRRDcb=document.createElement("Form");
+  var formRRDcb=document.createElement("form");
   formRRDcb.id=this.rrd_cb_id;
   formRRDcb.onchange= function () {rf_this.callback_rrd_cb_changed();};
   cellRRDcb.appendChild(formRRDcb);
@@ -206,7 +206,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
   cellScaleLegend.vAlign="top";
   cellScaleLegend.appendChild(document.createTextNode("Legend:"));
   cellScaleLegend.appendChild(document.createElement('br'));
-  var forScaleLegend=document.createElement("Select");
+  var forScaleLegend=document.createElement("select");
   forScaleLegend.id=this.legend_sel_id;
   forScaleLegend.appendChild(new Option("Top","nw",this.rrdflot_defaults.legend=="Top",this.rrdflot_defaults.legend=="Top"));
   forScaleLegend.appendChild(new Option("Bottom","sw",this.rrdflot_defaults.legend=="Bottom",this.rrdflot_defaults.legend=="Bottom"));
@@ -218,7 +218,7 @@ rrdFlotMatrix.prototype.createHTML = function() {
 
   var cellScale=rowScale.insertCell(-1);
   cellScale.align="right";
-  var elScale=document.createElement("Div");
+  var elScale=document.createElement("div");
   if(this.rrdflot_defaults.scale_width!=null) {
      elScale.style.width=this.rrdflot_defaults.scale_width;
   } else {elScale.style.width="250px";}
@@ -297,7 +297,7 @@ rrdFlotMatrix.prototype.populateRRDcb = function() {
  
   //Create a table within a table to arrange
   // checkbuttons into two or more columns
-  var table_el=document.createElement("Table");
+  var table_el=document.createElement("table");
   var row_el=table_el.insertRow(-1);
   row_el.vAlign="top";
   var cell_el=null; // will define later

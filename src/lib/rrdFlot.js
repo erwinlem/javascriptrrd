@@ -138,8 +138,10 @@ rrdFlot.prototype.createHTML = function() {
   this.external_table=external_table;
 
   // Header two: resulution select and DS selection title
-  var rowHeader=external_table.insertRow(-1);
-  var cellRes=rowHeader.insertCell(-1);
+  var rowHeader=document.createElement('tr');
+  external_table.appendChild(rowHeader);
+  var cellRes=document.createElement('td');
+  rowHeader.appendChild(cellRes);
   cellRes.colSpan=3;
   cellRes.appendChild(document.createTextNode("Resolution:"));
   var forRes=document.createElement("select");
@@ -148,12 +150,15 @@ rrdFlot.prototype.createHTML = function() {
   forRes.onchange= function () {rf_this.callback_res_changed();};
   cellRes.appendChild(forRes);
   
-  var cellDSTitle=rowHeader.insertCell(-1);
+  var cellDSTitle=document.createElement('td');
+  rowHeader.appendChild(cellDSTitle);
   cellDSTitle.appendChild(document.createTextNode("Select elements to plot:"));
 
   // Graph row: main graph and DS selection block
-  var rowGraph=external_table.insertRow(-1);
-  var cellGraph=rowGraph.insertCell(-1);
+  var rowGraph=document.createElement('tr');
+  external_table.appendChild(rowGraph);
+  var cellGraph=document.createElement('td');
+  rowGraph.appendChild(cellGraph);
   cellGraph.colSpan=3;
   var elGraph=document.createElement("div");
   if(this.rrdflot_defaults.graph_width!=null) {
@@ -164,24 +169,27 @@ rrdFlot.prototype.createHTML = function() {
   } else {elGraph.style.height="300px";}
   elGraph.id=this.graph_id;
   cellGraph.appendChild(elGraph);
-
-  var cellDScb=rowGraph.insertCell(-1);
   
-
+  var cellDScb=document.createElement('td');
+  rowGraph.appendChild(cellDScb);
+  
+  
   cellDScb.vAlign="top";
   var formDScb=document.createElement("form");
   formDScb.id=this.ds_cb_id;
   formDScb.onchange= function () {rf_this.callback_ds_cb_changed();};
   cellDScb.appendChild(formDScb);
-
+  
   // Scale row: scaled down selection graph
-  var rowScale=external_table.insertRow(-1);
-
-  var cellScaleLegend=rowScale.insertCell(-1);
+  var rowScale=document.createElement('tr');
+  external_table.appendChild(rowScale);
+  
+  var cellScaleLegend=document.createElement('td');
+  rowScale.appendChild(cellScaleLegend);
   cellScaleLegend.vAlign="top";
   cellScaleLegend.appendChild(document.createTextNode("Legend:"));
   cellScaleLegend.appendChild(document.createElement('br'));
-
+  
   var forScaleLegend=document.createElement("select");
   forScaleLegend.id=this.legend_sel_id;
   forScaleLegend.appendChild(new Option("Top","nw",this.rrdflot_defaults.legend=="Top",this.rrdflot_defaults.legend=="Top"));
@@ -224,7 +232,8 @@ rrdFlot.prototype.createHTML = function() {
 
   cellScaleLegend.appendChild(timezone);
 
-  var cellScale=rowScale.insertCell(-1);
+  var cellScale=document.createElement('td')
+  rowScale.appendChild(cellScale);
   cellScale.align="right";
   var elScale=document.createElement("div");
   if(this.rrdflot_defaults.scale_width!=null) {
@@ -236,7 +245,8 @@ rrdFlot.prototype.createHTML = function() {
   elScale.id=this.scale_id;
   cellScale.appendChild(elScale);
   
-  var cellScaleReset=rowScale.insertCell(-1);
+  var cellScaleReset=document.createElement('td');
+  rowScale.appendChild(cellScaleReset);
   cellScaleReset.vAlign="top";
   cellScaleReset.appendChild(document.createTextNode(" "));
   cellScaleReset.appendChild(document.createElement('br'));
@@ -246,7 +256,7 @@ rrdFlot.prototype.createHTML = function() {
   elScaleReset.onclick = function () {rf_this.callback_scale_reset();}
 
   cellScaleReset.appendChild(elScaleReset);
-
+  
   base_el.appendChild(external_table);
 };
 
@@ -293,7 +303,8 @@ rrdFlot.prototype.populateDScb = function() {
   //Create a table within a table to arrange
   // checkbuttons into two or more columns
   var table_el=document.createElement("table");
-  var row_el=table_el.insertRow(-1);
+  var row_el=document.createElement('tr');
+  table_el.appendChild(row_el);
   row_el.vAlign="top";
   var cell_el=null; // will define later
 
@@ -308,7 +319,8 @@ rrdFlot.prototype.populateDScb = function() {
 
     if ((i%this.rrdflot_defaults.num_cb_rows)==0) { // one column every x DSs
       if(this.rrdflot_defaults.use_element_buttons) {
-        cell_el=row_el.insertCell(-1); //make next element column 
+        cell_el=document.createElement('td');
+        row_el.appendChild(cell_el); //make next element column 
         if(nrDSs>this.rrdflot_defaults.num_cb_rows) { //if only one column, no need for a button
           elem_group_number = (i/this.rrdflot_defaults.num_cb_rows)+1;
           var elGroupSelect = document.createElement("input");
@@ -322,7 +334,8 @@ rrdFlot.prototype.populateDScb = function() {
         }
       } else {
          //just make next element column
-         cell_el=row_el.insertCell(-1); 
+         cell_el=document.createElement('td');
+         row_el.appendChild(cell_el); 
       }
     }
     var ds=this.rrd_file.getDS(i);

@@ -134,7 +134,7 @@ rrdFlot.prototype.createHTML = function() {
   while (base_el.lastChild!=null) base_el.removeChild(base_el.lastChild);
 
   // Now create the layout
-  var external_table=document.createElement("Table");
+  var external_table=document.createElement("table");
   this.external_table=external_table;
 
   // Header two: resulution select and DS selection title
@@ -142,7 +142,7 @@ rrdFlot.prototype.createHTML = function() {
   var cellRes=rowHeader.insertCell(-1);
   cellRes.colSpan=3;
   cellRes.appendChild(document.createTextNode("Resolution:"));
-  var forRes=document.createElement("Select");
+  var forRes=document.createElement("select");
   forRes.id=this.res_id;
   //forRes.onChange= this.callback_res_changed;
   forRes.onchange= function () {rf_this.callback_res_changed();};
@@ -155,7 +155,7 @@ rrdFlot.prototype.createHTML = function() {
   var rowGraph=external_table.insertRow(-1);
   var cellGraph=rowGraph.insertCell(-1);
   cellGraph.colSpan=3;
-  var elGraph=document.createElement("Div");
+  var elGraph=document.createElement("div");
   if(this.rrdflot_defaults.graph_width!=null) {
      elGraph.style.width=this.rrdflot_defaults.graph_width;
   } else {elGraph.style.width="500px";}
@@ -169,7 +169,7 @@ rrdFlot.prototype.createHTML = function() {
   
 
   cellDScb.vAlign="top";
-  var formDScb=document.createElement("Form");
+  var formDScb=document.createElement("form");
   formDScb.id=this.ds_cb_id;
   formDScb.onchange= function () {rf_this.callback_ds_cb_changed();};
   cellDScb.appendChild(formDScb);
@@ -182,7 +182,7 @@ rrdFlot.prototype.createHTML = function() {
   cellScaleLegend.appendChild(document.createTextNode("Legend:"));
   cellScaleLegend.appendChild(document.createElement('br'));
 
-  var forScaleLegend=document.createElement("Select");
+  var forScaleLegend=document.createElement("select");
   forScaleLegend.id=this.legend_sel_id;
   forScaleLegend.appendChild(new Option("Top","nw",this.rrdflot_defaults.legend=="Top",this.rrdflot_defaults.legend=="Top"));
   forScaleLegend.appendChild(new Option("Bottom","sw",this.rrdflot_defaults.legend=="Bottom",this.rrdflot_defaults.legend=="Bottom"));
@@ -197,7 +197,7 @@ rrdFlot.prototype.createHTML = function() {
   cellScaleLegend.appendChild(document.createTextNode("Timezone:"));
   cellScaleLegend.appendChild(document.createElement('br'));
 
-  var timezone=document.createElement("Select");
+  var timezone=document.createElement("select");
   timezone.id=this.time_sel_id;
 
   var timezones = ["+12","+11","+10","+9","+8","+7","+6","+5","+4","+3","+2","+1","0",
@@ -226,7 +226,7 @@ rrdFlot.prototype.createHTML = function() {
 
   var cellScale=rowScale.insertCell(-1);
   cellScale.align="right";
-  var elScale=document.createElement("Div");
+  var elScale=document.createElement("div");
   if(this.rrdflot_defaults.scale_width!=null) {
      elScale.style.width=this.rrdflot_defaults.scale_width;
   } else {elScale.style.width="250px";}
@@ -292,7 +292,7 @@ rrdFlot.prototype.populateDScb = function() {
  
   //Create a table within a table to arrange
   // checkbuttons into two or more columns
-  var table_el=document.createElement("Table");
+  var table_el=document.createElement("table");
   var row_el=table_el.insertRow(-1);
   row_el.vAlign="top";
   var cell_el=null; // will define later

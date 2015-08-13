@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <!--
  Example HTML/javascript file that display the
  header of a RRD archive files
@@ -11,30 +11,31 @@
 
 -->
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   
-    <script type="text/javascript" src="../lib/binaryXHR.js"></script>
-    <script type="text/javascript" src="../lib/rrdFile.js"></script>
   <head>
     <title>RRD Header Info</title>
+    <script type="text/javascript" src="../lib/binaryXHR.js"></script>
+    <script type="text/javascript" src="../lib/rrdFile.js"></script>
   </head>
 
   <body>
     <h1 id="title">RRD Header Info</h1>
 
     RRD URL:
-    <input type="text" id="input_fname" value="example1.rrd"
-           onchange="input_update()">
+    <input type="text" id="input_fname" value="../../data/example_rrds/example1.rrd"
+           onchange="input_update()" />
      <button onclick="input_update()">Update</button>
-    <hr>
+    <hr />
 
-    <table id="infotable" border=1>
+    <table id="infotable" border="1">
         <tr><td colspan="5"><b>Javascript needed for this page to work</b></td></tr>
 	<tr><td><b>RRD file</b></td><td id="fname" colspan="4">None</td></tr>
 	<tr><td><b>Min Step</b></td><td id="step" align="right">N/A</td><td><b>Last update</b></td><td id="last_update" colspan="2">N/A</td></tr>
     </table>
 
     <script type="text/javascript">
+<![CDATA[
       // Remove the Javascript warning
       document.getElementById("infotable").deleteRow(0);
 
@@ -134,6 +135,7 @@
       //} catch (err) {
       //  alert("Failed loading "+fname+"\n"+err);
       //}
+	     ]]>
       
     </script>
   </body>

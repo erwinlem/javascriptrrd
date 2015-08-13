@@ -1,4 +1,4 @@
-<DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <!--
  Example HTML/javascript file that display the
  content of a RRD archive file in a graph
@@ -23,7 +23,7 @@
 
 -->
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   
     <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
     <!-- the above script replaces the rrdfFlotAsync,rrdFlot, rrdFlotSelection, rrdFile, rrdFilter, binaryXHR and all the jquery libraries -->
@@ -36,11 +36,11 @@
 
     RRD URL:
     <input type="text" id="input_fname" value="example3.rrd"
-           onchange="fname_update()">
+           onchange="fname_update()" />
      <button onclick="fname_update()">Update</button>
-    <hr>
+    <hr />
 
-    <table id="infotable" border=1>
+    <table id="infotable" border="1">
         <tr><td colspan="21"><b>Javascript needed for this page to work</b></td></tr>
 	<tr><td><b>RRD file</b></td><td id="fname" colspan="5">None</td></tr>
     </table>
@@ -48,6 +48,7 @@
     <div id="mygraph"></div>
 
     <script type="text/javascript">
+<![CDATA[
 
       // Remove the Javascript warning
       document.getElementById("infotable").deleteRow(0);
@@ -117,6 +118,7 @@
         flot_obj.reload(fname);
         document.getElementById("fname").firstChild.data=fname;
       }
+	     ]]>
 
     </script>
   </body>

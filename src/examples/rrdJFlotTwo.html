@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <!--
  Example HTML/javascript file that display the
  content of two RRD archive files in a graph
@@ -21,7 +21,7 @@
 
 -->
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
   
     <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
     <!-- the above script replaces the rrdfFlotAsync,rrdFlot, rrdFlotSelection, rrdFile, rrdMultiFile, binaryXHR and all the jquery libraries -->
@@ -33,12 +33,12 @@
     <h1 id="title">RRD Graphs with Flot</h1>
 
     RRD URL:
-    <input type="text" id="input_fname1" value="example4_s1.rrd"><br>
-    <input type="text" id="input_fname2" value="example4_s2.rrd"><br>
+    <input type="text" id="input_fname1" value="example4_s1.rrd" /><br />
+    <input type="text" id="input_fname2" value="example4_s2.rrd" /><br />
      <button onclick="fname_update()">Update</button>
-    <hr>
+    <hr />
 
-    <table id="infotable" border=1>
+    <table id="infotable" border="1">
         <tr><td colspan="21"><b>Javascript needed for this page to work</b></td></tr>
 	<tr><td><b>RRD file</b></td><td id="fname1" colspan="2">None</td><td id="fname2" colspan="3">None</td></tr>
     </table>

@@ -64,7 +64,7 @@
 <h3> RRD Filter Classes: </h3>
 <h2 class="heading-2-western"><a NAME="RRDFilterOp"></a>Class RRDFilterOp</h2>
 <p>This class filters all of the DSs in an RRD by a list of filter objects.</p>
-<PRE>
+<pre>
  The filter object must implement the following interface
    getName()               - Symbolic name give to this function
    getDSName()             - list of DSs used in computing the result (names or indexes)
@@ -87,13 +87,13 @@
  var ds1_name = rrd_data.getDS(1).getName();
  rrd_data = new RRDFilterOp(rrd_data, [new Identity(ds0_name), 
                      new Itentity(ds1_name), new sumDS(ds0_name, ds1_name]);
-</PRE>
+</pre>
 <p>If a string is passed, it is assumed to be the name of a DS, and the Identity transformation is applied.<br />
    If an integer is passed, it is assumed to be the index or a DS, and the Identity equivalent is applied.<br />
    So this gives an equivalent result:</p>
-<PRE>
+<pre>
  rrd_data = new RRDFilterOp(rrd_data, [ds0_name,1, new sumDS(ds0_name, ds1_name]);
-</PRE>
+</pre>
 <p>Its arguments are: rrd_file and op_obj_list (list of ds filters).</p>
 <p>This class implements the following methods:</p>
 <div align='right'>
@@ -204,7 +204,7 @@
 	<li>2. List of Filter Objects. Each object must instantiate getIdx, which returns the index of the RRA to use in the RRD File, and getStep, which returns the step size of the RRA. (If getStep returns null, the filter will use the original step size given by the RRA specified by getIdx).</li> </ul>
 </p>
 <p>Examples of RRA Filter Objects: </p>
-<PRE>
+<pre>
       //This RRA Filter object leaves the original RRA unchanged.
       function RRAIdentity(rra_idx) {
          this.getIdx = function() {return rra_idx;}
@@ -220,19 +220,19 @@
          this.getIdx = function() {return rra_idx;}
          this.getStep = function() {return new_step_in_seconds;}
       }
-</PRE>
+</pre>
 <p>For instance, if you have 3 RRAs with 5 second, 60 second and 3600 second intervals, and would like an RRA with 1800 second steps along with them, create:</p> 
-<PRE>
+<pre>
       object_list = [new RRAIdentity(0), new RRAIdentity(1), new RRAItentity(2), new RRA_Avg(1,1800)].  
       new RRDRRAFilterAvg(rrd_file, object_list);
-</PRE>
+</pre>
 <p>It's best to use the RRA with the next smallest step size as a basis. It's also best to make steps integer multiples of the original RRA step sizes. For instance, using a 45 minute step, a 6 hour (= 45mins x 8) step would be better than 4 hour step (=45 mins x 5.33...).</p>
 <p>Given that the above classes are likely the most useful ones, the user can use an integer instead of a RRAIdentity object,
    and an Array(2) instead of the RRA_Avg object:</p>
-<PRE> 
+<pre> 
       object_list = [0,1,2,[1,1800]]
       new RRDRRAFilterAvg(rrd_file, object_list);
-</PRE>
+</pre>
 
 <p>This class implements the following methods:</p>
 <div align='right'>

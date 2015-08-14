@@ -129,10 +129,10 @@ The output is an object containing:
 				<td width='80%'>
 					<p>A list of datapoints suitable to be fed to <a href="http://www.flotcharts.org/">Flot</a>. Each element is a (Timestamp in ms, value) pair.</p>
                                         <p>An example of use with Flot:<br />
-<PRE>
+<pre>
 var fd=rrdDS2FlotSeries(...);
 var plot = $.plot("#myplot", [{data:fd.data}], options);
-</PRE>
+</pre>
                                         </p>
 				</td>
 			</tr>
@@ -253,10 +253,10 @@ The output is an object containing:
                                          <li>data - A list of (Timestamp in ms, value) pairs.</li>
                                          <li>label - The (optional) DS name.</li></ul></p>
                                         <p>An example of use with Flot:<br />
-<PRE>
+<pre>
 var fd=rrdDS2FlotObj(...);
 var plot = $.plot("#myplot", fd.data, options);
-</PRE>
+</pre>
                                         </p>
 				</td>
 			</tr>
@@ -401,10 +401,10 @@ The output is an object containing:
                                          <li>data - A list of (Timestamp in ms, value) pairs.</li>
                                          <li>label - The (optional) DS name.</li></ul></p>
                                         <p>An example of use with Flot:<br />
-<PRE>
+<pre>
 var fd=rrdDS2FlotObj(...);
 var plot = $.plot("#myplot", fd.data, options);
-</PRE>
+</pre>
                                         </p>
 				</td>
 			</tr>
@@ -531,10 +531,10 @@ The output is an object containing:
                                          <li>data - A list of (Timestamp in ms, value) pairs.</li>
                                          <li>label - The (optional) DS name.</li></ul></p>
                                         <p>An example of use with Flot:<br />
-<PRE>
+<pre>
 var fd=rrdDS2FlotObj(...);
 var plot = $.plot("#myplot", fd.data, options);
-</PRE>
+</pre>
                                         </p>
 				</td>
 			</tr>
@@ -615,9 +615,9 @@ var plot = $.plot("#myplot", fd.data, options);
 				<td width='80%'>
 					<p>Create a new Flot data object by selecting only the data points within the current selection.</p>
                                         <p>An example Flot data object is 
-<PRE>
+<pre>
 rrdDS2FlotObj(...).data
-</PRE></p>
+</pre></p>
 				</td>
 			</tr>
 			<tr valign='top'>
@@ -627,16 +627,16 @@ rrdDS2FlotObj(...).data
 				<td width='80%'>
 					<p>Create a new data list by selecting only the data points within the current selection.</p>
                                         <p>An example data list is 
-<PRE>
+<pre>
 rrdDS2FlotSeries(...).data
-</PRE></p>
+</pre></p>
 				</td>
 			</tr>
 		</tbody>
 	</table>
 </div>
 <p>Pseudo-example of use:
-<PRE>
+<pre>
   myplotplot.bind("plotselected", function (event, ranges) {
       // do the zooming
       selection_range.setFromFlotRanges(ranges);
@@ -644,7 +644,7 @@ rrdDS2FlotSeries(...).data
       graph_options.xaxis.max=ranges.xaxis.to;
       mygraph = $.plot("#mygraph", selection_range.trim_flot_data(flot_data), graph_options);
   });
-</PRE>
+</pre>
 </p>
 <table width='50%' cellpadding='2' CELLSPACING='2'>
         <tr>

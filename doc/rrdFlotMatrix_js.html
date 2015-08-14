@@ -1,13 +1,13 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8" />
 	<TITLE>rrdFlotMatrix module</TITLE>
-	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Linux)">
-	<META NAME="Info 1" CONTENT="">
-	<META NAME="Info 2" CONTENT="">
-	<META NAME="Info 3" CONTENT="">
-	<META NAME="Info 4" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Linux)" />
+	<META NAME="Info 1" CONTENT="" />
+	<META NAME="Info 2" CONTENT="" />
+	<META NAME="Info 3" CONTENT="" />
+	<META NAME="Info 4" CONTENT="" />
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 0.79in }
@@ -15,104 +15,105 @@
 		H1 { margin-bottom: 0.08in }
 		H1.western { font-family: "Liberation Sans", sans-serif; font-size: 22pt }
 		P { margin-bottom: 0.08in }
-		H2.heading-2-western { font-family: "Liberation Serif", serif; font-size: 16pt }
+		h2.heading-2-western { font-family: "Liberation Serif", serif; font-size: 16pt }
 		TH P { margin-bottom: 0.08in }
 		A:link { so-language: zxx }
 	-->
 	</STYLE>
 </HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<H1 CLASS="western">rrdFlotMatrix module</H1>
-<TABLE WIDTH=50% CELLPADDING=2 CELLSPACING=2>
-	<TR>
-		<TD>
-			<HR>
-			<P>The <A HREF="../../src/lib/rrdFlotMatrix.js">rrdFlotMatrix Javascript
-			module</A> implements a class used to represents a DS from a list of similar 
-			<A HREF="http://oss.oetiker.ch/rrdtool/">RDD archives</A> 
-	                as a <A HREF="http://www.flotcharts.org/">Flot</A> plot.</P>
-		        <P>All RRDs must have the same step, the same DS names and the same number of RRAs.</P>
-			<HR>
-		</TD>
-	</TR>
-</TABLE>
-<H2 CLASS="heading-2-western">Overview</H2>
-<P>This module provide a single class: <A HREF="#rrdFlotMatrix">rrdFlotMatrix</A>.</P>
-<P>Given a 
-<A HREF="rrdFile_js.html#RRDFile">RRDFile</A> object, this class
+<body LANG="en-US" DIR="LTR">
+<h1 class="western">rrdFlotMatrix module</h1>
+<table width='50%' cellpadding='2' CELLSPACING='2'>
+	<tr>
+		<td>
+			<hr />
+			<p>The <a href="../../src/lib/rrdFlotMatrix.js">rrdFlotMatrix Javascript
+			module</a> implements a class used to represents a DS from a list of similar 
+			<a href="http://oss.oetiker.ch/rrdtool/">RDD archives</a> 
+	                as a <a href="http://www.flotcharts.org/">Flot</a> plot.</p>
+		        <p>All RRDs must have the same step, the same DS names and the same number of RRAs.</p>
+			<hr />
+		</td>
+	</tr>
+</table>
+<h2 class="heading-2-western">Overview</h2>
+<p>This module provide a single class: <a href="#rrdFlotMatrix">rrdFlotMatrix</a>.</p>
+<p>Given a 
+<a href="rrdFile_js.html#RRDFile">RRDFile</a> object, this class
 creates an interactive
-<A HREF="http://www.flotcharts.org/">Flot</A> plot.</P>
+<a href="http://www.flotcharts.org/">Flot</a> plot.</p>
 
-<P>In order to use this module, you also need to include:
-<UL>
- <LI><A HREF="rrdFlotSupport_js.html">rrdFlotSupport.js</A>
- <LI><A HREF="http://www.flotcharts.org/">jquery.flot.js</A>
- <LI><A HREF="http://jquery.com/">jquery.js</A>
-</UL></P>
+<p>In order to use this module, you also need to include:
+<ul>
+	<li><a href="rrdFlotSupport_js.html">rrdFlotSupport.js</a></li>
+	<li><a href="http://www.flotcharts.org/">jquery.flot.js</a></li>
+	<li><a href="http://jquery.com/">jquery.js</a></li>
+</ul></p>
 
-<H2 CLASS="heading-2-western"><A NAME="rrdFlotMatrix"></A>Class rrdFlotMatrix</H2>
-<P>The rrdFlotMatrix constructor has two to six arguments:</P>
-<DIV ALIGN=RIGHT>
-	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
-		<COL WIDTH=51*>
-		<COL WIDTH=205*>
+<h2 class="heading-2-western"><a NAME="rrdFlotMatrix"></a>Class rrdFlotMatrix</h2>
+<p>The rrdFlotMatrix constructor has two to six arguments:</p>
+<div align='right'>
+	<table width='90%' border='1' cellpadding='2' cellspacing='3'>
+		<col width='51*' />
+		<col width='205*' />
 		<THEAD>
-			<TR VALIGN=TOP>
-				<TH WIDTH=20%>
-					<P ALIGN=LEFT>Argument</P>
+			<tr valign='top'>
+				<TH width='20%'>
+					<p align='left'>Argument</p>
 				</TH>
-				<TH WIDTH=80%>
-					<P ALIGN=LEFT>Description</P>
+				<TH width='80%'>
+					<p align='left'>Description</p>
 				</TH>
-			</TR>
+			</tr>
 		</THEAD>
-		<TBODY>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>html_id</P>
-				</TD>
-				<TD WIDTH=80%>
-					<P>ID of a HTML element, possibly a DIV.</P>
-				</TD>
-			</TR>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>rrd_files</P>
-				</TD>
-				<TD WIDTH=80%>
-				        <P>A list of RRDs. Each element of the list contains a [rrd_id,rrd_file] pair.
+		<tbody>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>html_id</p>
+				</td>
+				<td width='80%'>
+					<p>ID of a HTML element, possibly a div.</p>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>rrd_files</p>
+				</td>
+				<td width='80%'>
+				        <p>A list of RRDs. Each element of the list contains a [rrd_id,rrd_file] pair.
 				           <ul>
-					    <li>rrd_id - Logical name for the RRD.
-				            <li>rrd_file -An object of type <A HREF="rrdFile_js.html#RRDFile">RRDFile</A> or equivalent.
+						   <li>rrd_id - Logical name for the RRD.</li>
+						   <li>rrd_file -An object of type <a href="rrdFile_js.html#RRDFile">RRDFile</a> or equivalent</li>.
 					   </ul>
-					</P>
-				</TD>
-			</TR>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>ds_list (optional)</P>
-				</TD>
-				<TD WIDTH=80%>
-				        <P>A list of DSes. Each element of the list contains a [ds_id,ds_title] pair.
+					</p>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>ds_list (optional)</p>
+				</td>
+				<td width='80%'>
+				        <p>A list of DSes. Each element of the list contains a [ds_id,ds_title] pair.
 				           <ul>
 					    <li>ds_id - Logical name for the DS (as accepted by
-                                                        <A HREF="rrdFile_js.html#RRDFile">RRDFile.getDS()</A>).
-				            <li>ds_title - Name to display to the user.
+						    <a href="rrdFile_js.html#RRDFile">RRDFile.getDS()</a>).</li>
+					    <li>ds_title - Name to display to the user.</li>
 					   </ul>
-					</P>
-				        <P>If undefined, all the DS's of the RRD will be used.</P>
-				</TD>
-			</TR>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>graph_options (optional)</P>
-				</TD>
-				<TD WIDTH=80%>
-					<P>Global graphing options. See
-				           <A HREF="http://www.flotcharts.org/">Flot documentation</A>
-				           for more details.</P>
-                                        <P>The recognized elements and the default values are:
+					</p>
+				        <p>If undefined, all the DS's of the RRD will be used.</p>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>graph_options (optional)</p>
+				</td>
+				<td width='80%'>
+					<p>Global graphing options. See
+				           <a href="http://www.flotcharts.org/">Flot documentation</a>
+				           for more details.</p>
+                                        <p>The recognized elements and the default values are:
 <PRE>
+<![CDATA[
   graph_options = {
     legend: {position:"nw",noColumns:3},
     lines: { show:true },
@@ -120,19 +121,20 @@ creates an interactive
     tooltip: true,
     tooltipOpts: { content: "&lth4&gt%s&lt/h4&gt Value: %y.3" }, // %s: series text, %y.3: y-value toPrecision(3)
   };
-</PRE></P>
-				</TD>
-			</TR>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>rrd_graph_options (optional)</P>
-				</TD>
-				<TD WIDTH=80%>
-					<P>Dictionary of graphing options. This must be a dictionary of rrd_id.
+]]>
+</PRE></p>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>rrd_graph_options (optional)</p>
+				</td>
+				<td width='80%'>
+					<p>Dictionary of graphing options. This must be a dictionary of rrd_id.
 				           Each element of the dictionary contains graphing options. See
-				           <A HREF="http://www.flotcharts.org/">Flot documentation</A>
-				           for more details.</P>
-                                        <P>The recognized elements and the default values are:
+				           <a href="http://www.flotcharts.org/">Flot documentation</a>
+				           for more details.</p>
+                                        <p>The recognized elements and the default values are:
 <PRE>
    {
      title: label  or rrd_name                          // this is what is displayed in the checkboxes
@@ -141,16 +143,16 @@ creates an interactive
      color: rrd_index                                   // see Flot docs for details
      lines: { show:true, fill: true, fillColor:color }  // see Flot docs for details
    }
-</PRE></P>
-				</TD>
-			</TR>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>rrdflot_defaults (optional)</P>
-				</TD>
-				<TD WIDTH=80%>
-					<P>Dictionary of rrd_flot options. All are optional.</P>
-                                        <P>The recognized elements and the default values are:
+</PRE></p>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>rrdflot_defaults (optional)</p>
+				</td>
+				<td width='80%'>
+					<p>Dictionary of rrd_flot options. All are optional.</p>
+                                        <p>The recognized elements and the default values are:
 <PRE>
  {
     graph_only: false        // If true, limit the display to the graph only
@@ -176,25 +178,26 @@ creates an interactive
     scale_height: "110px"    //Height of small scaler graph.
     scale_width: "250px"     //Width of small scaler graph.
  } 
-</PRE></P>
-				</TD>
-			</TR>
-      </TABLE>
-</DIV>
-<P>Once instatiated, the object will automatically draw the plot and handle user interaction.</P>
-<TABLE WIDTH=50% CELLPADDING=2 CELLSPACING=2>
-        <TR>
-                <TD>
-                        <HR>
-                        <P>This module is part of the <A HREF="index.html">javascriptRRD
-                        package</A> hosted at <A HREF="http://javascriptrrd.sourceforge.net/">http://javascriptrrd.sourceforge.net</A>.
-                        <BR>It is licensed under the <A HREF="http://www.opensource.org/licenses/mit-license.php">MIT
-                        license</A>.
-                        </P>
-                        <HR>
-                </TD>
-        </TR>
-</TABLE>
+</PRE></p>
+				</td>
+			</tr>
+		</tbody>
+      </table>
+</div>
+<p>Once instatiated, the object will automatically draw the plot and handle user interaction.</p>
+<table width='50%' cellpadding='2' CELLSPACING='2'>
+        <tr>
+                <td>
+                        <hr />
+                        <p>This module is part of the <a href="index.html">javascriptRRD
+                        package</a> hosted at <a href="http://javascriptrrd.sourceforge.net/">http://javascriptrrd.sourceforge.net</a>.
+                        <br />It is licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT
+                        license</a>.
+                        </p>
+                        <hr />
+                </td>
+        </tr>
+</table>
 
-</BODY>
-</HTML>
+</body>
+</html>

@@ -1,70 +1,57 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
-	<TITLE>javascriptRRD libraries</TITLE>
-	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Linux)">
-	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGED" CONTENT="20090209;19413900">
-	<STYLE TYPE="text/css">
-	<!--
-		@page { margin: 0.79in }
-		H1 { margin-bottom: 0.08in }
-		H1.western { font-family: "Liberation Sans", sans-serif; font-size: 22pt }
-		P { margin-bottom: 0.08in }
-		A:link { so-language: zxx }
-	-->
-	</STYLE>
-</HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<H1 CLASS="western">javascriptRRD libraries</H1>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>javascriptRRD libraries</title>
+</head>
+<body>
+<h1 class="western">javascriptRRD libraries</h1>
 
-<P><b>Spoiler:</b> Look toward the end of the page.</P>
+<p><b>Spoiler:</b> Look toward the end of the page.</p>
 
-<P>The javascriptRRD package contains base three javascript modules that can be user to read RRD files:</P>
-<UL>
-	<LI><P>The <A HREF="rrdFile_js.html">rrdFile module</A>, used to
-	extract information from <A HREF="http://oss.oetiker.ch/rrdtool/">RRD
-	archives</A> loaded as binary file objects.</P>
-        <LI><P>The <A HREF="rrdMultiFile_js.html">rrdMultiFile module</A>, 
-        used to combine many rrdFile objects.</P>
-	<LI><P>The <A HREF="binaryXHR_js.html">binaryXHR module</A>, used to
-	retrieve binary files using the <A HREF="http://en.wikipedia.org/wiki/XMLHttpRequest">XMLHttpRequest</A>
-	API.</P>
-</UL>
-<P>Together they can be used to implement AJAX style applications.</P>
+<p>The javascriptRRD package contains base three javascript modules that can be user to read RRD files:</p>
+<ul>
+	<li><p>The <a href="rrdFile_js.html">rrdFile module</a>, used to
+	extract information from <a href="http://oss.oetiker.ch/rrdtool/">RRD
+		archives</a> loaded as binary file objects.</p></li>
+        <li><p>The <a href="rrdMultiFile_js.html">rrdMultiFile module</a>, 
+		used to combine many rrdFile objects.</p></li>
+	<li><p>The <a href="binaryXHR_js.html">binaryXHR module</a>, used to
+	retrieve binary files using the <a href="http://en.wikipedia.org/wiki/XMLHttpRequest">XMLHttpRequest</a>
+	API.</p></li>
+</ul>
+<p>Together they can be used to implement AJAX style applications.</p>
 
-<P> The <A HREF="rrdFilter_js.html">rrdFilter module</A> can be used to filter datasources (DSs) and apply user-customized filter objects such as mathematical operations. This module also has methods to average RRAs (for creating new, averaged RRAs with different step sizes). </P>
+<p> The <a href="rrdFilter_js.html">rrdFilter module</a> can be used to filter datasources (DSs) and apply user-customized filter objects such as mathematical operations. This module also has methods to average RRAs (for creating new, averaged RRAs with different step sizes). </p>
 
-<P>The package also provides two classes, based on
-   <A HREF="http://www.flotcharts.org/">Flot</A>,
-   that automate most of the graphing needs, once the files have been read:</P>
-<UL>
-	<LI><P>The <A HREF="rrdFlot_js.html">rrdFlot module</A> can be used to plot a single RRD file.
-	<LI><P>The <A HREF="rrdFlotMatrix_js.html">rrdFlotMatrix module</A> can be used to plot a list of RRD files.
-</UL>
+<p>The package also provides two classes, based on
+   <a href="http://www.flotcharts.org/">Flot</a>,
+   that automate most of the graphing needs, once the files have been read:</p>
+<ul>
+	<li><p>The <a href="rrdFlot_js.html">rrdFlot module</a> can be used to plot a single RRD file.</p></li>
+	<li><p>The <a href="rrdFlotMatrix_js.html">rrdFlotMatrix module</a> can be used to plot a list of RRD files.</p></li>
+</ul>
 
-<P>
-Most users are however expected to use the <b>helper classes in the <A HREF="rrdFlotAsync_js.html">rrdFlotAsync module</A></b>.<br>
-The classes there combine loading the files with graphing them.</P>
+<p>
+Most users are however expected to use the <b>helper classes in the <a href="rrdFlotAsync_js.html">rrdFlotAsync module</a></b>.<br />
+The classes there combine loading the files with graphing them.</p>
 
-<P>Example Web pages using the above modules can be found linked from the 
-<A HREF="../../src/examples/index.html">examples web page</a>.</P>
+<p>Example Web pages using the above modules can be found linked from the 
+<a href="../../src/examples/index.html">examples web page</a>.</p>
 
 
-<TABLE WIDTH=50% CELLPADDING=2 CELLSPACING=2>
-        <TR>
-                <TD>
-                        <HR>
-                        <P>The javascriptRRD package
-                        is hosted at <A HREF="http://javascriptrrd.sourceforge.net/">http://javascriptrrd.sourceforge.net</A>.
-                        <BR>It is licensed under the <A HREF="http://www.opensource.org/licenses/mit-license.php">MIT
-                        license</A>.
-                        </P>
-                        <HR>
-                </TD>
-        </TR>
-</TABLE>
+<table width='50%' cellpadding='2' cellspacing='2'>
+        <tr>
+                <td>
+                        <hr />
+                        <p>The javascriptRRD package
+                        is hosted at <a href="http://javascriptrrd.sourceforge.net/">http://javascriptrrd.sourceforge.net</a>.
+                        <br />It is licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT
+                        license</a>.
+                        </p>
+                        <hr />
+                </td>
+        </tr>
+</table>
 
-</BODY>
-</HTML>
+</body>
+</html>

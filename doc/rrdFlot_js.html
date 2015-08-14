@@ -1,13 +1,13 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8" />
 	<TITLE>rrdFlot module</TITLE>
-	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Linux)">
-	<META NAME="Info 1" CONTENT="">
-	<META NAME="Info 2" CONTENT="">
-	<META NAME="Info 3" CONTENT="">
-	<META NAME="Info 4" CONTENT="">
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Linux)" />
+	<META NAME="Info 1" CONTENT="" />
+	<META NAME="Info 2" CONTENT="" />
+	<META NAME="Info 3" CONTENT="" />
+	<META NAME="Info 4" CONTENT="" />
 	<STYLE TYPE="text/css">
 	<!--
 		@page { margin: 0.79in }
@@ -15,87 +15,88 @@
 		H1 { margin-bottom: 0.08in }
 		H1.western { font-family: "Liberation Sans", sans-serif; font-size: 22pt }
 		P { margin-bottom: 0.08in }
-		H2.heading-2-western { font-family: "Liberation Serif", serif; font-size: 16pt }
+		h2.heading-2-western { font-family: "Liberation Serif", serif; font-size: 16pt }
 		TH P { margin-bottom: 0.08in }
 		A:link { so-language: zxx }
 	-->
 	</STYLE>
 </HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<H1 CLASS="western">rrdFlot module</H1>
-<TABLE WIDTH=50% CELLPADDING=2 CELLSPACING=2>
-	<TR>
-		<TD>
-			<HR>
-			<P>The <A HREF="../../src/lib/rrdFlot.js">rrdFlot Javascript
-			module</A> implements a class used to represents a
-			<A HREF="http://oss.oetiker.ch/rrdtool/">RDD archive</A> 
-	                as a <A HREF="http://www.flotcharts.org/">Flot</A> plot.
-                        Tooltips are provided by the <A HREF="https://github.com/krzysu/flot.tooltip/">tooltip plugin</A>.
-                        </P>
-			<HR>
-		</TD>
-	</TR>
-</TABLE>
-<H2 CLASS="heading-2-western">Overview</H2>
-<P>This module provide a single class: <A HREF="#rrdFlot">rrdFlot</A>.</P>
-<P>Given a 
-<A HREF="rrdFile_js.html#RRDFile">RRDFile</A> object, this class
+<body LANG="en-US" DIR="LTR">
+<h1 class="western">rrdFlot module</h1>
+<table width='50%' cellpadding='2' CELLSPACING='2'>
+	<tr>
+		<td>
+			<hr />
+			<p>The <a href="../../src/lib/rrdFlot.js">rrdFlot Javascript
+			module</a> implements a class used to represents a
+			<a href="http://oss.oetiker.ch/rrdtool/">RDD archive</a> 
+	                as a <a href="http://www.flotcharts.org/">Flot</a> plot.
+                        Tooltips are provided by the <a href="https://github.com/krzysu/flot.tooltip/">tooltip plugin</a>.
+                        </p>
+			<hr />
+		</td>
+	</tr>
+</table>
+<h2 class="heading-2-western">Overview</h2>
+<p>This module provide a single class: <a href="#rrdFlot">rrdFlot</a>.</p>
+<p>Given a 
+<a href="rrdFile_js.html#RRDFile">RRDFile</a> object, this class
 creates an interactive
-<A HREF="http://www.flotcharts.org/">Flot</A> plot.</P>
+<a href="http://www.flotcharts.org/">Flot</a> plot.</p>
 
-<P>In order to use this module, you also need to include:
-<UL>
- <LI><A HREF="rrdFlotSupport_js.html">rrdFlotSupport.js</A>
- <LI><A HREF="http://www.flotcharts.org/">jquery.flot.js</A>
- <LI><A HREF="http://jquery.com/">jquery.js</A>
-</UL></P>
+<p>In order to use this module, you also need to include:
+<ul>
+	<li><a href="rrdFlotSupport_js.html">rrdFlotSupport.js</a></li>
+	<li><a href="http://www.flotcharts.org/">jquery.flot.js</a></li>
+	<li><a href="http://jquery.com/">jquery.js</a></li>
+</ul></p>
 
-<H2 CLASS="heading-2-western"><A NAME="rrdFlot"></A>Class rrdFlot</H2>
-<P>The rrdFlot constructor has two to four arguments:</P>
-<DIV ALIGN=RIGHT>
-	<TABLE WIDTH=90% BORDER=1 CELLPADDING=2 CELLSPACING=3>
-		<COL WIDTH=51*>
-		<COL WIDTH=205*>
+<h2 class="heading-2-western"><a NAME="rrdFlot"></a>Class rrdFlot</h2>
+<p>The rrdFlot constructor has two to four arguments:</p>
+<div align='right'>
+	<table width='90%' border='1' cellpadding='2' cellspacing='3'>
+		<col width='51*' />
+		<col width='205*' />
 		<THEAD>
-			<TR VALIGN=TOP>
-				<TH WIDTH=20%>
-					<P ALIGN=LEFT>Argument</P>
+			<tr valign='top'>
+				<TH width='20%'>
+					<p align='left'>Argument</p>
 				</TH>
-				<TH WIDTH=80%>
-					<P ALIGN=LEFT>Description</P>
+				<TH width='80%'>
+					<p align='left'>Description</p>
 				</TH>
-			</TR>
+			</tr>
 		</THEAD>
-		<TBODY>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>html_id</P>
-				</TD>
-				<TD WIDTH=80%>
-					<P>ID of a HTML element, possibly a DIV.</P>
-				</TD>
-			</TR>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>rrd_file</P>
-				</TD>
-				<TD WIDTH=80%>
-					<P>An object of type <A HREF="rrdFile_js.html#RRDFile">RRDFile</A>, or equivalent.</P>
-				</TD>
-			</TR>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>graph_options (optional)</P>
-				</TD>
-				<TD WIDTH=80%>
-					<P>Global graphing options. See
-				           <A HREF="http://www.flotcharts.org/">Flot documentation</A>
+		<tbody>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>html_id</p>
+				</td>
+				<td width='80%'>
+					<p>ID of a HTML element, possibly a div.</p>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>rrd_file</p>
+				</td>
+				<td width='80%'>
+					<p>An object of type <a href="rrdFile_js.html#RRDFile">RRDFile</a>, or equivalent.</p>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>graph_options (optional)</p>
+				</td>
+				<td width='80%'>
+					<p>Global graphing options. See
+				           <a href="http://www.flotcharts.org/">Flot documentation</a>
 		                           and
-                                           <A HREF="https://github.com/krzysu/flot.tooltip/">tooltip plugin documentation</A>
-				           for more details.</P>
-                                        <P>The recognized elements and the default values are:
-<PRE>
+                                           <a href="https://github.com/krzysu/flot.tooltip/">tooltip plugin documentation</a>
+				           for more details.</p>
+                                        <p>The recognized elements and the default values are:
+<pre>
+<![CDATA[
   graph_options = {
     legend: {position:"nw",noColumns:3},
     lines: { show:true },
@@ -103,19 +104,20 @@ creates an interactive
     tooltip: true,
     tooltipOpts: { content: "&lth4&gt%s&lt/h4&gt Value: %y.3" }, // %s: series text, %y.3: y-value toPrecision(3)
   };
-</PRE></P>
-				</TD>
-			</TR>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>ds_graph_options (optional)</P>
-				</TD>
-				<TD WIDTH=80%>
-					<P>Dictionary of graphing options. This must be a dictionary of DS_id.
+]]>
+</pre></p>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>ds_graph_options (optional)</p>
+				</td>
+				<td width='80%'>
+					<p>Dictionary of graphing options. This must be a dictionary of DS_id.
 				           Each element of the dictionary contains graphing options. See
-				           <A HREF="http://www.flotcharts.org/">Flot documentation</A>
-				           for more details.</P>
-                                        <P>The recognized elements and the default values are:
+				           <a href="http://www.flotcharts.org/">Flot documentation</a>
+				           for more details.</p>
+                                        <p>The recognized elements and the default values are:
 <PRE>
    {
      title: label  or ds_name     // this is what is displayed in the checkboxes
@@ -126,16 +128,16 @@ creates an interactive
      yaxis: 1                     // can be 1 or 2
      stack: 'none'                // other options are 'positive' and 'negative'
    }
-</PRE></P>
-				</TD>
-			</TR>
-			<TR VALIGN=TOP>
-				<TD WIDTH=20%>
-					<P>rrdflot_defaults (optional)</P>
-				</TD>
-				<TD WIDTH=80%>
-					<P>Dictionary of rrd_flot options. All are optional. 
-                                        <P>The recognized elements and the default values are:
+</PRE></p>
+				</td>
+			</tr>
+			<tr valign='top'>
+				<td width='20%'>
+					<p>rrdflot_defaults (optional)</p>
+				</td>
+				<td width='80%'>
+					<p>Dictionary of rrd_flot options. All are optional.</p>
+                                        <p>The recognized elements and the default values are:
 <PRE>
    {
      graph_only: false        // If true, limit the display to the graph only
@@ -164,26 +166,27 @@ creates an interactive
      scale_width: "250px"     //Width of small scaler graph.
      timezone: local time     //Timezone to plot. Options are -11 through +12
   } 
-</PRE></P>
-See the <A HREF=:../../src/examples/rrdJFlotDefaults.html">rrdflot_defaults in action.</A>
-				</TD>
-			</TR>
-      </TABLE>
-</DIV>
-<P>Once instatiated, the object will automatically draw the plot and handle user interaction.</P>
-<TABLE WIDTH=50% CELLPADDING=2 CELLSPACING=2>
-        <TR>
-                <TD>
-                        <HR>
-                        <P>This module is part of the <A HREF="index.html">javascriptRRD
-                        package</A> hosted at <A HREF="http://javascriptrrd.sourceforge.net/">http://javascriptrrd.sourceforge.net</A>.
-                        <BR>It is licensed under the <A HREF="http://www.opensource.org/licenses/mit-license.php">MIT
-                        license</A>.
-                        </P>
-                        <HR>
-                </TD>
-        </TR>
-</TABLE>
+</PRE></p>
+See the <a href="../../src/examples/rrdJFlotDefaults.html">rrdflot_defaults in action.</a>
+				</td>
+			</tr>
+		</tbody>
+      </table>
+</div>
+<p>Once instatiated, the object will automatically draw the plot and handle user interaction.</p>
+<table width='50%' cellpadding='2' CELLSPACING='2'>
+        <tr>
+                <td>
+                        <hr />
+                        <p>This module is part of the <a href="index.html">javascriptRRD
+                        package</a> hosted at <a href="http://javascriptrrd.sourceforge.net/">http://javascriptrrd.sourceforge.net</a>.
+                        <br />It is licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT
+                        license</a>.
+                        </p>
+                        <hr />
+                </td>
+        </tr>
+</table>
 
-</BODY>
-</HTML>
+</body>
+</html>

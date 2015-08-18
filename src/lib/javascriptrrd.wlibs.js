@@ -29,8 +29,8 @@ includeJS([
 
 // include flot
 includeJS([
-    "../../external/flot/jquery.js",
-    "../../external/flot/jquery.flot.js",
-    "../../external/flot/jquery.flot.time.js",
-    "../../external/flot/jquery.flot.selection.js"
+    "../../node_modules/flot/jquery.js",
+    "../../node_modules/flot/jquery.flot.js",
+    "../../node_modules/flot/jquery.flot.time.js",
+    "../../node_modules/flot/jquery.flot.selection.js"
 ]);

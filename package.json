@@ -1,0 +1,15 @@
+{
+  "name": "javascriptrrd",
+  "version": "0.0.1",
+  "dependencies": {
+    "bootstrap": "^3.3.5",
+    "flot": "^0.8.0-alpha",
+    "jquery": "^2.1.4",
+    "jslint": "^0.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/erwinlem/javascriptrrd.git"
+  },
+  "license": "MIT"
+}

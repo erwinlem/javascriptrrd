@@ -1,57 +1,363 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<title>javascriptRRD libraries</title>
-</head>
-<body>
-<h1 class="western">javascriptRRD libraries</h1>
+	<head>
+		<title>javascriptRRD libraries</title>
+		<link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="container bs-docs-container">
 
-<p><b>Spoiler:</b> Look toward the end of the page.</p>
+			<div class="row">
+				<div class="col-md-9" role="main">
+					<h1>javascriptRRD libraries</h1>
 
-<p>The javascriptRRD package contains base three javascript modules that can be user to read RRD files:</p>
+					<p><b>Spoiler:</b> Look toward the end of the page.</p>
+
+					<p>The javascriptRRD package contains base three javascript modules that can be user to read RRD files:</p>
+					<ul>
+						<li>The <a href="rrdFile_js.html">rrdFile module</a>, used to extract information from <a href="http://oss.oetiker.ch/rrdtool/">RRD archives</a> loaded as binary file objects.</li>
+						<li>The <a href="rrdMultiFile_js.html">rrdMultiFile module</a>, used to combine many rrdFile objects.</li>
+						<li>The <a href="binaryXHR_js.html">binaryXHR module</a>, used to retrieve binary files using the <a href="http://en.wikipedia.org/wiki/XMLHttpRequest">XMLHttpRequest</a> API.</li>
+					</ul>
+					<p>Together they can be used to implement AJAX style applications.</p>
+
+					<p>The <a href="rrdFilter_js.html">rrdFilter module</a> can be used to filter datasources (DSs) and apply user-customized filter objects such as mathematical operations. This module also has methods to average RRAs (for creating new, averaged RRAs with different step sizes). </p>
+
+					<p>The package also provides two classes, based on <a href="http://www.flotcharts.org/">Flot</a>, that automate most of the graphing needs, once the files have been read:</p>
+
+					<ul>
+						<li>The <a href="rrdFlot_js.html">rrdFlot module</a> can be used to plot a single RRD file.</li>
+						<li>The <a href="rrdFlotMatrix_js.html">rrdFlotMatrix module</a> can be used to plot a list of RRD files.</li>
+					</ul>
+
+					<p>Most users are however expected to use the <b>helper classes in the <a href="rrdFlotAsync_js.html">rrdFlotAsync module</a></b>.<br />
+					The classes there combine loading the files with graphing them.</p>
+
+					<p>Example Web pages using the above modules can be found linked from the 
+					<a href="../../src/examples/index.html">examples web page</a>.</p>
+
+
+
+
+
+<a class="anchorjs-link " href="#readingrrd"></a>
+<div class="page-header"><h1 id="readingrrd">rrdFile module</h1></div>
+			<p>The <a href="../../src/lib/rrdFile.js">rrdFile Javascript module</a> implements a set of classes that can be used to extract information from <a href="http://oss.oetiker.ch/rrdtool/">RRD archives</a> loaded as binary file objects.</p>
+
+<h2>Overview</h2>
+<p>The main class in this module is <a href="#RRDFile">RRDFile</a>.  It interprets the given the binary file object and provides methods to decode the <a href="http://oss.oetiker.ch/rrdtool/">RRD</a> information.</p>
+<h2><a NAME="RRDFile"></a>Class RRDFile</h2>
+<p>This is the main class of the package. It is also the only class
+the user ever needs to explicitly instantiate.</p>
+<p>The RRDFile constructor has two arguments (only one required):</p>
 <ul>
-	<li><p>The <a href="rrdFile_js.html">rrdFile module</a>, used to
-	extract information from <a href="http://oss.oetiker.ch/rrdtool/">RRD
-		archives</a> loaded as binary file objects.</p></li>
-        <li><p>The <a href="rrdMultiFile_js.html">rrdMultiFile module</a>, 
-		used to combine many rrdFile objects.</p></li>
-	<li><p>The <a href="binaryXHR_js.html">binaryXHR module</a>, used to
-	retrieve binary files using the <a href="http://en.wikipedia.org/wiki/XMLHttpRequest">XMLHttpRequest</a>
-	API.</p></li>
+	<li><p>A binary file object.</p>
+		<p>Any object implementing an interface providing the following methods can be used:</p>
+		<ul>
+			<li>getByteAt(idx) - Return a 8 bit unsigned integer at offset idx.</li>
+			<li>getLongAt(idx) - Return a 32 bit unsigned integer at offset idx.</li>
+			<li>getDoubleAt(idx) - Return a double float at offset idx.</li>
+			<li>getFastDoubleAt(idx) - Similar to getDoubleAt but with less precision.</li>
+			<li>getCStringAt(idx,maxsize) - Return a string of at most maxsize characters that was 0-terminated in the source.</li>
+		</ul>
+
+		<p>The <a href="binaryXHR_js.html">binaryXHR module</a>, provided with this package, provides the class <a href="binaryXHR_js.html#BinaryFile">BinaryFile</a> that implements this interface.</p>
+		<p>If the binary file is not a proper <a href="http://oss.oetiker.ch/rrdtool/">RRD file</a>, an <a href="#InvalidRRD">InvalidRRD</a> exception will be thrown.</p>
+	</li>
+	<li><p>Options object (optional)</p>
+		<p>Currently with no semantics; defined for future expandability only.</p>
+	</li>
 </ul>
-<p>Together they can be used to implement AJAX style applications.</p>
+<p>This class also implements the following methods:</p>
+	<table class="table table-bordered table-striped">
+		<thead> <tr> <th>Method</th> <th>Description</th> </tr> </thead>
+		<tbody>
+			<tr>
+				<td> getMinStep() </td>
+				<td> Return the base <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#I__step__s_step__default__300_seconds_">interval in seconds</a> that was used to feed the RRD file.  </td>
+			</tr>
+			<tr>
+				<td> getLastUpdate() </td>
+				<td> Return the timestamp of the <a href="http://oss.oetiker.ch/rrdtool/doc/rrdlastupdate.en.html">last update</a>.  </td>
+			</tr>
+			<tr>
+				<td> getNrDSs() </td>
+				<td> Return the number of <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data Sources</a> present in the RRD file.  </td>
+			</tr>
+			<tr>
+				<td> getDSNames() </td>
+				<td> Return the names of the <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data Sources</a> present in the RRD file.  </td>
+			</tr>
+			<tr>
+				<td> getDS(id) </td>
+				<td>
+					<p>If id is a number, return an object of type <a href="#RRDDS">RRDDS</a> holding the information about the id-th <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data Source</a>.</p>
+					<p>If id is a string, return an object of type <a href="#RRDDS">RRDDS</a> holding the information about the <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data Source</a> with the requested name.</p>
+				</td>
+			</tr>
+			<tr>
+				<td> getNrRRAs() </td>
+				<td> Return the number of <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round Robin Archives</a> present in the RRD file.  </td>
+			</tr>
+			<tr>
+				<td> getRRAInfo(n) </td>
+				<td> Return an object of type <a href="#RRDRRAInfo">RRDRRAInfo</a> holding the information about the n-th <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round Robin Archive</a>.  </td>
+			</tr>
+			<tr>
+				<td> getRRA(n) </td>
+				<td> Return an object of type <a href="#RRDRRA">RRDRRA</a> that can be used to access the values stored in the n-th <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round Robin Archive</a>.  </td>
+			</tr>
+		</tbody>
+	</table>
+<hr />
+<h2><i>Internal classes</i></h2>
 
-<p> The <a href="rrdFilter_js.html">rrdFilter module</a> can be used to filter datasources (DSs) and apply user-customized filter objects such as mathematical operations. This module also has methods to average RRAs (for creating new, averaged RRAs with different step sizes). </p>
+<h2><a NAME="RRDDS"></a>Class RRDDS</h2>
+<p>This class implements the methods needed to access the information
+about a <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">RRD
+Data Source</a>.</p>
+<div align='right'>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>
+					Method
+				</th>
+				<th>
+					Description
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					getIdx()
+				</td>
+				<td>
+					Return which DS it is in the RRD file.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					getName()
+				</td>
+				<td>
+					Return the name of the data source.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					getType()
+				</td>
+				<td>
+					Return the <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">type</a>
+					of the data source.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					getMin()
+				</td>
+				<td ROWSPAN="2">
+					Return the minimum and maximum value the data source can
+					contain. 
+					
+					If either is not defined, <I>undefined</I> is returned.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					getMax()
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<h2><a NAME="RRDRRAInfo"></a>Class
+RRDRRAInfo</h2>
+<p>This class implements the methods needed to access the information
+about a <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
+Robin Archive</a>.</p>
+<div align='right'>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>
+					<p>Method</p>
+				</th>
+				<th>
+					<p>Description</p>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<p>getIdx()</p>
+				</td>
+				<td>
+					<p>Return which RRA it is in the RRD file.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getNrRows()</p>
+				</td>
+				<td>
+					<p>Return the number of rows in the RRA.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getStep()</p>
+				</td>
+				<td>
+					<p>Return the number of seconds between rows.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getCFName()</p>
+				</td>
+				<td>
+					<p>Return the <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Consolidation
+					Function</a> used by the RRA.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getPdpPerRow()</p>
+				</td>
+				<td>
+					<p>Return number of slots used for consolidation.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<h2><a NAME="RRDRRA"></a>Class RRDRRA</h2>
+<p>This class implements the methods needed to access the content of
+a <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Round
+Robin Archive</a>.</p>
+<div align='right'>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>
+					<p>Method</p>
+				</th>
+				<th>
+					<p>Description</p>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<p>getIdx()</p>
+				</td>
+				<td>
+					<p>Return which RRA it is in the RRD file.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getCFName()</p>
+				</td>
+				<td>
+					<p>Return the <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IRRA_CF_cf_arguments">Consolidation
+					Function</a> used by the RRA.</p>
+					<p>The current implementation only supports
+					AVERAGE,MAXIMUM,MINIMUM and LAST.<br />Access to elements of any
+					other CF is currently undefined. 
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getNrRows()</p>
+				</td>
+				<td>
+					<p>Return the number of rows in the RRA.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getNrDSs()</p>
+				</td>
+				<td>
+					<p>Return the number of <a href="http://oss.oetiker.ch/rrdtool/doc/rrdcreate.en.html#IDS_ds_name_DST_dst_arguments">Data
+					Sources</a> present in the RRA.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getStep()</p>
+				</td>
+				<td>
+					<p>Return the number of seconds between rows.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getEl(r,d)</p>
+				</td>
+				<td>
+					<p>Return the value for the d-th DS in the r-th row.</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>getElFast(row,ds)</p>
+				</td>
+				<td>
+					<p>Return the low-precision value for the d-th DS in the r-th
+					row.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<h2><a NAME="InvalidRRD"></a>Exception
+class InvalidRRD</h2>
+<p>This is a helper exception class that can be thrown while
+interpreting the binary file object.</p>
+<p><br /><br />
+</p>
 
-<p>The package also provides two classes, based on
-   <a href="http://www.flotcharts.org/">Flot</a>,
-   that automate most of the graphing needs, once the files have been read:</p>
-<ul>
-	<li><p>The <a href="rrdFlot_js.html">rrdFlot module</a> can be used to plot a single RRD file.</p></li>
-	<li><p>The <a href="rrdFlotMatrix_js.html">rrdFlotMatrix module</a> can be used to plot a list of RRD files.</p></li>
-</ul>
+				</div>
 
-<p>
-Most users are however expected to use the <b>helper classes in the <a href="rrdFlotAsync_js.html">rrdFlotAsync module</a></b>.<br />
-The classes there combine loading the files with graphing them.</p>
+				<div class="col-md-3" role="complementary">
+					<nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">
+						<ul class="nav bs-docs-sidenav">
 
-<p>Example Web pages using the above modules can be found linked from the 
-<a href="../../src/examples/index.html">examples web page</a>.</p>
+							<li class="">
+								<a href="#overview">Overview</a>
+							</li>
+							<li class="">
+								<a href="#readingrrd">Reading RRD files</a>
+								<ul class="nav">
+									<li class=""><a href="#rrdFile">rrdFile</a></li>
+									<li class=""><a href="#rrdMultiFile">rrdMultiFile</a></li>
+									<li class=""><a href="#binaryXHR">binaryXHR</a></li>
+								</ul>
+							</li>
+						</ul>
+						<a class="back-to-top" href="#top">
+							Back to top
+						</a>
 
+					</nav>
+				</div>
+			</div>
 
-<table width='50%' cellpadding='2' cellspacing='2'>
-        <tr>
-                <td>
-                        <hr />
-                        <p>The javascriptRRD package
-                        is hosted at <a href="http://javascriptrrd.sourceforge.net/">http://javascriptrrd.sourceforge.net</a>.
-                        <br />It is licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT
-                        license</a>.
-                        </p>
-                        <hr />
-                </td>
-        </tr>
-</table>
-
-</body>
+			<footer>
+				<p>The javascriptRRD package is hosted at <a href="http://javascriptrrd.sourceforge.net/">http://javascriptrrd.sourceforge.net</a><br />
+				It is licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT license</a>.
+				</p>
+			</footer>
+		</div>
+		<script src="../node_modules/jquery/dist/jquery.js"></script>
+		<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+	</body>
 </html>

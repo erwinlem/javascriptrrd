@@ -239,3 +239,5 @@ function FetchBinaryURLAsync(url, callback, callback_arg) {
 	request.send(null);
 	return request;
 }
+
+module.exports.FetchBinaryURLAsync = FetchBinaryURLAsync;

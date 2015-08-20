@@ -58,7 +58,7 @@ function InvalidRRD(msg) {
 // pretty print
 InvalidRRD.prototype.toString = function() {
     return this.name + ': "' + this.message + '"';
-}
+};
 
 
 // ============================================================
@@ -71,19 +71,19 @@ function RRDDS(rrd_data, rrd_data_idx, my_idx) {
 
 RRDDS.prototype.getIdx = function() {
     return this.my_idx;
-}
+};
 RRDDS.prototype.getName = function() {
     return this.rrd_data.getCStringAt(this.rrd_data_idx, 20);
-}
+};
 RRDDS.prototype.getType = function() {
     return this.rrd_data.getCStringAt(this.rrd_data_idx + 20, 20);
-}
+};
 RRDDS.prototype.getMin = function() {
     return this.rrd_data.getDoubleAt(this.rrd_data_idx + 48);
-}
+};
 RRDDS.prototype.getMax = function() {
     return this.rrd_data.getDoubleAt(this.rrd_data_idx + 56);
-}
+};
 
 
 // ============================================================
@@ -103,28 +103,28 @@ function RRDRRAInfo(rrd_data, rra_def_idx,
 
 RRDRRAInfo.prototype.getIdx = function() {
     return this.my_idx;
-}
+};
 
 // Get number of rows
 RRDRRAInfo.prototype.getNrRows = function() {
     return this.row_cnt;
-}
+};
 
 // Get number of slots used for consolidation
 // Mostly for internal use
 RRDRRAInfo.prototype.getPdpPerRow = function() {
     return this.rrd_data.getLongAt(this.rra_pdp_cnt_idx);
-}
+};
 
 // Get RRA step (expressed in seconds)
 RRDRRAInfo.prototype.getStep = function() {
     return this.pdp_step * this.getPdpPerRow();
-}
+};
 
 // Get consolidation function name
 RRDRRAInfo.prototype.getCFName = function() {
     return this.rrd_data.getCStringAt(this.rra_def_idx, 20);
-}
+};
 
 
 // ============================================================
@@ -159,40 +159,40 @@ function RRDRRA(rrd_data, rra_ptr_idx,
         } else {
             throw RangeError("Row idx (" + row_idx + ") out of range [0-" + this.row_cnt + ").");
         }
-    }
+    };
 }
 
 RRDRRA.prototype.getIdx = function() {
     return this.rra_info.getIdx();
-}
+};
 
 // Get number of rows/columns
 RRDRRA.prototype.getNrRows = function() {
     return this.row_cnt;
-}
+};
 RRDRRA.prototype.getNrDSs = function() {
     return this.ds_cnt;
-}
+};
 
 // Get RRA step (expressed in seconds)
 RRDRRA.prototype.getStep = function() {
     return this.rra_info.getStep();
-}
+};
 
 // Get consolidation function name
 RRDRRA.prototype.getCFName = function() {
     return this.rra_info.getCFName();
-}
+};
 
 RRDRRA.prototype.getEl = function(row_idx, ds_idx) {
     return this.rrd_data.getDoubleAt(this.base_rrd_db_idx + this.calc_idx(row_idx, ds_idx));
-}
+};
 
 // Low precision version of getEl
 // Uses getFastDoubleAt
 RRDRRA.prototype.getElFast = function(row_idx, ds_idx) {
     return this.rrd_data.getFastDoubleAt(this.base_rrd_db_idx + this.calc_idx(row_idx, ds_idx));
-}
+};
 
 // ============================================================
 // RRD Header handling class
@@ -214,16 +214,16 @@ RRDHeader.prototype.validate_rrd = function() {
     }
 
     this.float_width = 8;
-    if (this.rrd_data.getLongAt(12) == 0) {
+    if (this.rrd_data.getLongAt(12) === 0) {
         // not a double here... likely 64 bit
         this.float_align = 8;
-        if (!(this.rrd_data.getDoubleAt(16) == 8.642135e+130)) {
+        if (this.rrd_data.getDoubleAt(16) != 8.642135e+130) {
             // uhm... wrong endian?
             this.rrd_data.switch_endian = true;
         }
         if (this.rrd_data.getDoubleAt(16) == 8.642135e+130) {
             // now, is it all 64bit or only float 64 bit?
-            if (this.rrd_data.getLongAt(28) == 0) {
+            if (this.rrd_data.getLongAt(28) === 0) {
                 // true 64 bit align
                 this.int_align = 8;
                 this.int_width = 8;
@@ -237,7 +237,7 @@ RRDHeader.prototype.validate_rrd = function() {
         }
     } else {
         /// should be 32 bit alignment
-        if (!(this.rrd_data.getDoubleAt(12) == 8.642135e+130)) {
+        if (this.rrd_data.getDoubleAt(12) != 8.642135e+130) {
             // uhm... wrong endian?
             this.rrd_data.switch_endian = true;
         }
@@ -280,10 +280,10 @@ RRDHeader.prototype.validate_rrd = function() {
     // best guess, assuming no weird align problems
     this.top_header_size = Math.ceil((this.pdp_step_idx + this.int_width) / this.unival_align) * this.unival_align + 10 * this.unival_width;
     var t = this.rrd_data.getLongAt(this.top_header_size);
-    if (t == 0) {
+    if (t === 0) {
         throw new InvalidRRD("Could not find first DS name.");
     }
-}
+};
 
 // Internal, used for initialization
 RRDHeader.prototype.calc_idxs = function() {
@@ -313,7 +313,7 @@ RRDHeader.prototype.calc_idxs = function() {
     this.rra_ptr_el_size = 1 * this.int_width;
 
     this.header_size = this.rra_ptr_idx + this.rra_ptr_el_size * this.rra_cnt;
-}
+};
 
 // Optional initialization
 // Read and calculate row counts
@@ -322,56 +322,56 @@ RRDHeader.prototype.load_row_cnts = function() {
     this.rra_def_row_cnt_sums = []; // how many rows before me
     for (var i = 0; i < this.rra_cnt; i++) {
         this.rra_def_row_cnts[i] = this.rrd_data.getLongAt(this.rra_def_idx + i * this.rra_def_el_size + this.row_cnt_idx, false);
-        if (i == 0) {
+        if (i === 0) {
             this.rra_def_row_cnt_sums[i] = 0;
         } else {
             this.rra_def_row_cnt_sums[i] = this.rra_def_row_cnt_sums[i - 1] + this.rra_def_row_cnts[i - 1];
         }
     }
-}
+};
 
 // ---------------------------
 // Start of user functions
 
 RRDHeader.prototype.getMinStep = function() {
     return this.pdp_step;
-}
+};
 RRDHeader.prototype.getLastUpdate = function() {
     return this.rrd_data.getLongAt(this.live_head_idx, false);
-}
+};
 
 RRDHeader.prototype.getNrDSs = function() {
     return this.ds_cnt;
-}
+};
 RRDHeader.prototype.getDSNames = function() {
-    var ds_names = []
+    var ds_names = [];
     for (var idx = 0; idx < this.ds_cnt; idx++) {
         var ds = this.getDSbyIdx(idx);
-        var ds_name = ds.getName()
+        var ds_name = ds.getName();
         ds_names.push(ds_name);
     }
     return ds_names;
-}
+};
 RRDHeader.prototype.getDSbyIdx = function(idx) {
     if ((idx >= 0) && (idx < this.ds_cnt)) {
         return new RRDDS(this.rrd_data, this.ds_def_idx + this.ds_el_size * idx, idx);
     } else {
         throw RangeError("DS idx (" + idx + ") out of range [0-" + this.ds_cnt + ").");
     }
-}
+};
 RRDHeader.prototype.getDSbyName = function(name) {
     for (var idx = 0; idx < this.ds_cnt; idx++) {
         var ds = this.getDSbyIdx(idx);
-        var ds_name = ds.getName()
+        var ds_name = ds.getName();
         if (ds_name == name)
             return ds;
     }
     throw RangeError("DS name " + name + " unknown.");
-}
+};
 
 RRDHeader.prototype.getNrRRAs = function() {
     return this.rra_cnt;
-}
+};
 RRDHeader.prototype.getRRAInfo = function(idx) {
     if ((idx >= 0) && (idx < this.rra_cnt)) {
         return new RRDRRAInfo(this.rrd_data,
@@ -381,7 +381,7 @@ RRDHeader.prototype.getRRAInfo = function(idx) {
     } else {
         throw RangeError("RRA idx (" + idx + ") out of range [0-" + this.rra_cnt + ").");
     }
-}
+};
 
 // ============================================================
 // RRDFile class
@@ -393,7 +393,7 @@ RRDHeader.prototype.getRRAInfo = function(idx) {
 function RRDFile(bf, file_options) {
     this.file_options = file_options;
 
-    var rrd_data = bf
+    var rrd_data = bf;
 
     this.rrd_header = new RRDHeader(rrd_data);
     this.rrd_header.load_row_cnts();
@@ -403,32 +403,32 @@ function RRDFile(bf, file_options) {
 
     this.getMinStep = function() {
         return this.rrd_header.getMinStep();
-    }
+    };
     this.getLastUpdate = function() {
         return this.rrd_header.getLastUpdate();
-    }
+    };
 
     this.getNrDSs = function() {
         return this.rrd_header.getNrDSs();
-    }
+    };
     this.getDSNames = function() {
         return this.rrd_header.getDSNames();
-    }
+    };
     this.getDS = function(id) {
         if (typeof id == "number") {
             return this.rrd_header.getDSbyIdx(id);
         } else {
             return this.rrd_header.getDSbyName(id);
         }
-    }
+    };
 
     this.getNrRRAs = function() {
         return this.rrd_header.getNrRRAs();
-    }
+    };
 
     this.getRRAInfo = function(idx) {
         return this.rrd_header.getRRAInfo(idx);
-    }
+    };
 
     this.getRRA = function(idx) {
         rra_info = this.rrd_header.getRRAInfo(idx);
@@ -438,6 +438,6 @@ function RRDFile(bf, file_options) {
             this.rrd_header.header_size,
             this.rrd_header.rra_def_row_cnt_sums[idx],
             this.rrd_header.ds_cnt);
-    }
+    };
 
 }

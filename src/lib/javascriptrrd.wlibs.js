@@ -10,12 +10,13 @@ function includeJS(s) {
         var script = document.createElement("script");
         script.type = "text/javascript";
         script.src = base + s[i];
-        document.getElementsByTagName("head")[0].appendChild(script)
-    };
+        document.getElementsByTagName("head")[0].appendChild(script);
+    }
 }
 
 // include rrd
 includeJS([
+    "../../node_modules/flot/jquery.js",
     "binaryXHR.js",
     "rrdFile.js",
     "rrdFlotSupport.js",
@@ -23,14 +24,9 @@ includeJS([
     "rrdFlotMatrix.js",
     "rrdFilter.js",
     "rrdMultiFile.js",
-    "rrdFlotAsync.js"
-]);
-
-
-// include flot
-includeJS([
-    "../../node_modules/flot/jquery.js",
+    "rrdFlotAsync.js",
     "../../node_modules/flot/jquery.flot.js",
     "../../node_modules/flot/jquery.flot.time.js",
     "../../node_modules/flot/jquery.flot.selection.js"
 ]);
+

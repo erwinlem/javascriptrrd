@@ -41,19 +41,19 @@ function RRDRRAFilterDS(rrd_rra, ds_list) {
 }
 RRDRRAFilterDS.prototype.getIdx = function() {
     return this.rrd_rra.getIdx();
-}
+};
 RRDRRAFilterDS.prototype.getNrRows = function() {
     return this.rrd_rra.getNrRows();
-}
+};
 RRDRRAFilterDS.prototype.getNrDSs = function() {
     return this.ds_list.length;
-}
+};
 RRDRRAFilterDS.prototype.getStep = function() {
     return this.rrd_rra.getStep();
-}
+};
 RRDRRAFilterDS.prototype.getCFName = function() {
     return this.rrd_rra.getCFName();
-}
+};
 RRDRRAFilterDS.prototype.getEl = function(row_idx, ds_idx) {
     if ((ds_idx >= 0) && (ds_idx < this.ds_list.length)) {
         var real_ds_idx = this.ds_list[ds_idx].real_ds_idx;
@@ -61,7 +61,7 @@ RRDRRAFilterDS.prototype.getEl = function(row_idx, ds_idx) {
     } else {
         throw RangeError("DS idx (" + ds_idx + ") out of range [0-" + this.ds_list.length + ").");
     }
-}
+};
 RRDRRAFilterDS.prototype.getElFast = function(row_idx, ds_idx) {
     if ((ds_idx >= 0) && (ds_idx < this.ds_list.length)) {
         var real_ds_idx = this.ds_list[ds_idx].real_ds_idx;
@@ -69,7 +69,7 @@ RRDRRAFilterDS.prototype.getElFast = function(row_idx, ds_idx) {
     } else {
         throw RangeError("DS idx (" + ds_idx + ") out of range [0-" + this.ds_list.length + ").");
     }
-}
+};
 
 // --------------------------------------------------
 // Public
@@ -89,28 +89,28 @@ function RRDFilterDS(rrd_file, ds_id_list) {
 }
 RRDFilterDS.prototype.getMinStep = function() {
     return this.rrd_file.getMinStep();
-}
+};
 RRDFilterDS.prototype.getLastUpdate = function() {
     return this.rrd_file.getLastUpdate();
-}
+};
 
 RRDFilterDS.prototype.getNrDSs = function() {
     return this.ds_list.length;
-}
+};
 RRDFilterDS.prototype.getDSNames = function() {
     var ds_names = [];
     for (var i = 0; i < this.ds_list.length; i++) {
         ds_names.push(ds_list[i].getName());
     }
     return ds_names;
-}
+};
 RRDFilterDS.prototype.getDS = function(id) {
     if (typeof id == "number") {
         return this.getDSbyIdx(id);
     } else {
         return this.getDSbyName(id);
     }
-}
+};
 
 // INTERNAL: Do not call directly
 RRDFilterDS.prototype.getDSbyIdx = function(idx) {
@@ -119,28 +119,28 @@ RRDFilterDS.prototype.getDSbyIdx = function(idx) {
     } else {
         throw RangeError("DS idx (" + idx + ") out of range [0-" + this.ds_list.length + ").");
     }
-}
+};
 
 // INTERNAL: Do not call directly
 RRDFilterDS.prototype.getDSbyName = function(name) {
     for (var idx = 0; idx < this.ds_list.length; idx++) {
         var ds = this.ds_list[idx];
-        var ds_name = ds.getName()
+        var ds_name = ds.getName();
         if (ds_name == name)
             return ds;
     }
     throw RangeError("DS name " + name + " unknown.");
-}
+};
 
 RRDFilterDS.prototype.getNrRRAs = function() {
     return this.rrd_file.getNrRRAs();
-}
+};
 RRDFilterDS.prototype.getRRAInfo = function(idx) {
     return this.rrd_file.getRRAInfo(idx);
-}
+};
 RRDFilterDS.prototype.getRRA = function(idx) {
     return new RRDRRAFilterDS(this.rrd_file.getRRA(idx), this.ds_list);
-}
+};
 
 // ================================================================
 // Filter out by using a user provided filter object
@@ -177,13 +177,13 @@ RRDFilterDS.prototype.getRRA = function(idx) {
 function RRDFltOpIdent(ds_name) {
     this.getName = function() {
         return ds_name;
-    }
+    };
     this.getDSNames = function() {
         return [ds_name];
-    }
+    };
     this.computeResult = function(val_list) {
         return val_list[0];
-    }
+    };
 }
 
 // similar to the above, but extracts the name from the index
@@ -192,13 +192,13 @@ function RRDFltOpIdentId(rrd_data, id) {
     this.ds_name = rrd_data.getDS(id).getName();
     this.getName = function() {
         return this.ds_name;
-    }
+    };
     this.getDSNames = function() {
         return [this.ds_name];
-    }
+    };
     this.computeResult = function(val_list) {
         return val_list[0];
-    }
+    };
 }
 
 //Private
@@ -215,28 +215,28 @@ function RRDDSFilterOp(rrd_file, op_obj, my_idx) {
 }
 RRDDSFilterOp.prototype.getIdx = function() {
     return this.my_idx;
-}
+};
 RRDDSFilterOp.prototype.getName = function() {
     return this.op_obj.getName();
-}
+};
 
 RRDDSFilterOp.prototype.getType = function() {
     return "function";
-}
+};
 RRDDSFilterOp.prototype.getMin = function() {
     return undefined;
-}
+};
 RRDDSFilterOp.prototype.getMax = function() {
     return undefined;
-}
+};
 
 // These are new to RRDDSFilterOp
 RRDDSFilterOp.prototype.getRealDSList = function() {
     return this.ds_idx_list;
-}
+};
 RRDDSFilterOp.prototype.computeResult = function(val_list) {
     return this.op_obj.computeResult(val_list);
-}
+};
 
 // ------ --------------------------------------------
 //Private
@@ -246,19 +246,19 @@ function RRDRRAFilterOp(rrd_rra, ds_list) {
 }
 RRDRRAFilterOp.prototype.getIdx = function() {
     return this.rrd_rra.getIdx();
-}
+};
 RRDRRAFilterOp.prototype.getNrRows = function() {
     return this.rrd_rra.getNrRows();
-}
+};
 RRDRRAFilterOp.prototype.getNrDSs = function() {
     return this.ds_list.length;
-}
+};
 RRDRRAFilterOp.prototype.getStep = function() {
     return this.rrd_rra.getStep();
-}
+};
 RRDRRAFilterOp.prototype.getCFName = function() {
     return this.rrd_rra.getCFName();
-}
+};
 RRDRRAFilterOp.prototype.getEl = function(row_idx, ds_idx) {
     if ((ds_idx >= 0) && (ds_idx < this.ds_list.length)) {
         var ds_idx_list = this.ds_list[ds_idx].getRealDSList();
@@ -270,7 +270,7 @@ RRDRRAFilterOp.prototype.getEl = function(row_idx, ds_idx) {
     } else {
         throw RangeError("DS idx (" + ds_idx + ") out of range [0-" + this.ds_list.length + ").");
     }
-}
+};
 RRDRRAFilterOp.prototype.getElFast = function(row_idx, ds_idx) {
     if ((ds_idx >= 0) && (ds_idx < this.ds_list.length)) {
         var ds_idx_list = this.ds_list[ds_idx].getRealDSList();
@@ -282,14 +282,14 @@ RRDRRAFilterOp.prototype.getElFast = function(row_idx, ds_idx) {
     } else {
         throw RangeError("DS idx (" + ds_idx + ") out of range [0-" + this.ds_list.length + ").");
     }
-}
+};
 
 // --------------------------------------------------
 //Public
 function RRDFilterOp(rrd_file, op_obj_list) {
     this.rrd_file = rrd_file;
     this.ds_list = [];
-    for (i in op_obj_list) {
+    for (var i in op_obj_list) {
         var el = op_obj_list[i];
         var outel = null;
         if (typeof(el) == "string") {
@@ -304,27 +304,27 @@ function RRDFilterOp(rrd_file, op_obj_list) {
 }
 RRDFilterOp.prototype.getMinStep = function() {
     return this.rrd_file.getMinStep();
-}
+};
 RRDFilterOp.prototype.getLastUpdate = function() {
     return this.rrd_file.getLastUpdate();
-}
+};
 RRDFilterOp.prototype.getNrDSs = function() {
     return this.ds_list.length;
-}
+};
 RRDFilterOp.prototype.getDSNames = function() {
     var ds_names = [];
     for (var i = 0; i < this.ds_list.length; i++) {
         ds_names.push(ds_list[i].getName());
     }
     return ds_names;
-}
+};
 RRDFilterOp.prototype.getDS = function(id) {
     if (typeof id == "number") {
         return this.getDSbyIdx(id);
     } else {
         return this.getDSbyName(id);
     }
-}
+};
 
 // INTERNAL: Do not call directly
 RRDFilterOp.prototype.getDSbyIdx = function(idx) {
@@ -333,28 +333,28 @@ RRDFilterOp.prototype.getDSbyIdx = function(idx) {
     } else {
         throw RangeError("DS idx (" + idx + ") out of range [0-" + this.ds_list.length + ").");
     }
-}
+};
 
 // INTERNAL: Do not call directly
 RRDFilterOp.prototype.getDSbyName = function(name) {
     for (var idx = 0; idx < this.ds_list.length; idx++) {
         var ds = this.ds_list[idx];
-        var ds_name = ds.getName()
+        var ds_name = ds.getName();
         if (ds_name == name)
             return ds;
     }
     throw RangeError("DS name " + name + " unknown.");
-}
+};
 
 RRDFilterOp.prototype.getNrRRAs = function() {
     return this.rrd_file.getNrRRAs();
-}
+};
 RRDFilterOp.prototype.getRRAInfo = function(idx) {
     return this.rrd_file.getRRAInfo(idx);
-}
+};
 RRDFilterOp.prototype.getRRA = function(idx) {
     return new RRDRRAFilterOp(this.rrd_file.getRRA(idx), this.ds_list);
-}
+};
 
 // ================================================================
 // NOTE: This function is archaic, and will likely be deprecated in future releases
@@ -372,28 +372,28 @@ function RRAFilterShift(rrd_file, shift_int, rra_list) {
 }
 RRAFilterShift.prototype.getMinStep = function() {
     return this.rrd_file.getMinStep();
-}
+};
 RRAFilterShift.prototype.getLastUpdate = function() {
     return this.rrd_file.getLastUpdate() + this.shift_in_seconds;
-}
+};
 RRAFilterShift.prototype.getNrDSs = function() {
     return this.rrd_file.getNrDSs();
-}
+};
 RRAFilterShift.prototype.getDSNames = function() {
     return this.rrd_file.getDSNames();
-}
+};
 RRAFilterShift.prototype.getDS = function(id) {
     return this.rrd_file.getDS(id);
-}
+};
 RRAFilterShift.prototype.getNrRRAs = function() {
     return this.rra_list.length;
-}
+};
 RRAFilterShift.prototype.getRRAInfo = function(idx) {
     return this.rrd_file.getRRAInfo(idx);
-}
+};
 RRAFilterShift.prototype.getRRA = function(idx) {
     return this.rrd_file.getRRA(idx);
-}
+};
 
 // ================================================================
 // Filter RRAs by using a user provided filter object
@@ -433,10 +433,10 @@ RRAFilterShift.prototype.getRRA = function(idx) {
 function RRDRRAFltAvgOpNewStep(rra_idx, new_step_in_seconds) {
     this.getIdx = function() {
         return rra_idx;
-    }
+    };
     this.getStep = function() {
         return new_step_in_seconds;
-    }
+    };
 }
 
 
@@ -448,26 +448,26 @@ function RRAInfoFilterAvg(rrd_file, rra, op_obj, idx) {
     this.rra = rra;
     this.idx = idx;
     var scaler = 1;
-    if (this.op_obj.getStep() != null) {
+    if (this.op_obj.getStep() !== null) {
         scaler = this.op_obj.getStep() / this.base_rra.getStep();
     }
     this.scaler = scaler;
 }
 RRAInfoFilterAvg.prototype.getIdx = function() {
     return this.idx;
-}
+};
 RRAInfoFilterAvg.prototype.getNrRows = function() {
         return this.rra.getNrRows();
-    } //draw info from RRAFilterAvg
+    }; //draw info from RRAFilterAvg
 RRAInfoFilterAvg.prototype.getStep = function() {
     return this.rra.getStep();
-}
+};
 RRAInfoFilterAvg.prototype.getCFName = function() {
     return this.rra.getCFName();
-}
+};
 RRAInfoFilterAvg.prototype.getPdpPerRow = function() {
     return this.rrd_file.getRRAInfo(this.op_obj.getIdx()).getPdpPerRow() * this.scaler;
-}
+};
 
 //---------------------------------------------------------------------------
 //Private Function
@@ -476,7 +476,7 @@ function RRAFilterAvg(rrd_file, op_obj) {
     this.op_obj = op_obj;
     this.base_rra = rrd_file.getRRA(op_obj.getIdx());
     var scaler = 1;
-    if (op_obj.getStep() != null) {
+    if (op_obj.getStep() !== null) {
         scaler = op_obj.getStep() / this.base_rra.getStep();
     }
     this.scaler = Math.floor(scaler);
@@ -484,43 +484,43 @@ function RRAFilterAvg(rrd_file, op_obj) {
 }
 RRAFilterAvg.prototype.getIdx = function() {
     return this.op_obj.getIdx();
-}
+};
 RRAFilterAvg.prototype.getCFName = function() {
     return this.base_rra.getCFName();
-}
+};
 RRAFilterAvg.prototype.getNrRows = function() {
     return Math.floor(this.base_rra.getNrRows() / this.scaler);
-}
+};
 RRAFilterAvg.prototype.getNrDSs = function() {
     return this.base_rra.getNrDSs();
-}
+};
 RRAFilterAvg.prototype.getStep = function() {
-    if (this.op_obj.getStep() != null) {
+    if (this.op_obj.getStep() !== null) {
         return this.op_obj.getStep();
     } else {
         return this.base_rra.getStep();
     }
-}
+};
 RRAFilterAvg.prototype.getEl = function(row, ds) {
     var sum = 0;
     for (var i = 0; i < this.scaler; i++) {
         sum += this.base_rra.getEl((this.scaler * row) + i, ds);
     }
     return sum / this.scaler;
-}
+};
 RRAFilterAvg.prototype.getElFast = function(row, ds) {
     var sum = 0;
     for (var i = 0; i < this.scaler; i++) {
         sum += this.base_rra.getElFast((this.scaler * row) + i, ds);
     }
     return sum / this.scaler;
-}
+};
 
 //----------------------------------------------------------------------------
 //Public function - use this one for RRA averaging
 function RRDRRAFilterAvg(rrd_file, op_obj_list) {
     this.rrd_file = rrd_file;
-    this.op_obj_list = new Array();
+    this.op_obj_list = [];
     this.rra_list = [];
     for (var i in op_obj_list) {
         var el = op_obj_list[i];
@@ -538,31 +538,31 @@ function RRDRRAFilterAvg(rrd_file, op_obj_list) {
 }
 RRDRRAFilterAvg.prototype.getMinStep = function() {
         return this.rrd_file.getMinStep();
-    } //other RRA steps change, not min
+    }; //other RRA steps change, not min
 RRDRRAFilterAvg.prototype.getLastUpdate = function() {
     return this.rrd_file.getLastUpdate();
-}
+};
 RRDRRAFilterAvg.prototype.getNrDSs = function() {
         return this.rrd_file.getNrDSs();
-    } //DSs unchanged
+    }; //DSs unchanged
 RRDRRAFilterAvg.prototype.getDSNames = function() {
     return this.rrd_file.getDSNames();
-}
+};
 RRDRRAFilterAvg.prototype.getDS = function(id) {
     return this.rrd_file.getDS(id);
-}
+};
 RRDRRAFilterAvg.prototype.getNrRRAs = function() {
     return this.rra_list.length;
-}
+};
 RRDRRAFilterAvg.prototype.getRRAInfo = function(idx) {
     if ((idx >= 0) && (idx < this.rra_list.length)) {
         return new RRAInfoFilterAvg(this.rrd_file, this.rra_list[idx], this.op_obj_list[idx], idx);
     } else {
         return this.rrd_file.getRRAInfo(0);
     }
-}
+};
 RRDRRAFilterAvg.prototype.getRRA = function(idx) {
     if ((idx >= 0) && (idx < this.rra_list.length)) {
         return this.rra_list[idx];
     }
-}
+};

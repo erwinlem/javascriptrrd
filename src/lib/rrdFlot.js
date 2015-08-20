@@ -49,35 +49,6 @@
  *     stack: 'none'                // other options are 'positive' and 'negative'
  *   }
  *
- * //overwrites other defaults; mostly used for linking via the URL
- * rrdflot_defaults defaults (see Flot docs for details) 	 
- * {
- *    graph_only: false        // If true, limit the display to the graph only
- *    legend: "Top"            //Starting location of legend. Options are: 
- *                             //   "Top","Bottom","TopRight","BottomRight","None".
- *    num_cb_rows: 12          //How many rows of DS checkboxes per column.
- *    use_element_buttons: false  //To be used in conjunction with num_cb_rows: This option
- *                             //    creates a button above every column, which selects
- *                             //    every element in the column. 
- *    multi_ds: false          //"true" appends the name of the aggregation function to the 
- *                             //    name of the DS element. 
- *    multi_rra: false         //"true" appends the name of the RRA consolidation function (CF) 
- *                             //    (AVERAGE, MIN, MAX or LAST) to the name of the RRA. Useful 
- *                             //    for RRAs over the same interval with different CFs.  
- *    use_checked_DSs: false   //Use the list checked_DSs below.
- *    checked_DSs: []          //List of elements to be checked by default when graph is loaded. 
- *                             //    Overwrites graph options. 
- *    use_rra: false           //Whether to use the rra index specified below.
- *    rra: 0                   //RRA (rra index in rrd) to be selected when graph is loaded. 
- *    use_windows: false       //Whether to use the window zoom specifications below.
- *    window_min: 0            //Sets minimum for window zoom. X-axis usually in unix time. 
- *    window_max: 0            //Sets maximum for window zoom.
- *    graph_height: "300px"    //Height of main graph. 
- *    graph_width: "500px"     //Width of main graph.
- *    scale_height: "110px"    //Height of small scaler graph.
- *    scale_width: "250px"     //Width of small scaler graph.
- *    timezone: local          //timezone.
- * } 
  */
 
 var local_checked_DSs = [];
@@ -88,30 +59,52 @@ var elem_group = null;
 var timezone_shift = 0;
 
 function rrdFlot(html_id, rrd_file, graph_options, ds_graph_options, rrdflot_defaults) {
-    this.html_id = html_id;
-    this.rrd_file = rrd_file;
-    this.graph_options = graph_options;
-    if (rrdflot_defaults == null) {
-        this.rrdflot_defaults = new Object(); // empty object, just not to be null
-    } else {
-        this.rrdflot_defaults = rrdflot_defaults;
-    }
-    if (ds_graph_options == null) {
-        this.ds_graph_options = new Object(); // empty object, just not to be null
-    } else {
-        this.ds_graph_options = ds_graph_options;
-    }
-    this.selection_range = new rrdFlotSelection();
+	this.html_id = html_id;
+	this.rrd_file = rrd_file;
+	this.graph_options = graph_options;
 
-    graph_info = {};
-    this.createHTML();
-    this.populateRes();
-    this.populateDScb();
-    this.drawFlotGraph();
+	this.rrdflot_defaults = {
+		graph_only: false ,
+		legend: "Top" ,
+		num_cb_rows: 12 ,
+		use_element_buttons: false ,
+		multi_ds: false ,
+		multi_rra: false ,
+		use_checked_DSs: false ,
+		checked_DSs: [] ,
+		use_rra: false ,
+		rra: 0 ,
+		use_windows: false ,
+		window_min: 0 ,
+		window_max: 0 ,
+		graph_height: "300px" ,
+		graph_width: "500px" ,
+		scale_height: "110px" ,
+		scale_width: "250px" ,
+		timezone: -Math.ceil((new Date()).getTimezoneOffset() / 60) 
+	};
+	
+	// user supplied defaults override the system defaults
+	if (rrdflot_defaults !== null && rrdflot_defaults !== undefined) {
+		this.rrdflot_defaults = $.extend({}, this.rrdflot_defaults, rrdflot_defaults);
+	}
 
-    if (this.rrdflot_defaults.graph_only == true) {
-        this.cleanHTMLCruft();
-    }
+	if (ds_graph_options === null || ds_graph_options === undefined) {
+		this.ds_graph_options = {}; // empty object, just not to be null
+	} else {
+		this.ds_graph_options = ds_graph_options;
+	}
+	this.selection_range = new rrdFlotSelection();
+
+	graph_info = {};
+	this.createHTML();
+	this.populateRes();
+	this.populateDScb();
+	this.drawFlotGraph();
+
+	if (this.rrdflot_defaults.graph_only === true) {
+		this.cleanHTMLCruft();
+	}
 }
 
 
@@ -131,7 +124,7 @@ rrdFlot.prototype.createHTML = function() {
     this.elem_group_id = this.html_id + "_elem_group";
 
     // First clean up anything in the element
-    while (base_el.lastChild != null) base_el.removeChild(base_el.lastChild);
+    while (base_el.lastChild !== null) base_el.removeChild(base_el.lastChild);
 
     // Now create the layout
     var external_table = document.createElement("table");
@@ -163,16 +156,8 @@ rrdFlot.prototype.createHTML = function() {
     rowGraph.appendChild(cellGraph);
     cellGraph.colSpan = 3;
     var elGraph = document.createElement("div");
-    if (this.rrdflot_defaults.graph_width != null) {
-        elGraph.style.width = this.rrdflot_defaults.graph_width;
-    } else {
-        elGraph.style.width = "500px";
-    }
-    if (this.rrdflot_defaults.graph_height != null) {
-        elGraph.style.height = this.rrdflot_defaults.graph_height;
-    } else {
-        elGraph.style.height = "300px";
-    }
+    elGraph.style.width = this.rrdflot_defaults.graph_width;
+    elGraph.style.height = this.rrdflot_defaults.graph_height;
     elGraph.id = this.graph_id;
     cellGraph.appendChild(elGraph);
 
@@ -218,26 +203,10 @@ rrdFlot.prototype.createHTML = function() {
     var timezone = document.createElement("select");
     timezone.id = this.time_sel_id;
 
-    var timezones = ["+12", "+11", "+10", "+9", "+8", "+7", "+6", "+5", "+4", "+3", "+2", "+1", "0",
-        "-1", "-2", "-3", "-4", "-5", "-6", "-7", "-8", "-9", "-10", "-11", "-12"
-    ];
-    var tz_found = false;
-    var true_tz;
-    for (var j = 0; j < 24; j++) {
-        if (Math.ceil(this.rrdflot_defaults.timezone) == Math.ceil(timezones[j])) {
-            tz_found = true;
-            true_tz = Math.ceil(this.rrdflot_defaults.timezone);
-            break;
-        }
-    }
-    if (!tz_found) {
-        // the passed timezone does not make sense
-        // find the local time
-        var d = new Date();
-        true_tz = -Math.ceil(d.getTimezoneOffset() / 60);
-    }
-    for (var j = 0; j < 24; j++) {
-        timezone.appendChild(new Option(timezones[j], timezones[j], true_tz == Math.ceil(timezones[j]), true_tz == Math.ceil(timezones[j])));
+    var true_tz = Math.ceil(this.rrdflot_defaults.timezone);
+
+    for (var j = -12; j < 12; j++) {
+        timezone.appendChild(new Option(j, j, true_tz == j, true_tz == j));
     }
     timezone.onchange = function() {
         rf_this.callback_timezone_changed();
@@ -245,20 +214,12 @@ rrdFlot.prototype.createHTML = function() {
 
     cellScaleLegend.appendChild(timezone);
 
-    var cellScale = document.createElement('td')
+    var cellScale = document.createElement('td');
     rowScale.appendChild(cellScale);
     cellScale.align = "right";
     var elScale = document.createElement("div");
-    if (this.rrdflot_defaults.scale_width != null) {
-        elScale.style.width = this.rrdflot_defaults.scale_width;
-    } else {
-        elScale.style.width = "250px";
-    }
-    if (this.rrdflot_defaults.scale_height != null) {
-        elScale.style.height = this.rrdflot_defaults.scale_height;
-    } else {
-        elScale.style.height = "110px";
-    }
+    elScale.style.width = this.rrdflot_defaults.scale_width;
+    elScale.style.height = this.rrdflot_defaults.scale_height;
     elScale.id = this.scale_id;
     cellScale.appendChild(elScale);
 
@@ -272,7 +233,7 @@ rrdFlot.prototype.createHTML = function() {
     elScaleReset.value = "Reset selection";
     elScaleReset.onclick = function() {
         rf_this.callback_scale_reset();
-    }
+    };
 
     cellScaleReset.appendChild(elScaleReset);
 
@@ -290,7 +251,7 @@ rrdFlot.prototype.cleanHTMLCruft = function() {
 
     var ds_el = document.getElementById(this.ds_cb_id);
     ds_el.removeChild(ds_el.lastChild);
-}
+};
 
 // ======================================
 // Populate RRA and RD info
@@ -298,7 +259,7 @@ rrdFlot.prototype.populateRes = function() {
     var form_el = document.getElementById(this.res_id);
 
     // First clean up anything in the element
-    while (form_el.lastChild != null) form_el.removeChild(form_el.lastChild);
+    while (form_el.lastChild !== null) form_el.removeChild(form_el.lastChild);
 
     // now populate with RRA info
     var nrRRAs = this.rrd_file.getNrRRAs();
@@ -329,16 +290,19 @@ rrdFlot.prototype.populateDScb = function() {
     row_el.vAlign = "top";
     var cell_el = null; // will define later
 
-    if (this.rrdflot_defaults.num_cb_rows == null) {
-        this.rrdflot_defaults.num_cb_rows = 12;
-    }
     // now populate with DS info
     var nrDSs = this.rrd_file.getNrDSs();
     var elem_group_number = 0;
 
+    var elGroupSelectonclick = (function(e) { //lambda function!!
+                        return function() {
+                            rf_this.callback_elem_group_changed(e);
+                        };
+                    });
+
     for (var i = 0; i < nrDSs; i++) {
 
-        if ((i % this.rrdflot_defaults.num_cb_rows) == 0) { // one column every x DSs
+        if (Math.round(i % this.rrdflot_defaults.num_cb_rows) === 0) { // one column every x DSs
             if (this.rrdflot_defaults.use_element_buttons) {
                 cell_el = document.createElement('td');
                 row_el.appendChild(cell_el); //make next element column 
@@ -347,11 +311,7 @@ rrdFlot.prototype.populateDScb = function() {
                     var elGroupSelect = document.createElement("input");
                     elGroupSelect.type = "button";
                     elGroupSelect.value = "Group " + elem_group_number;
-                    elGroupSelect.onclick = (function(e) { //lambda function!!
-                        return function() {
-                            rf_this.callback_elem_group_changed(e);
-                        };
-                    })(elem_group_number);
+                    elGroupSelect.onclick = elGroupSelectonclick(elem_group_number);
 
                     cell_el.appendChild(elGroupSelect);
                     cell_el.appendChild(document.createElement('br')); //add space between the two
@@ -363,45 +323,42 @@ rrdFlot.prototype.populateDScb = function() {
             }
         }
         var ds = this.rrd_file.getDS(i);
+        var name2 = ds.getName();
+        var name = ds.getName();
         if (this.rrdflot_defaults.multi_ds) { //null==false in boolean ops
-            var name = ds.getName() + "-" + ds.getType();
-            var name2 = ds.getName();
-        } else {
-            var name = ds.getName();
-            var name2 = ds.getName();
+            name = name + "-" + ds.getType();
         }
         var title = name;
-        if (this.rrdflot_defaults.use_checked_DSs) {
-            if (this.rrdflot_defaults.checked_DSs.length == 0) {
-                var checked = (i == 0); // only first checked by default
-            } else {
+
+	// by default, if we have ony one ds check it, otherwise nothing is selected
+        var checked = (i === 0); 
+        if (this.rrdflot_defaults.use_checked_DSs && this.rrdflot_defaults.checked_DSs.length !== 0) {
                 checked = false;
-            }
-        } else {
-            var checked = (i == 0);
         }
-        if (this.ds_graph_options[name] != null) {
-            var dgo = this.ds_graph_options[name];
-            if (dgo['title'] != null) {
+
+	var dgo;
+        if (this.ds_graph_options[name] !== undefined) {
+            dgo = this.ds_graph_options[name];
+            if (dgo.title !== undefined) {
                 // if the user provided the title, use it
-                title = dgo['title'];
-            } else if (dgo['label'] != null) {
+                title = dgo.title;
+            } else if (dgo.label !== undefined) {
                 // use label as a second choiceit
-                title = dgo['label'];
+                title = dgo.label;
             } // else leave the ds name
             if (this.rrdflot_defaults.use_checked_DSs) {
-                if (this.rrdflot_defaults.checked_DSs.length == 0) {
+                if (this.rrdflot_defaults.checked_DSs.length === 0) {
                     // if the user provided the title, use it
-                    checked = dgo['checked'];
+                    checked = dgo.checked;
                 }
             } else {
-                if (dgo['checked'] != null) {
-                    checked = dgo['checked'];
+                if (dgo.checked !== undefined) {
+                    checked = dgo.checked;
                 }
             }
         }
         if (this.rrdflot_defaults.use_checked_DSs) {
-            if (this.rrdflot_defaults.checked_DSs == null) {
+            if (this.rrdflot_defaults.checked_DSs === undefined) {
                 continue;
             }
             for (var j = 0; j < this.rrdflot_defaults.checked_DSs.length; j++) {
@@ -441,17 +398,17 @@ rrdFlot.prototype.drawFlotGraph = function() {
     var ds_colors = {};
     var oCB = document.getElementById(this.ds_cb_id);
     var nrDSs = oCB.ds.length;
+    var i; // iterator variable FIXME
     local_checked_DSs = [];
     if (oCB.ds.length > 0) {
-        for (var i = 0; i < oCB.ds.length; i++) {
-            if (oCB.ds[i].checked == true) {
+        for (i = 0; i < oCB.ds.length; i++) {
+            if (oCB.ds[i].checked === true) {
                 var ds_name = oCB.ds[i].value;
                 var ds_stack_type = 'none';
-                local_checked_DSs.push(ds_name);;
-                if (this.ds_graph_options[ds_name] != null) {
-                    var dgo = this.ds_graph_options[ds_name];
-                    if (dgo['stack'] != null) {
-                        var ds_stack_type = dgo['stack'];
+                local_checked_DSs.push(ds_name);
+                if (this.ds_graph_options[ds_name] !== undefined) {
+                    if (this.ds_graph_options[ds_name].stack !== undefined) {
+                        ds_stack_type = this.ds_graph_options[ds_name].stack;
                     }
                 }
                 if (ds_stack_type == 'positive') {
@@ -465,12 +422,11 @@ rrdFlot.prototype.drawFlotGraph = function() {
             }
         }
     } else { // single element is not treated as an array
-        if (oCB.ds.checked == true) {
+        if (oCB.ds.checked === true) {
             // no sense trying to stack a single element
-            var ds_name = oCB.ds.value;
-            ds_single_list.push(ds_name);
-            ds_colors[ds_name] = 0;
-            local_checked_DSs.push(ds_name);
+            ds_single_list.push(oCB.ds.value);
+            ds_colors[oCB.ds.value] = 0;
+            local_checked_DSs.push(oCB.ds.value);
         }
     }
 
@@ -483,28 +439,28 @@ rrdFlot.prototype.drawFlotGraph = function() {
         timezone_shift * 3600);
 
     // fix the colors, based on the position in the RRD
-    for (var i = 0; i < flot_obj.data.length; i++) {
+    for (i = 0; i < flot_obj.data.length; i++) {
         var name = flot_obj.data[i].label; // at this point, label is the ds_name
         var color = ds_colors[name]; // default color as defined above
-        if (this.ds_graph_options[name] != null) {
+        if (this.ds_graph_options[name] !== undefined) {
             var dgo = this.ds_graph_options[name];
-            if (dgo['color'] != null) {
-                color = dgo['color'];
+            if (dgo.color !== undefined) {
+                color = dgo.color;
             }
-            if (dgo['label'] != null) {
+            if (dgo.label !== undefined) {
                 // if the user provided the label, use it
-                flot_obj.data[i].label = dgo['label'];
-            } else if (dgo['title'] != null) {
+                flot_obj.data[i].label = dgo.label;
+            } else if (dgo.title !== undefined) {
                 // use title as a second choice 
-                flot_obj.data[i].label = dgo['title'];
+                flot_obj.data[i].label = dgo.title;
             } // else use the ds name
-            if (dgo['lines'] != null) {
+            if (dgo.lines !== undefined) {
                 // if the user provided the label, use it
-                flot_obj.data[i].lines = dgo['lines'];
+                flot_obj.data[i].lines = dgo.lines;
             }
-            if (dgo['yaxis'] != null) {
+            if (dgo.yaxis !== undefined) {
                 // if the user provided the label, use it
-                flot_obj.data[i].yaxis = dgo['yaxis'];
+                flot_obj.data[i].yaxis = dgo.yaxis;
             }
         }
         flot_obj.data[i].color = color;
@@ -559,11 +515,11 @@ rrdFlot.prototype.bindFlotGraph = function(flot_obj) {
         graph_options.legend.position = legend_id;
     }
 
-    if (this.graph_options != null) {
+    if (this.graph_options !== undefined) {
         graph_options = populateGraphOptions(graph_options, this.graph_options);
     }
 
-    if (graph_options.tooltip == false) {
+    if (graph_options.tooltip === false) {
         // avoid the need for the caller specify both
         graph_options.grid.hoverable = false;
     }
@@ -695,27 +651,27 @@ rrdFlot.prototype.callback_elem_group_changed = function(num) { //,window_min,wi
             }
         }
     }
-    this.drawFlotGraph()
+    this.drawFlotGraph();
 };
 
 function getGraphInfo() {
     var graph_info = {};
-    graph_info['dss'] = local_checked_DSs;
-    graph_info['rra'] = selected_rra;
-    graph_info['window_min'] = window_min;
-    graph_info['window_max'] = window_max;
-    graph_info['timezone'] = timezone_shift;
+    graph_info.dss = local_checked_DSs;
+    graph_info.rra = selected_rra;
+    graph_info.window_min = window_min;
+    graph_info.window_max = window_max;
+    graph_info.timezone = timezone_shift;
     return graph_info;
-};
+}
 
 function resetWindow() {
     window_min = 0;
     window_max = 0;
-};
+}
 
 function populateGraphOptions(me, other) {
-    for (e in other) {
-        if (me[e] != undefined) {
+    for (var e in other) {
+        if (me[e] !== undefined) {
             if (Object.prototype.toString.call(other[e]) == "[object Object]") {
                 me[e] = populateGraphOptions(me[e], other[e]);
             } else {
@@ -732,4 +688,4 @@ function populateGraphOptions(me, other) {
         }
     }
     return me;
-};
+}

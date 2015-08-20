@@ -53,8 +53,10 @@
 		document.getElementById("infotable").deleteRow(0);
 
 		var graph_opts={legend: { noColumns:4}};
-		var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
-			lines: { show: true, fill: true, fillColor:"#ffff80"} },
+		var ds_graph_opts={
+			'title':'test',
+			'Oscilator':{ color: "#ff8000", 
+			'lines': { show: true, fill: true, fillColor:"#ffff80"} },
 			'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
 				lines: { show: true, fill: true} },
 				'Running':{color: "#000000",yaxis:2}};

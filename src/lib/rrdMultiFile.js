@@ -118,7 +118,7 @@ function rrdFileSort(f1, f2) {
 // it is interpreted like the "old treat_undefined_as_zero" argument
 
 function RRDFileSum(file_list, sumfile_options) {
-    if (sumfile_options === undefined) {
+    if (sumfile_options === undefined || sumfile_options === null) {
         sumfile_options = {};
     } else if (typeof(sumfile_options) == "boolean") {
         sumfile_options = {
@@ -171,8 +171,8 @@ function RRDFileSum(file_list, sumfile_options) {
         var rra_step = rra_info.getStep();
         var realLastUpdate;
 
-        var rra_list = {};
-        var offset_list = {};
+        var rra_list = [];
+        var offset_list = [];
         for (var i in this.file_list) {
             file = file_list[i];
             fileLastUpdate = file.getLastUpdate();

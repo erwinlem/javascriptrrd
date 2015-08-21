@@ -240,4 +240,4 @@ function FetchBinaryURLAsync(url, callback, callback_arg) {
 	return request;
 }
 
-module.exports.FetchBinaryURLAsync = FetchBinaryURLAsync;
+//module.exports.FetchBinaryURLAsync = FetchBinaryURLAsync;

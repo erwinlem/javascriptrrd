@@ -1,35 +1,28 @@
-javascriptRRD
-=============
+Project goal
+============
 
-javascriptRRD package contains a set of Javascript libraries
-that can be used for reading RRD archives from any Web browser.
-Mozilla, Internet Explorer and Safari havae been tested.
-
-Being Javascript an interpreted language, no compilation is needed.
-Just copy the files in the files located in the 
-src/lib
-directory into a Web accessible location and use them.
-
-The 
-src/examples/
-directory contain example Web pages that you can use as a template
-for writing your own Web Browser applications for accessing the
-RRD archives on your Web server.
-
-While the code itself tries to be self documenting, the 
-doc/lib/
-directory contains more detailed information about the libraries.
+javascriptRRD is a library designed to plot data using only client side javascript.
 
 javascriptRRD installation
 ==========================
 
-Being Javascript an interpreted language, no compilation is needed.
-Just copy the files in the files located in the
-src/lib
-directory into a Web accessible location and use them.
+Being Javascript an interpreted language, no compilation is needed. Just copy the files in the files located in the lib directory into a Web accessible location and use them.
 
-javascriptRRD
-=============
+The following libraries are used at runtime :
+	* flot
+	* jquery
+	 
+The following libraries are used to aid development :
+	* jsdoc
+	* jshint
+	* chai
+	* mocha
 
-javascriptRRD is Javascript implementation of a client side RRD tool.
+Dependencies could be installed using npm or you could manually edit the file javascriptrrd.wlibs.js and point it to the right location. 
 
+Original implementation & credits
+=================================
+
+The original version of javascriptRRD can be found at : http://javascriptrrd.sourceforge.net
+
+The goal of this fork is to make version for modern browsers with xhtml support. With the first stable release the name wil most likely change to avoid confusion.

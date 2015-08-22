@@ -6,6 +6,7 @@
     "chai": "^3.2.0",
     "flot": "^0.8.0-alpha",
     "jquery": "^2.1.4",
+    "js-beautify": "^1.5.10",
     "jsdoc": "^3.3.2"
   },
   "devDependencies": {

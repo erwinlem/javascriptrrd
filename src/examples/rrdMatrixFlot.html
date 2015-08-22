@@ -1,32 +1,8 @@
 <!DOCTYPE html>
-<!--
- Example HTML/javascript file that display the
- content of a RRD archive file in a graph
- using the Flot libraries
- Part of the javascriptRRD package
- Copyright (c) 2010 Frank Wuerthwein, fkw@ucsd.edu
-                    Igor Sfiligoi, isfiligoi@ucsd.edu
-
- Original repository: http://javascriptrrd.sourceforge.net/
- 
- MIT License [http://www.opensource.org/licenses/mit-license.php]
-
--->
-
-<!--
- This page requires Flot.
-
- Repository: http://www.flotcharts.org/
- [Previous repository: http://code.google.com/p/flot/]
-
--->
-
 <html xmlns="http://www.w3.org/1999/xhtml">
-  
-    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
-    <!-- the above script replaces the rrdfFlotAsync,rrdFlotMatrix, rrdFlotSelection, rrdFile, binaryXHR and all the jquery libraries -->
   <head>
     <title>Graph multiple RRDs with Flot</title>
+    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
   </head>
 
   <body>
@@ -44,32 +20,34 @@
     <div id="mygraph"></div>
 
     <script type="text/javascript">
+<![CDATA[
+	flot_obj= {}
+	// this function is invoked when the RRD file name changes
+	function fname_update() {
+		var base_el=document.getElementById("mygraph");
+		// First clean up anything in the element
+		while (base_el.lastChild!=null) base_el.removeChild(base_el.lastChild);
 
-      // Remove the Javascript warning
-      document.getElementById("infotable").deleteRow(0);
+		fname_group=document.getElementById("input_fname").value;
+		fname1=fname_group+"_s1.rrd";
+		fname2=fname_group+"_s2.rrd";
+		fname3=fname_group+"_s3.rrd";
 
-      {
-        var form_el=document.getElementById('input_fname');
-        form_el.appendChild(new Option("example4","example4"));
-       }
-    
+		flot_obj.reload([['s1',fname1],['s2',fname2],['s3',fname3]]);
+		document.getElementById("fname").firstChild.data=fname_group;
+	}
 
-      flot_obj=new rrdFlotMatrixAsync("mygraph",null,null,null,{legend:{position:'ne'}},{'s2':{checked:false},'s1':{title:'First rrd'}});
+window.onload = function() {
+	// Remove the Javascript warning
+	document.getElementById("infotable").deleteRow(0);
 
-      // this function is invoked when the RRD file name changes
-      function fname_update() {
-        var base_el=document.getElementById("mygraph");
-        // First clean up anything in the element
-        while (base_el.lastChild!=null) base_el.removeChild(base_el.lastChild);
+	var form_el=document.getElementById('input_fname');
+	form_el.appendChild(new Option("example4","../../example_rrds/example4"));
 
-        fname_group=document.getElementById("input_fname").value;
-        fname1=fname_group+"_s1.rrd";
-        fname2=fname_group+"_s2.rrd";
-        fname3=fname_group+"_s3.rrd";
+	flot_obj=new rrdFlotMatrixAsync("mygraph",null,null,null,{legend:{position:'ne'}},{'s2':{checked:false},'s1':{title:'First rrd'}});
 
-        flot_obj.reload([['s1',fname1],['s2',fname2],['s3',fname3]]);
-        document.getElementById("fname").firstChild.data=fname_group;
-      }
+}
+]]>
     </script>
   </body>
 </html>

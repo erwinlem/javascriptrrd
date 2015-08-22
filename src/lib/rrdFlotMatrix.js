@@ -59,32 +59,6 @@
  *     lines: { show:true, fill: true, fillColor:color }  // see Flot docs for details
  *   }
  *
- * //overwrites other defaults; mostly used for linking via the URL
- * rrdflot_defaults defaults (see Flot docs for details) 	 
- * {
- *    graph_only: false        // If true, limit the display to the graph only
- *    legend: "Top"            //Starting location of legend. Options are: 
- *                             //   "Top","Bottom","TopRight","BottomRight","None".
- *    num_cb_rows: 12          //How many rows of DS checkboxes per column.
- *    use_element_buttons: false  //To be used in conjunction with num_cb_rows: This option
- *                             //    creates a button above every column, which selects
- *                             //    every element in the column. 
- *    multi_rra: false         //"true" appends the name of the RRA consolidation function (CF) 
- *                             //    (AVERAGE, MIN, MAX or LAST) to the name of the RRA. Useful 
- *                             //    for RRAs over the same interval with different CFs.  
- *    use_checked_RRDs: false   //Use the list checked_RRDs below.
- *    checked_RRDs: []          //List of elements to be checked by default when graph is loaded. 
- *                             //    Overwrites graph options. 
- *    use_rra: false           //Whether to use the rra index specified below.
- *    rra: 0                   //RRA (rra index in rrd) to be selected when graph is loaded. 
- *    use_windows: false       //Whether to use the window zoom specifications below.
- *    window_min: 0            //Sets minimum for window zoom. X-axis usually in unix time. 
- *    window_max: 0            //Sets maximum for window zoom.
- *    graph_height: "300px"    //Height of main graph. 
- *    graph_width: "500px"     //Width of main graph.
- *    scale_height: "110px"    //Height of small scaler graph.
- *    scale_width: "250px"     //Width of small scaler graph.
- * } 
  */
 
 var local_checked_RRDs = [];
@@ -97,11 +71,33 @@ var elem_group = null;
 function rrdFlotMatrix(html_id, rrd_files, ds_list, graph_options, rrd_graph_options, rrdflot_defaults) {
     this.html_id = html_id;
     this.rrd_files = rrd_files;
-    if (rrdflot_defaults === null) {
-        this.rrdflot_defaults = {}; // empty object, just not to be null
-    } else {
-        this.rrdflot_defaults = rrdflot_defaults;
-    }
+
+	this.rrdflot_defaults = {
+		graph_only: false ,
+		legend: "Top" ,
+		num_cb_rows: 12 ,
+		use_element_buttons: false ,
+		multi_ds: false ,
+		multi_rra: false ,
+		use_checked_DSs: false ,
+		checked_DSs: [] ,
+		use_rra: false ,
+		rra: 0 ,
+		use_windows: false ,
+		window_min: 0 ,
+		window_max: 0 ,
+		graph_height: "300px" ,
+		graph_width: "500px" ,
+		scale_height: "110px" ,
+		scale_width: "250px" ,
+		timezone: -Math.ceil((new Date()).getTimezoneOffset() / 60) 
+	};
+	
+	// user supplied defaults override the system defaults
+	if (rrdflot_defaults !== null && rrdflot_defaults !== undefined) {
+		this.rrdflot_defaults = $.extend({}, this.rrdflot_defaults, rrdflot_defaults);
+	}
+	
     if (ds_list === null) {
         this.ds_list = [];
         var rrd_file = this.rrd_files[0][1]; // get the first one... they are all the same
@@ -187,16 +183,8 @@ rrdFlotMatrix.prototype.createHTML = function() {
     var cellGraph = rowGraph.insertCell(-1);
     cellGraph.colSpan = 3;
     var elGraph = document.createElement("div");
-    if (this.rrdflot_defaults.graph_width !== null) {
-        elGraph.style.width = this.rrdflot_defaults.graph_width;
-    } else {
-        elGraph.style.width = "500px";
-    }
-    if (this.rrdflot_defaults.graph_height !== null) {
-        elGraph.style.height = this.rrdflot_defaults.graph_height;
-    } else {
-        elGraph.style.height = "300px";
-    }
+    elGraph.style.width = this.rrdflot_defaults.graph_width;
+    elGraph.style.height = this.rrdflot_defaults.graph_height;
     elGraph.id = this.graph_id;
     cellGraph.appendChild(elGraph);
 
@@ -231,16 +219,8 @@ rrdFlotMatrix.prototype.createHTML = function() {
     var cellScale = rowScale.insertCell(-1);
     cellScale.align = "right";
     var elScale = document.createElement("div");
-    if (this.rrdflot_defaults.scale_width !== null) {
-        elScale.style.width = this.rrdflot_defaults.scale_width;
-    } else {
-        elScale.style.width = "250px";
-    }
-    if (this.rrdflot_defaults.scale_height !== null) {
-        elScale.style.height = this.rrdflot_defaults.scale_height;
-    } else {
-        elScale.style.height = "110px";
-    }
+    elScale.style.width = this.rrdflot_defaults.scale_width;
+    elScale.style.height = this.rrdflot_defaults.scale_height;
     elScale.id = this.scale_id;
     cellScale.appendChild(elScale);
 
@@ -283,8 +263,7 @@ rrdFlotMatrix.prototype.populateDS = function() {
     while (form_el.lastChild !== null) form_el.removeChild(form_el.lastChild);
 
     for (var i in this.ds_list) {
-        var ds = this.ds_list[i];
-        form_el.appendChild(new Option(ds[1], ds[0]));
+        form_el.appendChild(new Option(this.ds_list[i][1], this.ds_list[i][0]));
     }
 };
 
@@ -322,9 +301,6 @@ rrdFlotMatrix.prototype.populateRRDcb = function() {
     row_el.vAlign = "top";
     var cell_el = null; // will define later
 
-    if (this.rrdflot_defaults.num_cb_rows === null) {
-        this.rrdflot_defaults.num_cb_rows = 12;
-    }
     // now populate with RRD info
     var nrRRDs = this.rrd_files.length;
     var elem_group_number = 0;
@@ -365,9 +341,9 @@ rrdFlotMatrix.prototype.populateRRDcb = function() {
         if (this.rrdflot_defaults.use_checked_RRDs && this.rrdflot_defaults.checked_RRDs.length !== 0) {
                 checked = false;
         }
-        if (this.rrd_graph_options[name] !== null) {
+        if (this.rrd_graph_options[name] !== undefined) {
             var rgo = this.rrd_graph_options[name];
-            if (rgo.title !== null) {
+            if (rgo.title !== undefined) {
                 // if the user provided the title, use it
                 title = rgo.title;
             } else if (rgo.label !== null) {
@@ -398,7 +374,7 @@ rrdFlotMatrix.prototype.populateRRDcb = function() {
         var cb_el = document.createElement("input");
         cb_el.type = "checkbox";
         cb_el.name = "rrd";
-        cb_el.value = i;
+        cb_el.value = name;
         cb_el.checked = cb_el.defaultChecked = checked;
         cell_el.appendChild(cb_el);
         cell_el.appendChild(document.createTextNode(title));
@@ -412,7 +388,7 @@ rrdFlotMatrix.prototype.populateRRDcb = function() {
 rrdFlotMatrix.prototype.drawFlotGraph = function() {
     // DS
     var oSelect = document.getElementById(this.ds_id);
-    var ds_id = oSelect.options[oSelect.selectedIndex].value;
+    var ds_id_option = oSelect.options[oSelect.selectedIndex].value;
     var i; // iterator variable
 
     // Res contains the RRA idx
@@ -474,30 +450,31 @@ rrdFlotMatrix.prototype.drawFlotGraph = function() {
     }
 
     // then extract RRA data about those DSs... to be finished
-    var flot_obj = rrdRRAMultiStackFlotObj(rrd_list, rra_idx, ds_id);
+    var flot_obj = rrdRRAMultiStackFlotObj(rrd_list, rra_idx, ds_id_option);
 
     // fix the colors, based on the position in the RRD
     for (i = 0; i < flot_obj.data.length; i++) {
         var name = flot_obj.data[i].label; // at this point, label is the rrd_name
         var color = rrd_colors[flot_obj.data.length - i - 1]; // stack inverts colors
         var lines = null;
-        if (this.rrd_graph_options[name] !== null) {
+        if (this.rrd_graph_options[name] !== undefined) {
             var dgo = this.rrd_graph_options[name];
-            if (dgo.color !== null) {
+            if (dgo.color !== undefined) {
                 color = dgo.color;
             }
-            if (dgo.label !== null) {
+            if (dgo.label !== undefined) {
                 // if the user provided the label, use it
                 flot_obj.data[i].label = dgo.label;
-            } else if (dgo.title !== null) {
+            } else if (dgo.title !== undefined) {
                 // use title as a second choice 
                 flot_obj.data[i].label = dgo.title;
             } // else use the rrd name
-            if (dgo.lines !== null) {
+            if (dgo.lines !== undefined) {
                 // if the user provided the label, use it
                 flot_obj.data[i].lines = dgo.lines;
             }
         }
+	// FIXME: lines is always null
         if (lines === null) {
             flot_obj.data[i].lines = {
                 show: true,
@@ -660,15 +637,15 @@ rrdFlotMatrix.prototype.callback_ds_changed = function() {
     this.drawFlotGraph();
 };
 
-rrdFlotMatrix.prototype.callback_rrd_cb_changed = function() {
-    this.drawFlotGraph();
-};
-
 rrdFlotMatrix.prototype.callback_scale_reset = function() {
     this.scale.clearSelection();
 };
 
 rrdFlotMatrix.prototype.callback_legend_changed = function() {
+    this.drawFlotGraph();
+};
+
+rrdFlotMatrix.prototype.callback_rrd_cb_changed = function() {
     this.drawFlotGraph();
 };
 

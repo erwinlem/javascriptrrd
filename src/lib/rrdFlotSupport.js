@@ -1,101 +1,78 @@
-/*
- * Support library aimed at providing commonly used functions and classes
- * that may be used while plotting RRD files with Flot
- *
- * Part of the javascriptRRD package
- * Copyright (c) 2009 Frank Wuerthwein, fkw@ucsd.edu
- *
- * Original repository: http://javascriptrrd.sourceforge.net/
- * 
- * MIT License [http://www.opensource.org/licenses/mit-license.php]
- *
- */
-
-/*
- *
- * Flot is a javascript plotting library developed and maintained by
- * Ole Laursen [http://www.flotcharts.org/]
- *
- */
-
-// Return a Flot-like data structure
-// Since Flot does not properly handle empty elements, min and max are returned, too
 function rrdDS2FlotSeries(rrd_file, ds_id, rra_idx, want_rounding) {
-    var ds = rrd_file.getDS(ds_id);
-    var rra = rrd_file.getRRA(rra_idx);
-    var rra_rows = rra.getNrRows();
-    var last_update = rrd_file.getLastUpdate();
-    var step = rra.getStep();
+	var ds = rrd_file.getDS(ds_id);
+	var rra = rrd_file.getRRA(rra_idx);
+	var rra_rows = rra.getNrRows();
+	var last_update = rrd_file.getLastUpdate();
+	var step = rra.getStep();
 
-    if (want_rounding !== false) {
-        // round last_update to step
-        // so that all elements are sync
-        last_update -= (last_update % step);
-    }
+	// round last_update to step // so that all elements are sync
+	if (want_rounding) {
+		last_update -= (last_update % step);
+	}
 
-    var first_el = last_update - (rra_rows - 1) * step;
-    var timestamp = first_el;
-    var flot_series = [];
-    for (var i = 0; i < rra_rows; i++) {
-        var el = rra.getEl(i, ds.getIdx());
-        if (el !== undefined) {
-            flot_series.push([timestamp * 1000.0, el]);
-        }
-        timestamp += step;
-    } // end for
+	var first_el = last_update - (rra_rows - 1) * step;
+	var timestamp = first_el;
+	var flot_series = [];
+	for (var i = 0; i < rra_rows; i++) {
+		var el = rra.getEl(i, ds.getIdx());
+		if (el !== undefined) {
+			flot_series.push([timestamp * 1000.0, el]);
+		}
+		timestamp += step;
+	} // end for
 
-    return {
-        label: ds.getName(),
-        data: flot_series,
-        min: first_el * 1000.0,
-        max: last_update * 1000.0
-    };
+	return {
+		label: ds.getName(),
+		data: flot_series,
+		min: first_el * 1000.0,
+		max: last_update * 1000.0
+	};
 }
 
 // return an object with an array containing Flot elements, one per DS
 // min and max are also returned
 function rrdRRA2FlotObj(rrd_file, rra_idx, ds_list, want_ds_labels, want_rounding) {
-    var rra = rrd_file.getRRA(rra_idx);
-    var rra_rows = rra.getNrRows();
-    var last_update = rrd_file.getLastUpdate();
-    var step = rra.getStep();
-    if (want_rounding !== false) {
-        // round last_update to step
-        // so that all elements are sync
-        last_update -= (last_update % step);
-    }
+	var rra = rrd_file.getRRA(rra_idx);
+	var rra_rows = rra.getNrRows();
+	var last_update = rrd_file.getLastUpdate();
+	var step = rra.getStep();
 
-    var first_el = last_update - (rra_rows - 1) * step;
+	// round last_update to step // so that all elements are sync
+	if (want_rounding) {
+		last_update -= (last_update % step);
+	}
 
-    var out_el = {
-        data: [],
-        min: first_el * 1000.0,
-        max: last_update * 1000.0
-    };
+	var first_el = last_update - (rra_rows - 1) * step;
 
-    var ds_list_len = ds_list.length;
-    for (var ds_list_idx = 0; ds_list_idx < ds_list_len; ++ds_list_idx) {
-        var ds = rrd_file.getDS(ds_list[ds_list_idx]);
+	var out_el = {
+		data: [],
+		min: first_el * 1000.0,
+		max: last_update * 1000.0
+	};
 
-        var timestamp = first_el;
-        var flot_series = [];
-        for (var i = 0; i < rra_rows; i++) {
-            var el = rra.getEl(i, ds.getIdx());
-            if (el !== undefined) {
-                flot_series.push([timestamp * 1000.0, el]);
-            }
-            timestamp += step;
-        } // end for
+	var ds_list_len = ds_list.length;
+	for (var ds_list_idx = 0; ds_list_idx < ds_list_len; ++ds_list_idx) {
+		var ds = rrd_file.getDS(ds_list[ds_list_idx]);
 
-        var flot_el = {
-            data: flot_series
-        };
-        if (want_ds_labels !== false) {
-            flot_el.label = ds.getName();
-        }
-        out_el.data.push(flot_el);
-    } //end for ds_list_idx
-    return out_el;
+		var timestamp = first_el;
+		var flot_series = [];
+		for (var i = 0; i < rra_rows; i++) {
+			var el = rra.getEl(i, ds.getIdx());
+			if (el !== undefined) {
+				flot_series.push([timestamp * 1000.0, el]);
+			}
+			timestamp += step;
+		} // end for
+
+		var flot_el = {
+			data: flot_series
+		};
+		if (want_ds_labels !== false) {
+			flot_el.label = ds.getName();
+		}
+		out_el.data.push(flot_el);
+	} //end for ds_list_idx
+	return out_el;
 }
 
 // return an object with an array containing Flot elements
@@ -106,115 +83,112 @@ function rrdRRA2FlotObj(rrd_file, rra_idx, ds_list, want_ds_labels, want_roundin
 function rrdRRAStackFlotObj(rrd_file, rra_idx,
     ds_positive_stack_list, ds_negative_stack_list, ds_single_list,
     timestamp_shift, want_ds_labels, want_rounding, one_undefined_enough) {
-    var ds_list_idx = 0; // used for looping. FIXME
-    var	ds ;	// used for temp assign. FIXME
-    var rra = rrd_file.getRRA(rra_idx);
-    var rra_rows = rra.getNrRows();
-    var last_update = rrd_file.getLastUpdate();
-    var step = rra.getStep();
-    if (want_rounding !== false) {
-        // round last_update to step
-        // so that all elements are sync
-        last_update -= (last_update % step);
-    }
-    if (one_undefined_enough !== true) { // make sure it is a boolean
-        one_undefined_enough = false;
-    }
+	var ds_list_idx = 0; // used for looping. FIXME
+	var ds ;	// used for temp assign. FIXME
+	var rra = rrd_file.getRRA(rra_idx);
+	var rra_rows = rra.getNrRows();
+	var last_update = rrd_file.getLastUpdate();
+	var step = rra.getStep();
 
-    var first_el = last_update - (rra_rows - 1) * step;
+	// round last_update to step // so that all elements are sync
+	if (want_rounding) {
+		last_update -= (last_update % step);
+	}
 
-    var out_el = {
-        data: [],
-        min: (first_el + timestamp_shift) * 1000.0,
-        max: (last_update + timestamp_shift) * 1000.0
-    };
+	var first_el = last_update - (rra_rows - 1) * step;
 
-    var el; // FIXME
-    var flot_el; // FIXME
-    // first the stacks stack
-    var stack_els = [ds_positive_stack_list, ds_negative_stack_list];
-    var stack_els_len = stack_els.length;
-    for (var stack_list_id = 0; stack_list_id < stack_els_len; ++stack_list_id) {
-	var id; // used for looping
-        var stack_list = stack_els[stack_list_id];
-        var tmp_flot_els = [];
-        var tmp_ds_ids = [];
-        var tmp_nr_ids = stack_list.length;
-        var stack_list_len = stack_list.length;
-        for (ds_list_idx = 0; ds_list_idx < stack_list_len; ++ds_list_idx) {
-            ds = rrd_file.getDS(stack_list[ds_list_idx]);
-            tmp_ds_ids.push(ds.getIdx()); // getting this is expensive, call only once
+	var out_el = {
+		data: [],
+		min: (first_el + timestamp_shift) * 1000.0,
+		max: (last_update + timestamp_shift) * 1000.0
+	};
 
-            // initialize
-            flot_el = {
-                data: []
-            };
-            if (want_ds_labels !== false) {
-                flot_el.label = ds.getName();
-            }
-            tmp_flot_els.push(flot_el);
-        }
+	var el; // FIXME
+	var flot_el; // FIXME
+	// first the stacks stack
+	var stack_els = [ds_positive_stack_list, ds_negative_stack_list];
+	var stack_els_len = stack_els.length;
+	for (var stack_list_id = 0; stack_list_id < stack_els_len; ++stack_list_id) {
+		var id; // used for looping
+		var stack_list = stack_els[stack_list_id];
+		var tmp_flot_els = [];
+		var tmp_ds_ids = [];
+		var tmp_nr_ids = stack_list.length;
+		var stack_list_len = stack_list.length;
+		for (ds_list_idx = 0; ds_list_idx < stack_list_len; ++ds_list_idx) {
+			ds = rrd_file.getDS(stack_list[ds_list_idx]);
+			tmp_ds_ids.push(ds.getIdx()); // getting this is expensive, call only once
 
-        var timestamp = first_el;
-        for (var row = 0; row < rra_rows; row++) {
-            var ds_vals = [];
-            var all_undef = true;
-            var all_def = true;
-            for (id = 0; id < tmp_nr_ids; id++) {
-                el = rra.getEl(row, tmp_ds_ids[id]);
-                if (el !== undefined) {
-                    all_undef = false;
-                    ds_vals.push(el);
-                } else {
-                    all_def = false;
-                    ds_vals.push(0);
-                }
-            } // end for id
-            if (!all_undef) { // if all undefined, skip
-                if (all_def || (!one_undefined_enough)) {
-                    // this is a valid column, do the math
-                    for (id = 1; id < tmp_nr_ids; id++) {
-                        ds_vals[id] += ds_vals[id - 1]; // both positive and negative stack use a +, negative stack assumes negative values
-                    }
-                    // fill the flot data
-                    for (id = 0; id < tmp_nr_ids; id++) {
-                        tmp_flot_els[id].data.push([(timestamp + timestamp_shift) * 1000.0, ds_vals[id]]);
-                    }
-                }
-            } // end if
+			// initialize
+			flot_el = {
+				data: []
+			};
+			if (want_ds_labels !== false) {
+				flot_el.label = ds.getName();
+			}
+			tmp_flot_els.push(flot_el);
+		}
 
-            timestamp += step;
-        } // end for row
+		var timestamp = first_el;
+		for (var row = 0; row < rra_rows; row++) {
+			var ds_vals = [];
+			var all_undef = true;
+			var all_def = true;
+			for (id = 0; id < tmp_nr_ids; id++) {
+				el = rra.getEl(row, tmp_ds_ids[id]);
+				if (el !== undefined) {
+					all_undef = false;
+					ds_vals.push(el);
+				} else {
+					all_def = false;
+					ds_vals.push(0);
+				}
+			} // end for id
+			if (!all_undef) { // if all undefined, skip
+				if (all_def || (!one_undefined_enough)) {
+					// this is a valid column, do the math
+					for (id = 1; id < tmp_nr_ids; id++) {
+						ds_vals[id] += ds_vals[id - 1]; // both positive and negative stack use a +, negative stack assumes negative values
+					}
+					// fill the flot data
+					for (id = 0; id < tmp_nr_ids; id++) {
+						tmp_flot_els[id].data.push([(timestamp + timestamp_shift) * 1000.0, ds_vals[id]]);
+					}
+				}
+			} // end if
 
-        // put flot data in output object
-        // reverse order so higher numbers are behind
-        for (id = 0; id < tmp_nr_ids; id++) {
-            out_el.data.push(tmp_flot_els[tmp_nr_ids - id - 1]);
-        }
-    } //end for stack_list_id
+			timestamp += step;
+		} // end for row
 
-    var ds_single_list_len = ds_single_list.length;
-    for (ds_list_idx = 0; ds_list_idx < ds_single_list_len; ++ds_list_idx) {
-        ds = rrd_file.getDS(ds_single_list[ds_list_idx]);
+		// put flot data in output object
+		// reverse order so higher numbers are behind
+		for (id = 0; id < tmp_nr_ids; id++) {
+			out_el.data.push(tmp_flot_els[tmp_nr_ids - id - 1]);
+		}
+	} //end for stack_list_id
 
-        var flot_series = [];
-        for (var i = 0; i < rra_rows; i++) {
-            el = rra.getEl(i, ds.getIdx());
-            if (el !== undefined) {
-                flot_series.push([(first_el+i*step + timestamp_shift) * 1000.0, el]);
-            }
-        } // end for
+	var ds_single_list_len = ds_single_list.length;
+	for (ds_list_idx = 0; ds_list_idx < ds_single_list_len; ++ds_list_idx) {
+		ds = rrd_file.getDS(ds_single_list[ds_list_idx]);
 
-        flot_el = {
-            data: flot_series
-        };
-        if (want_ds_labels !== false) {
-            flot_el.label = ds.getName();
-        }
-        out_el.data.push(flot_el);
-    } //end for ds_list_idx
+		var flot_series = [];
+		for (var i = 0; i < rra_rows; i++) {
+			el = rra.getEl(i, ds.getIdx());
+			if (el !== undefined) {
+				flot_series.push([(first_el+i*step + timestamp_shift) * 1000.0, el]);
+			}
+		} // end for
 
-    return out_el;
+		flot_el = {
+			data: flot_series
+		};
+		if (want_ds_labels !== false) {
+			flot_el.label = ds.getName();
+		}
+		out_el.data.push(flot_el);
+	} //end for ds_list_idx
+
+	return out_el;
 }
 
 // return an object with an array containing Flot elements, one per RRD
@@ -239,7 +213,7 @@ function rrdRRAMultiStackFlotObj(rrd_files, // a list of [rrd_id,rrd_file] pairs
     var tmp_nr_ids = rrd_files.length;
     for (var id = 0; id < tmp_nr_ids; id++) {
         var rrd_file = rrd_files[id][1];
-        tmp_rras.push(rrrd_file.getRRA(rra_idx));
+        tmp_rras.push(rrd_file.getRRA(rra_idx));
 
         var rrd_last_update = rrd_file.getLastUpdate();
         if (want_rounding !== false) {
@@ -283,7 +257,7 @@ function rrdRRAMultiStackFlotObj(rrd_files, // a list of [rrd_id,rrd_file] pairs
             var row_delta = Math.round((tmp_last_updates[id] - ts) / step);
             var el; // if out of range
             if ((row_delta >= 0) && (row_delta < rows)) {
-                el = rtmp_rras[id].getEl(rows - row_delta - 1, rrd_files[0][1].getDS(ds_id).getIdx());
+                el = tmp_rras[id].getEl(rows - row_delta - 1, rrd_files[0][1].getDS(ds_id).getIdx());
             }
             if (el !== undefined) {
                 all_undef = false;
@@ -293,6 +267,7 @@ function rrdRRAMultiStackFlotObj(rrd_files, // a list of [rrd_id,rrd_file] pairs
                 rrd_vals.push(0);
             }
         } // end for id
+
         if (!all_undef) { // if all undefined, skip
             if (all_def || (!one_undefined_enough)) {
                 // this is a valid column, do the math

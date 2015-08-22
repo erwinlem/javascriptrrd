@@ -1,40 +1,17 @@
 <!DOCTYPE html>
-<!--
- Example HTML/javascript file that display the
- content of three RRD archive files in a graph
- using the Flot libraries
- Part of the javascriptRRD package
- Copyright (c) 2013 Igor Sfiligoi, isfiligoi@ucsd.edu
-
- Original repository: http://javascriptrrd.sourceforge.net/
- 
- MIT License [http://www.opensource.org/licenses/mit-license.php]
-
--->
-
-<!--
- This page requires Flot.
-
- Repository: http://www.flotcharts.org/
- [Previous repository: http://code.google.com/p/flot/]
-
--->
-
 <html xmlns="http://www.w3.org/1999/xhtml">
-  
-    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
-    <!-- the above script replaces the rrdfFlotAsync,rrdFlot, rrdFlotSelection, rrdFile, rrdMultiFile, binaryXHR and all the jquery libraries -->
   <head>
     <title>RRD Graphs with Flot</title>
+    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
   </head>
 
   <body>
     <h1 id="title">RRD Graphs with Flot</h1>
 
     RRD URL:
-    <input type="text" id="input_fname1" value="example4_s1.rrd" /><br />
-    <input type="text" id="input_fname2" value="example4_s2.rrd" /><br />
-    <input type="text" id="input_fname3" value="example4_s3.rrd" /><br />
+    <input type="text" id="input_fname1" value="../../example_rrds/example4_s1.rrd" /><br />
+    <input type="text" id="input_fname2" value="../../example_rrds/example4_s2.rrd" /><br />
+    <input type="text" id="input_fname3" value="../../example_rrds/example4_s3.rrd" /><br />
      <button onclick="fname_update()">Update</button>
     <hr />
 
@@ -46,7 +23,19 @@
     <div id="mygraph"></div>
 
     <script type="text/javascript">
+<![CDATA[
+      // this function is invoked when the RRD file name changes
+      function fname_update() {
+        var fname1=document.getElementById("input_fname1").value;
+        var fname2=document.getElementById("input_fname2").value;
+        var fname3=document.getElementById("input_fname3").value;
+        flot_obj.reload([fname1,fname2,fname3]);
+        document.getElementById("fname1").firstChild.data=fname1;
+        document.getElementById("fname2").firstChild.data=fname2;
+        document.getElementById("fname3").firstChild.data=fname3;
+       }
 
+	window.onload = function() {
       // Remove the Javascript warning
       document.getElementById("infotable").deleteRow(0);
 
@@ -62,16 +51,8 @@
        // the rrdFlot object creates and handles the graph
       flot_obj=new rrdFlotSumAsync("mygraph",null,null,null,graph_opts,ds_graph_opts);
 
-      // this function is invoked when the RRD file name changes
-      function fname_update() {
-        var fname1=document.getElementById("input_fname1").value;
-        var fname2=document.getElementById("input_fname2").value;
-        var fname3=document.getElementById("input_fname3").value;
-        flot_obj.reload([fname1,fname2,fname3]);
-        document.getElementById("fname1").firstChild.data=fname1;
-        document.getElementById("fname2").firstChild.data=fname2;
-        document.getElementById("fname3").firstChild.data=fname3;
-       }
+}
+]]>
 
 
     </script>

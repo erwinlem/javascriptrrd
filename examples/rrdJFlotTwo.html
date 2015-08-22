@@ -9,33 +9,33 @@
     <h1 id="title">RRD Graphs with Flot</h1>
 
     RRD URL:
-    <input type="text" id="input_fname1" value="../../example_rrds/example4_s1.rrd" /><br />
-    <input type="text" id="input_fname2" value="../../example_rrds/example4_s2.rrd" /><br />
-    <input type="text" id="input_fname3" value="../../example_rrds/example4_s3.rrd" /><br />
+    <input type="text" id="input_fname1" value="../example_rrds/example4_s1.rrd" /><br />
+    <input type="text" id="input_fname2" value="../example_rrds/example4_s2.rrd" /><br />
      <button onclick="fname_update()">Update</button>
     <hr />
 
     <table id="infotable" border="1">
         <tr><td colspan="21"><b>Javascript needed for this page to work</b></td></tr>
-	<tr><td><b>RRD file</b></td><td id="fname1" colspan="2">None</td><td id="fname2" colspan="3">None</td><td id="fname3" colspan="3">None</td></tr>
+	<tr><td><b>RRD file</b></td><td id="fname1" colspan="2">None</td><td id="fname2" colspan="3">None</td></tr>
     </table>
 
     <div id="mygraph"></div>
 
     <script type="text/javascript">
 <![CDATA[
+	flot_obj= {}
+
       // this function is invoked when the RRD file name changes
       function fname_update() {
         var fname1=document.getElementById("input_fname1").value;
         var fname2=document.getElementById("input_fname2").value;
-        var fname3=document.getElementById("input_fname3").value;
-        flot_obj.reload([fname1,fname2,fname3]);
+        flot_obj.reload([fname1,fname2]);
         document.getElementById("fname1").firstChild.data=fname1;
         document.getElementById("fname2").firstChild.data=fname2;
-        document.getElementById("fname3").firstChild.data=fname3;
        }
 
 	window.onload = function() {
+
       // Remove the Javascript warning
       document.getElementById("infotable").deleteRow(0);
 
@@ -44,16 +44,13 @@
                                        lines: { show: true, fill: true, fillColor:"#ffff80"} },
                          'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
                                   lines: { show: true, fill: true} },
-                         'Running':{color: "#000000",yaxis:2},
-                         'ClientGlideTotal':{title: 'Running glidein jobs', label:'Running',color: "#00f800", checked:true, 
-                                                  lines: { show: true, fill: true, fillColor:"#00ff00"}}};
+                         'Running':{color: "#000000",yaxis:2}};
 
-       // the rrdFlot object creates and handles the graph
+      // the rrdFlot object creates and handles the graph
       flot_obj=new rrdFlotSumAsync("mygraph",null,null,null,graph_opts,ds_graph_opts);
 
 }
 ]]>
-
 
     </script>
   </body>

@@ -42,7 +42,7 @@ window.onload = function() {
 	document.getElementById("infotable").deleteRow(0);
 
 	var form_el=document.getElementById('input_fname');
-	form_el.appendChild(new Option("example4","../../example_rrds/example4"));
+	form_el.appendChild(new Option("example4","../example_rrds/example4"));
 
 	flot_obj=new rrdFlotMatrixAsync("mygraph",null,null,null,{legend:{position:'ne'}},{'s2':{checked:false},'s1':{title:'First rrd'}});
 

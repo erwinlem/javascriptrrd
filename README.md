@@ -20,3 +20,16 @@ While the code itself tries to be self documenting, the
 doc/lib/
 directory contains more detailed information about the libraries.
 
+javascriptRRD installation
+==========================
+
+Being Javascript an interpreted language, no compilation is needed.
+Just copy the files in the files located in the
+src/lib
+directory into a Web accessible location and use them.
+
+javascriptRRD
+=============
+
+javascriptRRD is Javascript implementation of a client side RRD tool.
+

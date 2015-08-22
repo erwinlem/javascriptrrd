@@ -5,7 +5,8 @@
     "bootstrap": "^3.3.5",
     "chai": "^3.2.0",
     "flot": "^0.8.0-alpha",
-    "jquery": "^2.1.4"
+    "jquery": "^2.1.4",
+    "jsdoc": "^3.3.2"
   },
   "devDependencies": {
     "jshint": "latest",

@@ -1,28 +1,4 @@
 <!DOCTYPE html>
-<!--
- Example HTML/javascript file that display the
- content of a RRD archive file in a graph
- using the Flot libraries. This page adds two examples
- to RRDJFlot.html of using RRDFilterOp to apply operations
- (here, summing) to several or all of the DS in the RRD.
- Part of the javascriptRRD package
- Copyright (c) 2010 Frank Wuerthwein, fkw@ucsd.edu
-                    Igor Sfiligoi, isfiligoi@ucsd.edu
-
- Original repository: http://javascriptrrd.sourceforge.net/
- 
- MIT License [http://www.opensource.org/licenses/mit-license.php]
-
--->
-
-<!--
- This page requires Flot.
-
- Repository: http://www.flotcharts.org/
- [Previous repository: http://code.google.com/p/flot/]
-
--->
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   
   <head>
@@ -35,7 +11,7 @@
     <h1 id="title">RRD Graphs with Flot, with RRA Filter Operations</h1>
 
     RRD URL:
-    <input type="text" id="input_fname" value="example3.rrd"
+    <input type="text" id="input_fname" value="../example_rrds/example3.rrd"
            onchange="fname_update()" />
      <button onclick="fname_update()">Update</button>
     <hr />
@@ -49,25 +25,28 @@
 
     <script type="text/javascript">
 <![CDATA[
+	flot_obj= {}
 
-      // Remove the Javascript warning
-      document.getElementById("infotable").deleteRow(0);
+	window.onload = function() {
+		// Remove the Javascript warning
+		document.getElementById("infotable").deleteRow(0);
 
-      var graph_opts={legend: { noColumns:4}};
-      var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
-				       lines: { show: true, fill: true, fillColor:"#ffff80"} },
-			 'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
-				  lines: { show: true, fill: true} },
-			 'Running':{color: "#000000",yaxis:2}};
+		var graph_opts={legend: { noColumns:4}};
+		var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
+			lines: { show: true, fill: true, fillColor:"#ffff80"} },
+			'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
+				lines: { show: true, fill: true} },
+				'Running':{color: "#000000",yaxis:2}};
 
-      //Add RRA filters for longer averaged-out RRAs
-      //This pages was made to run example3.rra, with RRA steps of 
-      //5 mins (300 seconds), 45 mins (2700s) and 8 hours (28800s).
-      var rra_steps_list = [0, [0,1800],  // org(5mins), 30mins
-			    1, [1,21600], // org(45mins), 6h
-			    2, [2,86400], [2,259200], [2,604800]]; // org(8h), 24h, 3d, 1w
+		//Add RRA filters for longer averaged-out RRAs
+		//This pages was made to run example3.rra, with RRA steps of 
+		//5 mins (300 seconds), 45 mins (2700s) and 8 hours (28800s).
+		var rra_steps_list = [0, [0,1800],  // org(5mins), 30mins
+		1, [1,21600], // org(45mins), 6h
+		2, [2,86400], [2,259200], [2,604800]]; // org(8h), 24h, 3d, 1w
 
-      flot_obj=new rrdFlotAsync("mygraph",null,null,graph_opts,ds_graph_opts,null,null,rra_steps_list);
+		flot_obj=new rrdFlotAsync("mygraph",null,null,graph_opts,ds_graph_opts,null,null,rra_steps_list);
+	}
 
       // this function is invoked when the RRD file name changes
       function fname_update() {

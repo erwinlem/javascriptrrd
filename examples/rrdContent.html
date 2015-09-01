@@ -166,11 +166,11 @@
             alert("File "+fname+" is empty (possibly loading failed)!");
             return 1;
           }
-          try {
+//          try {
             var i_rrd_data=new RRDFile(bf);            
-          } catch(err) {
-            alert("File "+fname+" is not a valid RRD archive!\n"+err);
-          }
+//          } catch(err) {
+//            alert("File "+fname+" is not a valid RRD archive!\n"+err);
+//          }
           if (i_rrd_data!=undefined) {
             rrd_data=i_rrd_data;
             update_fname()

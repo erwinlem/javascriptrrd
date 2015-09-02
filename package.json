@@ -16,7 +16,7 @@
   "scripts": {
     "lint": "./node_modules/jshint/bin/jshint src/lib/*.js",
     "test": "mocha test/",
-    "doc": "./node_modules/.bin/jsdoc -t doc/template.jsdoc lib/*.js"
+    "doc": "./node_modules/.bin/jsdoc --access all --template doc/template.jsdoc lib/*.js"
   },
   "repository": {
     "type": "git",

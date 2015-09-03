@@ -7,17 +7,21 @@
     "jquery": "^2.1.4"
   },
   "devDependencies": {
+    "chai": "^3.2.0",
+    "coveralls": "^2.11.4",
     "istanbul": "^0.3.19",
-    "jshint": "latest",
-    "mocha": "latest",
     "js-beautify": "^1.5.10",
     "jsdoc": "^3.3.2",
-    "chai": "^3.2.0"
+    "jshint": "latest",
+    "mocha": "latest",
+    "mocha-lcov-reporter": "0.0.2",
+    "xmlhttprequest": "^1.7.0"
   },
   "scripts": {
     "lint": "./node_modules/jshint/bin/jshint src/lib/*.js",
     "test": "./node_modules/.bin/_mocha test/",
-    "cover": "./node_modules/.bin/istanbul cover node_modules/.bin/_mocha",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha",
+    "coveralls": "./node_modules/.bin/istanbul cover --report lcovonly ./node_modules/.bin/_mocha && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "doc": "./node_modules/.bin/jsdoc --access all --template template.jsdoc --readme README.md lib/*.js"
   },
   "repository": {

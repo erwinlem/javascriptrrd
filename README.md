@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/erwinlem/javascriptrrd.svg?branch=master)](https://travis-ci.org/erwinlem/javascriptrrd)
 [![Coverage Status](https://coveralls.io/repos/erwinlem/javascriptrrd/badge.svg?branch=master&service=github)](https://coveralls.io/github/erwinlem/javascriptrrd?branch=master)
 
 Project goal

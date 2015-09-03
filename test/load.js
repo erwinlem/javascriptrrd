@@ -1,5 +1,5 @@
 var expect = require("chai").expect;
-var binaryXHR = require("../src/lib/binaryXHR.js").FetchBinaryURLAsync;
+var binaryXHR = require("../lib/binaryXHR.js").FetchBinaryURLAsync;
 
 describe("rrd", function(){
 	describe("constructor", function() {

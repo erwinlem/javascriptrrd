@@ -7,6 +7,7 @@
     "jquery": "^2.1.4"
   },
   "devDependencies": {
+    "istanbul": "^0.3.19",
     "jshint": "latest",
     "mocha": "latest",
     "js-beautify": "^1.5.10",
@@ -15,7 +16,8 @@
   },
   "scripts": {
     "lint": "./node_modules/jshint/bin/jshint src/lib/*.js",
-    "test": "mocha test/",
+    "test": "./node_modules/.bin/_mocha test/",
+    "cover": "./node_modules/.bin/istanbul cover node_modules/.bin/_mocha",
     "doc": "./node_modules/.bin/jsdoc --access all --template template.jsdoc --readme README.md lib/*.js"
   },
   "repository": {

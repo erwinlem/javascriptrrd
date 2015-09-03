@@ -10,17 +10,28 @@ Being Javascript an interpreted language, no compilation is needed. Just copy th
 
 The following libraries are used at runtime :
 
-	* flot
-	* jquery
+* Flot
+* JQuery
 	 
 The following libraries are used to aid development :
 
-	* jsdoc
-	* jshint
-	* chai
-	* mocha
+* JsDoc
+* JsHint
+* Chai
+* Mocha
+* Instanbul
 
 Dependencies could be installed using npm or you could manually edit the file javascriptrrd.wlibs.js and point it to the right location. 
+
+The examples directory contains ready to use examples, this could be used as a reference point.
+
+Generating documentation
+------------------------
+Documentation is generated with jsdoc. This is integrated in npm, so running "npm run doc" should generate all the required api documentation. This can be found in the out directory and will be included in releases. 
+
+running tests
+-------------
+Tests are run with Mocha and code coverage is done with Istanbul. You can run "npm run test" or "npm run cover". The first one will run only the tests and cover will also run the code coverage. 
 
 Original implementation & credits
 =================================

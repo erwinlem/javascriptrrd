@@ -20,4 +20,12 @@ describe("file loading", function(){
 		var bf = binaryXHR.FetchBinaryURL("example_rrds/example3.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 	});	    
+
+	it("load invalid rrd file", function() {
+		var bf = binaryXHR.FetchBinaryURL("README.md");
+		var fn = function() {
+			var rrd_data = new rrdFile.RRDFile(bf);
+		}
+		expect(fn).to.throw("Wrong magic id.");
+	});	    
 });

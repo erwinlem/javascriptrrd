@@ -4,7 +4,6 @@ var assert = require('assert');
 var binaryXHR = require("../lib/binaryXHR.js");
 var rrdFile = require('../lib/rrdFile.js');
 var rrdFilter = require('../lib/rrdFilter.js');
-var rrdFlot = require('../lib/rrdFlot.js');
 var rrdFlotAsync = require('../lib/rrdFlotAsync.js');
 var rrdFlotMatrix = require('../lib/rrdFlotMatrix.js');
 var rrdFlotSupport = require('../lib/rrdFlotSupport.js');

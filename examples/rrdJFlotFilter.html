@@ -23,81 +23,86 @@
 
 		<script type="text/javascript">
 //<![CDATA[
-	flot_obj= {}
-	//Sum two DSs
-	function SumDS(ds1,ds2) {
-		this.getName = function() {return ds1+"+"+ds2;}
-		this.getDSNames = function() {return [ds1,ds2];}
-		this.computeResult = function(val_list) {return val_list[0]+val_list[1];}
-	}
+flot_obj= {}
+//Sum two DSs
+function SumDS(ds1,ds2) {
+	this.getName = function() {return ds1+"+"+ds2;}
+	this.getDSNames = function() {return [ds1,ds2];}
+	this.computeResult = function(val_list) {return val_list[0]+val_list[1];}
+}
 
 // this function is invoked when the RRD file name changes
 function fname_update() {
 	var fname=document.getElementById("input_fname").value;
-	flot_obj.reload(fname);
+	flot_obj.reload([['data',fname]]);
 	document.getElementById("fname").firstChild.data=fname;
 }
+
 //Sums multiple DSs from a given list
 function MultiSumDS(list) {
 	this.getName = function() {
-		return "SumTotal";}
+		return "SumTotal";
+	}
 	this.getDSNames = function() {
 		var i = 0;
 		var name_list=[];
 		for(i=0;i<list.length;i++) {
-	  name_list.push(list[i].getName());
-	  }
-	  return name_list;
-	  }
-	  this.computeResult = function(val_list) {
-	  var val_sum=0; 
-	  var i=0;
-	  for(i=0;i<val_list.length;i++){
-	  val_sum+=val_list[i];
-	  }
-	  return val_sum;
-	  }
-	  }
+			name_list.push(list[i].getName());
+		}
+		return name_list;
+	}
+	this.computeResult = function(val_list) {
+		var val_sum=0; 
+		var i=0;
+		for(i=0;i<val_list.length;i++){
+			val_sum+=val_list[i];
+		}
+		return val_sum;
+	}
+}
 
-	  // this function is called after the data is loaded
-	  //  but before the graph is displayed
-	  function mycallback(obj) {
-	  var op_list = []; //list of operations
-	  var DS_list = []; //list of DSs to sum in MultiSumDS
-	  var i = 0;
+// this function is called after the data is loaded
+//  but before the graph is displayed
+function mycallback(obj) {
+	// FIXME: this is totally broken
+	var op_list = []; //list of operations
+	var DS_list = []; //list of DSs to sum in MultiSumDS
+	var i = j = 0;
 
-	  //create a new rrdlist, which contains almost all original elements
-	  //    plus additional operated-on DSs from RRDFilterOp 
-	  for (i=0;i<obj.rrd_data.getNrDSs();i++) {
-	  if (i!=1) op_list.push(i);
-	  DS_list.push(obj.rrd_data.getDS(i))
-	  }
-	  op_list.push(new MultiSumDS(DS_list));
-	  op_list.push(new SumDS(obj.rrd_data.getDS(0).getName(),obj.rrd_data.getDS(1).getName()));
+	//create a new rrdlist, which contains almost all original elements
+	//    plus additional operated-on DSs from RRDFilterOp 
+	for (j in obj.rrd_data) {
+		for (i=0;i<obj.rrd_data[j].getNrDSs;i++) {
+			if (i!=1) op_list.push(i);
+			DS_list.push(obj.rrd_data[i].getDS(i));
+		}
+	}
+	op_list.push(new MultiSumDS(DS_list));
+	//op_list.push(new SumDS(obj.ds_list[0][0],obj.ds_list[1][0]));
 
-	  //we just customized the DS shown by the graph
-	  obj.ds_op_list=op_list;
-	  }
-
-
-	  window.onload = function() {
-
-	  // Remove the Javascript warning
-	  document.getElementById("infotable").deleteRow(0);
+	//we just customized the DS shown by the graph
+	obj.ds_op_list=op_list;
+}
 
 
-	  var graph_opts={legend: { noColumns:4}};
-	  var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
-	  lines: { show: true, fill: true, fillColor:"#ffff80"} },
-	  'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
-	  lines: { show: true, fill: true} },
-	  'Running':{color: "#000000",yaxis:2}};
+window.onload = function() {
+
+	// Remove the Javascript warning
+	document.getElementById("infotable").deleteRow(0);
 
 
-	  // we don't know what DSs we will get, so we have to use the callback
-	  // in principle, we could personalize ds_graph_opts in the callback as well, but we keep it simple here
-	  flot_obj=new rrdFlotAsync("mygraph",null,null,graph_opts,ds_graph_opts,null,null,null,mycallback);
-	  }
+	var graph_opts={legend: { noColumns:4}};
+	var ds_graph_opts={'Oscilator':{ color: "#ff8000", 
+		lines: { show: true, fill: true, fillColor:"#ffff80"} },
+		'Idle':{ label: 'IdleJobs', color: "#00c0c0", 
+			lines: { show: true, fill: true} },
+			'Running':{color: "#000000",yaxis:2}};
+
+
+	// we don't know what DSs we will get, so we have to use the callback
+	// in principle, we could personalize ds_graph_opts in the callback as well, but we keep it simple here
+	flot_obj=new rrdFlotMatrixAsync("mygraph",null,null,null,graph_opts,ds_graph_opts,null,null,null,mycallback);
+}
 
 //]]>
 

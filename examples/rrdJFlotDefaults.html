@@ -68,13 +68,14 @@
 			graph_width:"700px",graph_height:"300px", scale_width:"350px", scale_height:"200px",
 			timezone:"-5"};
 
-		flot_obj=new rrdFlotAsync("mygraph",null,null,graph_opts,ds_graph_opts,rrdflot_defaults);
+		// FIXME: enable element grouping
+		flot_obj=new rrdFlotMatrixAsync("mygraph",null,null,null,graph_opts,ds_graph_opts,rrdflot_defaults);
 	}
 
 // this function is invoked when the RRD file name changes
 function fname_update() {
 	var fname=document.getElementById("input_fname").value;
-	flot_obj.reload(fname);
+	flot_obj.reload([['data',fname]]);
 	document.getElementById("fname").firstChild.data=fname;
 }
 //]]>

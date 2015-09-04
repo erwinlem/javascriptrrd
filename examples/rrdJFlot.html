@@ -61,13 +61,13 @@
 				lines: { show: true, fill: true} },
 				'Running':{color: "#000000",yaxis:2}};
 
-		flot_obj=new rrdFlotAsync("mygraph",null,null,graph_opts,ds_graph_opts);
+		flot_obj=new rrdFlotMatrixAsync("mygraph",null,null,null,graph_opts,ds_graph_opts);
 
 	}
 // this function is invoked when the RRD file name changes
 function fname_update() {
 	var fname=document.getElementById("input_fname").value;
-	flot_obj.reload(fname);
+	flot_obj.reload([['example2', fname]]);
 	document.getElementById("fname").firstChild.data=fname;
 }
 //]]>

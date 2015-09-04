@@ -37,13 +37,13 @@
 
       var graph_opts1={legend: { noColumns:4}, yaxis:{max:250,min:-200}};
       var rrdflot_defaults1={graph_only:true,use_checked_DSs:true,checked_DSs:['SignChanger'],use_rra:true,rra:1}
-      // the rrdFlotAsync object creates and handles the graph
-      var f1=new rrdFlotAsync("mygraph1","../example_rrds/example3.rrd",null,graph_opts1,ds_graph_opts,rrdflot_defaults1);
+      // the rrdFlotMatrixAsync object creates and handles the graph
+      var f1=new rrdFlotMatrixAsync("mygraph1",[['example3',"../example_rrds/example3.rrd"]],null,null,graph_opts1,ds_graph_opts,rrdflot_defaults1);
 
       var graph_opts2={legend: { noColumns:4}, yaxis:{min:100},tooltipOpts:{content:"MyValue: %y.3"}};
       var rrdflot_defaults2={graph_only:true,use_checked_DSs:true,checked_DSs:['Oscilator'],use_rra:true,rra:0}
-      // the rrdFlotAsync object creates and handles the graph
-      var f2=new rrdFlotAsync("mygraph2","../example_rrds/example3.rrd",null,graph_opts2,ds_graph_opts,rrdflot_defaults2);
+      // the rrdFlotMatrixAsync object creates and handles the graph
+      var f2=new rrdFlotMatrixAsync("mygraph2",[['example3',"../example_rrds/example3.rrd"]],null,null,graph_opts2,ds_graph_opts,rrdflot_defaults2);
 	}
 //]]>
     </script>

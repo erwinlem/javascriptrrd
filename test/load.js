@@ -28,4 +28,11 @@ describe("file loading", function(){
 		}
 		expect(fn).to.throw("Wrong magic id.");
 	});	    
+
+	it("check known rra value", function() {
+		var bf = binaryXHR.FetchBinaryURL("example_rrds/example1.rrd");
+		var rrd_data = new rrdFile.RRDFile(bf);
+		assert.equal(rrd_data.getRRA(0).getEl(42,0), 166.25);
+	});	    
+
 });

@@ -147,9 +147,9 @@
           }
           var oCell=oRow.insertCell(-1);
           oCell.colSpan=20/clm_nr;
-          var el=rra.getElFast(i,ds_idx);
+          var el=rra.getEl(i,ds_idx);
           if (el!=undefined) {
-           oCell.innerHTML=Math.round(rra.getElFast(i,ds_idx));
+           oCell.innerHTML=Math.round(rra.getEl(i,ds_idx));
           } else {
            oCell.innerHTML="-";
           }

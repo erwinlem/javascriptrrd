@@ -16,7 +16,7 @@ describe("file loading", function(){
 		assert.equal(bf.getCStringAt(0,3),"RRD");
 	});	    
 
-	it("load rrd file", function() {
+	it("load RRDFile", function() {
 		var bf = binaryXHR.FetchBinaryURL("example_rrds/example3.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 	});	    

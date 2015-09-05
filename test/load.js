@@ -35,4 +35,22 @@ describe("file loading", function(){
 		assert.equal(rrd_data.getRRA(0).getEl(42,0), 166.25);
 	});	    
 
+	it("check known rra amd64", function() {
+		var bf = binaryXHR.FetchBinaryURL("example_rrds/example_amd64.rrd");
+		var rrd_data = new rrdFile.RRDFile(bf);
+		assert.equal(rrd_data.getRRA(0).getEl(10,0), 9591.318830506743);
+	});	    
+
+	it("check known rra mips", function() {
+		var bf = binaryXHR.FetchBinaryURL("example_rrds/example_mips.rrd");
+		var rrd_data = new rrdFile.RRDFile(bf);
+		assert.equal(rrd_data.getRRA(0).getEl(10,0), 0.4615386513891367);
+	});	    
+
+	it("check known rra openwrt", function() {
+		var bf = binaryXHR.FetchBinaryURL("example_rrds/example_openwrt.rrd");
+		var rrd_data = new rrdFile.RRDFile(bf);
+		assert.equal(rrd_data.getRRA(0).getEl(42,0), 420);
+	});	    
+
 });

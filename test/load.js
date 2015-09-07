@@ -2,6 +2,7 @@ var expect = require("chai").expect;
 var assert = require('assert');
 
 var binaryXHR = require("../lib/binaryXHR.js");
+var RRDDS = require('../lib/RRDDS.js');
 var rrdFile = require('../lib/rrdFile.js');
 var rrdFilter = require('../lib/rrdFilter.js');
 var rrdFlotAsync = require('../lib/rrdFlotAsync.js');

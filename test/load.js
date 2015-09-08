@@ -54,3 +54,22 @@ describe("file loading", function(){
 	});	    
 
 });
+
+describe("rrd functions", function(){
+
+	it("header", function() {
+		var bf = binaryXHR.FetchBinaryURL("example_rrds/example1.rrd");
+		var rrd_data = new rrdFile.RRDFile(bf);
+		rrd_data.getMinStep();
+		rrd_data.getLastUpdate();
+		rrd_data.getNrDSs();
+		rrd_data.getDSNames();
+		var a = rrd_data.getDS(0);
+		rrd_data.getDS(a.getName());
+		rrd_data.getNrRRAs();
+		rrd_data.getRRAInfo();
+
+	});	    
+
+});
+

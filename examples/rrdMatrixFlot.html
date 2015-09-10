@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>Graph multiple RRDs with Flot</title>
-    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
-  </head>
-
-  <body>
+<div>
      <h1 id="title">Graph multiple RRDs with Flot</h1>
 
      RRD group: <select id="input_fname" onchange="fname_update()"></select>
@@ -37,7 +30,6 @@
 		document.getElementById("fname").firstChild.data=fname_group;
 	}
 
-window.onload = function() {
 	// Remove the Javascript warning
 	document.getElementById("infotable").deleteRow(0);
 
@@ -46,8 +38,6 @@ window.onload = function() {
 
 	flot_obj=new rrdFlotMatrixAsync("mygraph",null,null,null,{legend:{position:'ne'}},{'s2':{checked:false},'s1':{title:'First rrd'}});
 
-}
 //]]>
     </script>
-  </body>
-</html>
+</div>

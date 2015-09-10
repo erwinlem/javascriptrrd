@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
-    <title>RRD Graphs with Flot - Simplified version</title>
-  </head>
-
-  <body>
+<div>
     <h1>RRD Graphs with Flot - Simplified version</h1>
 
     RRD URL: example3.rrd
@@ -28,7 +21,6 @@
     <script type="text/javascript">
 //<![CDATA[
 
-	window.onload = function() {
       // Remove the Javascript warning
       document.getElementById("infotable").deleteRow(0);
 
@@ -44,8 +36,6 @@
       var rrdflot_defaults2={graph_only:true,use_checked_DSs:true,checked_DSs:['Oscilator'],use_rra:true,rra:0}
       // the rrdFlotMatrixAsync object creates and handles the graph
       var f2=new rrdFlotMatrixAsync("mygraph2",[['example3',"../example_rrds/example3.rrd"]],null,null,graph_opts2,ds_graph_opts,rrdflot_defaults2);
-	}
 //]]>
     </script>
-  </body>
-</html>
+</div>

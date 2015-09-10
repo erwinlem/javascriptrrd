@@ -1,34 +1,4 @@
-<!DOCTYPE html>
-<!--
- Example HTML/javascript file that display the
- content of a RRD archive file in a graph
- using the Flot libraries
- Part of the javascriptRRD package
- Copyright (c) 2010 Frank Wuerthwein, fkw@ucsd.edu
-                    Igor Sfiligoi, isfiligoi@ucsd.edu
-
- Original repository: http://javascriptrrd.sourceforge.net/
- 
- MIT License [http://www.opensource.org/licenses/mit-license.php]
-
--->
-
-<!--
- This page requires Flot.
-
- Repository: http://www.flotcharts.org/
- [Previous repository: http://code.google.com/p/flot/]
-
--->
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-  
-  <head>
-    <title>RRD Graphs with Flot</title>
-    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
-  </head>
-
-  <body>
+<div>
     <h1 id="title">RRD Graphs with Flot</h1>
 
     RRD URL:
@@ -48,7 +18,6 @@
 //<![CDATA[
 	flot_obj= {}
 
-	window.onload = function() {
 		// Remove the Javascript warning
 		document.getElementById("infotable").deleteRow(0);
 
@@ -63,7 +32,6 @@
 
 		flot_obj=new rrdFlotMatrixAsync("mygraph",null,null,null,graph_opts,ds_graph_opts);
 
-	}
 // this function is invoked when the RRD file name changes
 function fname_update() {
 	var fname=document.getElementById("input_fname").value;
@@ -73,5 +41,4 @@ function fname_update() {
 //]]>
 
     </script>
-  </body>
-</html>
+</div>

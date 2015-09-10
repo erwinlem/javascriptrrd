@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>RRD Graphs with Flot</title>
-    <script type="text/javascript" src="../lib/javascriptrrd.wlibs.js"></script>
-  </head>
-
-  <body>
+<div>
     <h1 id="title">RRD Graphs with Flot</h1>
 
     RRD URL:
@@ -35,7 +28,6 @@
         document.getElementById("fname3").firstChild.data=fname3;
        }
 
-	window.onload = function() {
       // Remove the Javascript warning
       document.getElementById("infotable").deleteRow(0);
 
@@ -51,10 +43,8 @@
        // the rrdFlot object creates and handles the graph
       flot_obj=new rrdFlotSumAsync("mygraph",null,null,null,graph_opts,ds_graph_opts);
 
-}
 //]]>
 
 
     </script>
-  </body>
-</html>
+</div>

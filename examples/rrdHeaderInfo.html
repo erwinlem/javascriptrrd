@@ -1,27 +1,5 @@
-<!DOCTYPE html>
-<!--
- Example HTML/javascript file that display the
- header of a RRD archive files
- Part of the javascriptRRD package
- Copyright (c) 2009 Frank Wuerthwein, fkw@ucsd.edu
-
- Original repository: http://javascriptrrd.sourceforge.net/
- 
- MIT License [http://www.opensource.org/licenses/mit-license.php]
-
--->
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-  
-  <head>
-    <title>RRD Header Info</title>
-    <script type="text/javascript" src="../lib/binaryXHR.js"></script>
-    <script type="text/javascript" src="../lib/rrdFile.js"></script>
-  </head>
-
-  <body>
+<div>
     <h1 id="title">RRD Header Info</h1>
-
     RRD URL:
     <input type="text" id="input_fname" value="../example_rrds/example1.rrd"
            onchange="input_update()" />
@@ -33,7 +11,6 @@
 	<tr><td><b>RRD file</b></td><td id="fname" colspan="4">None</td></tr>
 	<tr><td><b>Min Step</b></td><td id="step" align="right">N/A</td><td><b>Last update</b></td><td id="last_update" colspan="2">N/A</td></tr>
     </table>
-
     <script type="text/javascript">
 //<![CDATA[
       // Remove the Javascript warning
@@ -138,5 +115,5 @@
 //	     ]]>
       
     </script>
-  </body>
-</html>
+
+</div>

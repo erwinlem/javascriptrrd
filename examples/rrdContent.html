@@ -1,32 +1,5 @@
-<!DOCTYPE html>
-<!--
- Example HTML/javascript file that display the
- content of a RRD archive file
- Part of the javascriptRRD package
- Copyright (c) 2009 Frank Wuerthwein, fkw@ucsd.edu
-
- Original repository: http://javascriptrrd.sourceforge.net/
- 
- MIT License [http://www.opensource.org/licenses/mit-license.php]
-
--->
-
-<!--
- This example will print out RRD content in integer format.
- Make sure all RRD values can fit in an integer
--->
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-  
-  <head>
-    <title>RRD Content</title>
-    <script type="text/javascript" src="../lib/binaryXHR.js"></script>
-    <script type="text/javascript" src="../lib/rrdFile.js"></script>
-  </head>
-
-  <body>
+<div>
     <h1 id="title">RRD Raw Content</h1>
-
     RRD URL:
     <input type="text" id="input_fname" value="../example_rrds/example1.rrd"
            onchange="fname_update()" />
@@ -49,7 +22,6 @@
     </table>
    
     <hr />
-
     <table id="infotable" border='1'>
         <tr><td colspan="21"><b>Javascript needed for this page to work</b></td></tr>
 	<tr><td><b>RRD file</b></td><td id="fname" colspan="20">None</td></tr>
@@ -59,6 +31,7 @@
 	</tr>
 	<tr><th>Offset</th><th colspan="20">Data</th></tr>
     </table>
+
 
     <script type="text/javascript">
 // <![CDATA[
@@ -198,5 +171,4 @@
 //	     ]]>
       
     </script>
-  </body>
-</html>
+</div>

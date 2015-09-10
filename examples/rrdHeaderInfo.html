@@ -6,16 +6,12 @@
      <button onclick="input_update()">Update</button>
     <hr />
 
-    <table id="infotable" border="1">
-        <tr><td colspan="5"><b>Javascript needed for this page to work</b></td></tr>
+    <table id="infotable">
 	<tr><td><b>RRD file</b></td><td id="fname" colspan="4">None</td></tr>
 	<tr><td><b>Min Step</b></td><td id="step" align="right">N/A</td><td><b>Last update</b></td><td id="last_update" colspan="2">N/A</td></tr>
     </table>
     <script type="text/javascript">
 //<![CDATA[
-      // Remove the Javascript warning
-      document.getElementById("infotable").deleteRow(0);
-
       // fname is the global variable used by all the functions below
       fname=document.getElementById("input_fname").value;
 

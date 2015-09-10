@@ -8,7 +8,6 @@
     <hr />
 
     <table id="infotable" border="1">
-        <tr><td colspan="21"><b>Javascript needed for this page to work</b></td></tr>
 	<tr><td><b>RRD file</b></td><td id="fname" colspan="5">None</td></tr>
     </table>
 
@@ -18,9 +17,6 @@
 //<![CDATA[
 	// FIXME: this is totally broken
 	flot_obj= {}
-
-		// Remove the Javascript warning
-		document.getElementById("infotable").deleteRow(0);
 
 		var graph_opts={legend: { noColumns:4}};
 		var ds_graph_opts={

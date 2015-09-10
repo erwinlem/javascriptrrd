@@ -9,7 +9,6 @@
     <hr />
 
     <table id="infotable" border="1">
-        <tr><td colspan="21"><b>Javascript needed for this page to work</b></td></tr>
 	<tr><td><b>RRD file</b></td><td id="fname1" colspan="2">None</td><td id="fname2" colspan="3">None</td><td id="fname3" colspan="3">None</td></tr>
     </table>
 
@@ -27,9 +26,6 @@
         document.getElementById("fname2").firstChild.data=fname2;
         document.getElementById("fname3").firstChild.data=fname3;
        }
-
-      // Remove the Javascript warning
-      document.getElementById("infotable").deleteRow(0);
 
       var graph_opts={legend: { noColumns:4}};
       var ds_graph_opts={'Oscilator':{ color: "#ff8000", 

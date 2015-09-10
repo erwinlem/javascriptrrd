@@ -6,7 +6,6 @@
     <hr />
 
     <table id="infotable" border="1">
-        <tr><td colspan="21"><b>Javascript needed for this page to work</b></td></tr>
 	<tr><td><b>RRD file</b></td><td id="fname" colspan="5">None</td></tr>
     </table>
 
@@ -29,9 +28,6 @@
 		flot_obj.reload([['s1',fname1],['s2',fname2],['s3',fname3]]);
 		document.getElementById("fname").firstChild.data=fname_group;
 	}
-
-	// Remove the Javascript warning
-	document.getElementById("infotable").deleteRow(0);
 
 	var form_el=document.getElementById('input_fname');
 	form_el.appendChild(new Option("example4","../example_rrds/example4"));

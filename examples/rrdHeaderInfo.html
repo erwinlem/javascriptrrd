@@ -1,115 +1,66 @@
 <div>
-    <h1 id="title">RRD Header Info</h1>
-    RRD URL:
-    <input type="text" id="input_fname" value="../example_rrds/example1.rrd"
-           onchange="input_update()" />
-     <button onclick="input_update()">Update</button>
-    <hr />
+	<h1 id="title">RRD Header Info</h1>
 
-    <table id="infotable">
-	<tr><td><b>RRD file</b></td><td id="fname" colspan="4">None</td></tr>
-	<tr><td><b>Min Step</b></td><td id="step" align="right">N/A</td><td><b>Last update</b></td><td id="last_update" colspan="2">N/A</td></tr>
-    </table>
-    <script type="text/javascript">
+	<div class="form-group">
+		<label for="input_fname">rrd file</label>
+		<input type="text" class="form-control" id="input_fname" value="../example_rrds/example1.rrd" onchange="input_update()" />
+	</div>
+
+
+	<button onclick="input_update()" class="btn btn-default">Update</button>
+	<hr />
+
+	<dl class="dl-horizontal">
+		<dt>filename</dt><dd id="fname">NA</dd>
+		<dt>min step</dt><dd id="step">NA</dd>
+		<dt>last update</dt><dd id="last_update">NA</dd>
+	</dl>
+
+	<table id="dsInfo" class="table table-condensed table-bordered">
+		<caption>DS list</caption>
+		<thead><tr><th>Name</th><th>Type</th></tr></thead>
+	</table>
+	<table id="rraInfo" class="table table-condensed table-bordered">
+		<caption>RRA list</caption>
+		<thead><tr><th>Index</th><th>Rows</th><th>Steps</th></tr></thead>
+	</table>
+
+	<script type="text/javascript">
 //<![CDATA[
-      // fname is the global variable used by all the functions below
-      fname=document.getElementById("input_fname").value;
 
-      // This function updates the Web Page with the data from the RRD archive
-      function update_info(fname,rrd_data) {
-        // cleanup
-        // rows may have been added during previous updates
-        var oTable=document.getElementById("infotable");
-        while (oTable.rows.length>=3) {
-          oTable.deleteRow(2);
-        } 
+function update_info(bf) {
+	var rrd_data = new RRDFile(bf);
+	// cleanup
+	$("#dsInfo tbody>tr").remove();
+	$("#rraInfo tbody>tr").remove();
 
-        // Generic header info
-        document.getElementById("fname").firstChild.data=fname;
-        document.getElementById("step").firstChild.data=rrd_data.getMinStep();
-        document.getElementById("last_update").firstChild.data=rrd_data.getLastUpdate();
+	// Generic header info
+	$('#fname').text($('#input_fname').val());
+	$('#step').text(rrd_data.getMinStep());
+	$('#last_update').text(new Date(rrd_data.getLastUpdate()*1000));
 
-        // DS info
-        var nrDSs=rrd_data.getNrDSs()
-        var oRow=oTable.insertRow(-1);
-        var oCell=oRow.insertCell(0);
-        oCell.innerHTML="<b>DS list</b>";
-        oCell.colSpan=5;
-        for (var i=0; i<nrDSs; i++) {
-          var oDS=rrd_data.getDS(i);
-          oRow=oTable.insertRow(-1);
-          oCell=oRow.insertCell(0)
-          oCell.innerHTML="<b>"+oDS.getName()+"</b>";
-          oCell=oRow.insertCell(1)
-          oCell.innerHTML=oDS.getType();
-          oCell.colSpan=4;
-        }
+	// DS info
+	var nrDSs=rrd_data.getNrDSs();
+	for (var i=0; i<nrDSs; i++) {
+		var oDS=rrd_data.getDS(i);
+		$('#dsInfo').append('<tr><td>'+oDS.getName()+'</td><td>'+oDS.getType()+'</td></tr>');
+	}
 
-        // RRA Info
-        var nrRRAs=rrd_data.getNrRRAs()
-        oRow=oTable.insertRow(-1);
-        oCell=oRow.insertCell(0);
-        oCell.innerHTML="<b>RRA list</b>";
-        oCell.colSpan=5;
-        for (var i=0; i<nrRRAs; i++) {
-          var oRRA=rrd_data.getRRAInfo(i);
-          oRow=oTable.insertRow(-1);
-          oCell=oRow.insertCell(0)
-          oCell.innerHTML=i;
-          oCell.align="center";
-          oCell=oRow.insertCell(1)
-          oCell.innerHTML="<b>Rows</b>";
-          oCell=oRow.insertCell(2)
-          oCell.innerHTML=oRRA.getNrRows();
-          oCell.align="right";
-          oCell=oRow.insertCell(3)
-          oCell.innerHTML="<b>Step</b>";
-          oCell=oRow.insertCell(4)
-          oCell.innerHTML=oRRA.getStep();
-          oCell.align="right";
-        }
-      }      
+	// RRA Info
+	var nrRRAs=rrd_data.getNrRRAs();
+	for (var i=0; i<nrRRAs; i++) {
+		var oRRA=rrd_data.getRRAInfo(i);
+		$('#rraInfo').append('<tr><td>'+i+'</td><td>'+oRRA.getNrRows()+'</td><td>'+oRRA.getStep()+'</td></tr>');
+	}
+}
 
-      // This is the callback function that,
-      // given a binary file object,
-      // verifies that it is a valid RRD archive
-      // and performs the update of the Web page
-      function update_info_handler(bf) {
-          var rrd_data=undefined;
-          if (bf.getLength()<1) {
-            alert("File "+fname+" is empty (possibly loading failed)!");
-            return 1;
-          }
-          try {
-            var rrd_data=new RRDFile(bf);            
-          } catch(err) {
-            alert("File "+fname+" is not a valid RRD archive!\n"+err);
-          }
-          if (rrd_data!=undefined) {
-            update_info(fname,rrd_data)
-          }
-      }
 
-      // this function is invoked when the RRD file name changes
-      function input_update() {
-        fname=document.getElementById("input_fname").value;
-        try {
-          FetchBinaryURLAsync(fname,update_info_handler);
-        } catch (err) {
-           alert("Failed loading "+fname+"\n"+err);
-        }
-      }
+function input_update() {
+	FetchBinaryURLAsync($('#input_fname').val(), update_info);
+}
 
-      // Uncomment this part if you want the Web page to load the
-      // default RRD file at load time
-      //
-      //try {
-      //  FetchBinaryURLAsync(fname,update_info_handler);
-      //} catch (err) {
-      //  alert("Failed loading "+fname+"\n"+err);
-      //}
 //	     ]]>
-      
-    </script>
+
+	</script>
 
 </div>

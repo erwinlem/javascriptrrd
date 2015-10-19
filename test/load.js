@@ -8,17 +8,17 @@ var rrdGraph = require('../lib/rrdGraph.js');
 describe("file loading", function(){
 
 	it("load file", function() {
-		var bf = binaryXHR.FetchBinaryURL("example_rrds/example3.rrd");
+		var bf = new binaryXHR.BinaryFile("example_rrds/example3.rrd");
 		assert.equal(bf.getCStringAt(0,3),"RRD");
 	});	    
 
 	it("load RRDFile", function() {
-		var bf = binaryXHR.FetchBinaryURL("example_rrds/example3.rrd");
+		var bf = new binaryXHR.BinaryFile("example_rrds/example3.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 	});	    
 
 	it("load invalid rrd file", function() {
-		var bf = binaryXHR.FetchBinaryURL("README.md");
+		var bf = new binaryXHR.BinaryFile("README.md");
 		var fn = function() {
 			var rrd_data = new rrdFile.RRDFile(bf);
 		}
@@ -26,25 +26,25 @@ describe("file loading", function(){
 	});	    
 
 	it("check known rra value", function() {
-		var bf = binaryXHR.FetchBinaryURL("example_rrds/example1.rrd");
+		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 		assert.equal(rrd_data.getRRA(0).getEl(42,0), 166.25);
 	});	    
 
 	it("check known rra amd64", function() {
-		var bf = binaryXHR.FetchBinaryURL("example_rrds/example_amd64.rrd");
+		var bf = new binaryXHR.BinaryFile("example_rrds/example_amd64.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 		assert.equal(rrd_data.getRRA(0).getEl(10,0), 9591.318830506743);
 	});	    
 
 	it("check known rra mips", function() {
-		var bf = binaryXHR.FetchBinaryURL("example_rrds/example_mips.rrd");
+		var bf = new binaryXHR.BinaryFile("example_rrds/example_mips.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 		assert.equal(rrd_data.getRRA(0).getEl(10,0), 0.4615386513891367);
 	});	    
 
 	it("check known rra openwrt", function() {
-		var bf = binaryXHR.FetchBinaryURL("example_rrds/example_openwrt.rrd");
+		var bf = new binaryXHR.BinaryFile("example_rrds/example_openwrt.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 		assert.equal(rrd_data.getRRA(0).getEl(42,0), 420);
 	});	    
@@ -54,7 +54,7 @@ describe("file loading", function(){
 describe("rrd functions", function(){
 
 	it("header", function() {
-		var bf = binaryXHR.FetchBinaryURL("example_rrds/example1.rrd");
+		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 		rrd_data.getMinStep();
 		rrd_data.getLastUpdate();
@@ -68,7 +68,7 @@ describe("rrd functions", function(){
 	});	    
 	
 	it("flotData", function() {
-		var bf = binaryXHR.FetchBinaryURL("example_rrds/example1.rrd");
+		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_Graph = new rrdGraph.rrdGraph();
 		rrd_Graph.addRrdFile(new rrdFile.RRDFile(bf));
 		rrd_Graph.getFlotData();

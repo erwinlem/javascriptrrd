@@ -3,7 +3,6 @@ var assert = require('assert');
 
 var binaryXHR = require("../lib/binaryXHR.js");
 var rrdFile = require('../lib/rrdFile.js');
-var rrdFlotAsync = require('../lib/rrdFlotAsync.js');
 var rrdGraph = require('../lib/rrdGraph.js');
 
 describe("file loading", function(){

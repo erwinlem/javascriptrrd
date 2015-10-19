@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/erwinlem/javascriptrrd.svg?branch=master)](https://travis-ci.org/erwinlem/javascriptrrd)
 [![Coverage Status](https://coveralls.io/repos/erwinlem/javascriptrrd/badge.svg?branch=master&service=github)](https://coveralls.io/github/erwinlem/javascriptrrd?branch=master)
+[![bitHound Score](https://www.bithound.io/github/erwinlem/javascriptrrd/badges/score.svg)](https://www.bithound.io/github/erwinlem/javascriptrrd)
+[![bitHound Dependencies](https://www.bithound.io/github/erwinlem/javascriptrrd/badges/dependencies.svg)](https://www.bithound.io/github/erwinlem/javascriptrrd/master/dependencies/npm)
 
 Project goal
 ============

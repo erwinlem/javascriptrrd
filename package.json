@@ -7,15 +7,15 @@
     "jquery": "^2.1.4"
   },
   "devDependencies": {
-    "chai": "^3.2.0",
-    "coveralls": "^2.11.4",
-    "istanbul": "^0.3.19",
-    "js-beautify": "^1.5.10",
-    "jsdoc": "^3.3.2",
-    "jshint": "latest",
-    "mocha": "latest",
-    "mocha-lcov-reporter": "0.0.2",
-    "xmlhttprequest": "^1.7.0"
+    "chai": "3.3.0",
+    "coveralls": "2.11.4",
+    "istanbul": "0.4.0",
+    "js-beautify": "1.5.10",
+    "jsdoc": "3.3.3",
+    "jshint": "2.8.0",
+    "mocha": "2.3.3",
+    "mocha-lcov-reporter": "1.0.0",
+    "xmlhttprequest": "1.8.0"
   },
   "scripts": {
     "lint": "./node_modules/jshint/bin/jshint src/lib/*.js",

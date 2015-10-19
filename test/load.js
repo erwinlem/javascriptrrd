@@ -3,11 +3,8 @@ var assert = require('assert');
 
 var binaryXHR = require("../lib/binaryXHR.js");
 var rrdFile = require('../lib/rrdFile.js');
-var rrdFilter = require('../lib/rrdFilter.js');
 var rrdFlotAsync = require('../lib/rrdFlotAsync.js');
-var rrdFlotMatrix = require('../lib/rrdFlotMatrix.js');
-var rrdFlotSupport = require('../lib/rrdFlotSupport.js');
-var rrdMultiFile = require('../lib/rrdMultiFile.js');
+var rrdGraph = require('../lib/rrdGraph.js');
 
 describe("file loading", function(){
 
@@ -70,6 +67,15 @@ describe("rrd functions", function(){
 		rrd_data.getRRAInfo();
 
 	});	    
+	
+	it("flotData", function() {
+		var bf = binaryXHR.FetchBinaryURL("example_rrds/example1.rrd");
+		var rrd_Graph = new rrdGraph.rrdGraph();
+		rrd_Graph.addRrdFile(new rrdFile.RRDFile(bf));
+		rrd_Graph.getFlotData();
+
+	});	    
+
 
 });
 

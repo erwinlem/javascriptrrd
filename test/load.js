@@ -60,6 +60,9 @@ describe("rrd functions", function(){
 		rrd_data.getLastUpdate();
 		rrd_data.getNrDSs();
 		rrd_data.getDSNames();
+
+		rrd_data.getNrRRAs();
+		rrd_data.getRRAInfo(0);
 	});
 
 	it("datasource", function() {
@@ -69,9 +72,26 @@ describe("rrd functions", function(){
 		ds.getType();
 		ds.getMin();
 		ds.getMax();
-
 	});	    
 	
+	it("rra info", function() {
+		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
+		var rrd_data = new rrdFile.RRDFile(bf);
+		var rraInfo = rrd_data.getRRAInfo(0);
+		rraInfo.getIdx();
+		rraInfo.getNrRows();
+		rraInfo.getCFName();
+	});	    
+
+	it("rra", function() {
+		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
+		var rrd_data = new rrdFile.RRDFile(bf);
+		var rra= rrd_data.getRRA(0);
+		rra.getIdx();
+		rra.getNrDSs();
+		rra.getCFName();
+	});	    
+
 	it("flotData", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_Graph = new rrdGraph.rrdGraph();

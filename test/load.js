@@ -60,10 +60,15 @@ describe("rrd functions", function(){
 		rrd_data.getLastUpdate();
 		rrd_data.getNrDSs();
 		rrd_data.getDSNames();
-		var a = rrd_data.getDS(0);
-		rrd_data.getDS(a.getName());
-		rrd_data.getNrRRAs();
-		rrd_data.getRRAInfo();
+	});
+
+	it("datasource", function() {
+		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
+		var rrd_data = new rrdFile.RRDFile(bf);
+		var ds = rrd_data.getDS(0);
+		ds.getType();
+		ds.getMin();
+		ds.getMax();
 
 	});	    
 	

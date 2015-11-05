@@ -67,7 +67,8 @@ function update_info(bf) {
 
 
 function input_update() {
-	FetchBinaryURLAsync("../example_rrds/"+$('#file').val()+".rrd", update_info);
+	var bf = new BinaryFile("../example_rrds/"+$('#file').val()+".rrd");
+	update_info(bf);
 }
 
 //	     ]]>

@@ -7,7 +7,7 @@
      <button onclick="fname_update()">Update</button>
     <hr />
 
-    <table id="infotable" border='1'>
+    <table id="infotable" class="table">
 	<tr><td><b>RRD file</b></td><td id="fname" colspan="5">None</td></tr>
     </table>
 
@@ -16,26 +16,28 @@
     <script type="text/javascript">
 //<![CDATA[
 
-
-
-
 // this function is invoked when the RRD file name changes
 function fname_update() {
-var r = new rrdGraph();
-var bf = new BinaryFile($('#input_fname').val());
-r.addRrdFile(new RRDFile(bf));
-var rr = r.rrdFiles[0];
-var rra = rr.getRRA(rr.getNrRRAs()-1);
-var e = new Date((rr.getLastUpdate()-rra.getNrRows()*rra.getStep())*1000.0);
-var ds_graph_opts={
-	'title':'test',
-	xaxis: {
-		mode: "time",
-		panRange: [e, new Date(r.rrdFiles[0].getLastUpdate()*1000.0)]
-	},
-	zoom: { interactive: true, },
-	pan: { interactive: true, }
-};
+	var r = new rrdGraph();
+	var bf = new BinaryFile($('#input_fname').val());
+	r.addRrdFile(new RRDFile(bf));
+	var rr = r.rrdFiles[0];
+	var rra = rr.getRRA(rr.getNrRRAs()-1);
+	var e = new Date((rr.getLastUpdate()-rra.getNrRows()*rra.getStep())*1000.0);
+	var ds_graph_opts={
+		'title':'test',
+		yaxis: {
+			zoomRange: [0, 100],
+			autoscaleMargin: 0
+		},
+		xaxis: {
+			autoscaleMargin: 0,
+			mode: "time",
+			panRange: [e, new Date(r.rrdFiles[0].getLastUpdate()*1000.0)]
+		},
+		zoom: { interactive: true, },
+		pan: { interactive: true, }
+	};
 
 	$.plot('#mygraph', r.getFlotData(), ds_graph_opts);
 }

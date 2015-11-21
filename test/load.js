@@ -69,9 +69,6 @@ describe("rrd functions", function(){
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 		var ds = rrd_data.getDS(0);
-		ds.getType();
-		ds.getMin();
-		ds.getMax();
 	});	    
 	
 	it("rra info", function() {

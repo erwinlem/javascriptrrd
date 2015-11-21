@@ -1,9 +1,14 @@
 <div>
 	<h1 id="title">RRD Raw Content</h1>
-	RRD URL:
-	<input type="text" id="input_fname" value="../example_rrds/example1.rrd" onchange="fname_update()" />
-	<button onclick="fname_update()"  type="button" class="btn btn-default">Update</button>
+
+	<div class="form-group">
+		<label for="input_fname">rrd file</label>
+		<select id="file" onchange="input_update()">
+		</select>
+	</div>
+	<button onclick="input_update()" class="btn btn-default">Update</button>
 	<hr />
+
 	<table>
 		<tr>
 			<td>DS: <select id="select_ds"></select></td>
@@ -130,11 +135,13 @@ function element_update() {
 }      
 
 // this function is invoked when the RRD file name changes
-function fname_update() {
-	var bf = new BinaryFile($('#input_fname').val());
+function input_update() {
+	var bf = new BinaryFile("../example_rrds/"+$('#file').val()+".rrd");
 	rrd_data = new RRDFile(bf);
 	update_fname(new RRDFile(bf))
 }
+
+fillFileOptions($('#file'));
 
 	 //	     ]]>
 

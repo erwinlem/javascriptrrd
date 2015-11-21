@@ -1,10 +1,12 @@
 <div>
     <h1 id="title">RRD Graphs with Flot</h1>
 
-    RRD URL:
-    <input type="text" id="input_fname" value="../example_rrds/example_amd64.rrd"
-           onchange="fname_update()" />
-     <button onclick="fname_update()">Update</button>
+    <div class="form-group">
+	    <label for="input_fname">rrd file</label>
+	    <select id="file" onchange="input_update()">
+	    </select>
+    </div>
+    <button onclick="input_update()" class="btn btn-default">Update</button>
     <hr />
 
     <table id="infotable" class="table">
@@ -17,9 +19,9 @@
 //<![CDATA[
 
 // this function is invoked when the RRD file name changes
-function fname_update() {
+function input_update() {
 	var r = new rrdGraph();
-	var bf = new BinaryFile($('#input_fname').val());
+	var bf = new BinaryFile("../example_rrds/"+$('#file').val()+".rrd");
 	r.addRrdFile(new RRDFile(bf));
 	var rr = r.rrdFiles[0];
 	var rra = rr.getRRA(rr.getNrRRAs()-1);
@@ -41,6 +43,9 @@ function fname_update() {
 
 	$.plot('#mygraph', r.getFlotData(), ds_graph_opts);
 }
+
+fillFileOptions($('#file'));
+
 //]]>
 
     </script>

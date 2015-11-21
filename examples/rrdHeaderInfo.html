@@ -4,20 +4,8 @@
 	<div class="form-group">
 		<label for="input_fname">rrd file</label>
 		<select id="file" onchange="input_update()">
-			<option value="example1">example1</option>
-			<option value="example2">example2</option>
-			<option value="example3">example3</option>
-			<option value="example4">example4</option>
-			<option value="example4_s1">example4_s1</option>
-			<option value="example4_s2">example4_s2</option>
-			<option value="example4_s3">example4_s3</option>
-			<option value="example_amd64">example_amd64</option>
-			<option value="example_mips">example_mips</option>
-			<option value="example_optionwrt">example_openwrt</option>
 		</select>
 	</div>
-
-
 	<button onclick="input_update()" class="btn btn-default">Update</button>
 	<hr />
 
@@ -70,6 +58,8 @@ function input_update() {
 	var bf = new BinaryFile("../example_rrds/"+$('#file').val()+".rrd");
 	update_info(bf);
 }
+
+fillFileOptions($('#file'));
 
 //	     ]]>
 

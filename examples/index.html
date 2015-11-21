@@ -82,6 +82,16 @@ $('.dropdown-menu > li > a').click(function() {
 	console.log($(this).attr('href'));
 	$(".main").load($(this).attr('href').split('#')[1]);
 });
+
+function fillFileOptions(node) {
+	var files = ["example1", "example2", "example3", "example4", "example4_s1", "example4_s2", "example4_s3", "example_amd64", "example_mips", "example_optionwrt"];
+
+	var p = node.prop('options');
+	$.each(files, function(index, file) {
+		    p[p.length] = new Option(file, file);
+	});
+	
+}
 </script>
 
 	</body>

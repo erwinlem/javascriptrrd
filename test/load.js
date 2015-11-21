@@ -75,7 +75,6 @@ describe("rrd functions", function(){
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
 		var rraInfo = rrd_data.getRRAInfo(0);
-		rraInfo.getCFName();
 	});	    
 
 	it("rra", function() {
@@ -84,7 +83,6 @@ describe("rrd functions", function(){
 		var rra= rrd_data.getRRA(0);
 		rra.getIdx();
 		rra.getNrDSs();
-		rra.getCFName();
 	});	    
 
 	it("flotData", function() {

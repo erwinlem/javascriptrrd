@@ -76,7 +76,6 @@ describe("rrd functions", function(){
 		var rrd_data = new rrdFile.RRDFile(bf);
 		var rraInfo = rrd_data.getRRAInfo(0);
 		rraInfo.getIdx();
-		rraInfo.getNrRows();
 		rraInfo.getCFName();
 	});	    
 

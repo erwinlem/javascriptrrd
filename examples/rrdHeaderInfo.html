@@ -42,14 +42,14 @@ function update_info(bf) {
 	var nrDSs=rrd_data.getNrDSs();
 	for (var i=0; i<nrDSs; i++) {
 		var oDS=rrd_data.getDS(i);
-		$('#dsInfo').append('<tr><td>'+oDS.getName()+'</td><td>'+oDS.getType()+'</td></tr>');
+		$('#dsInfo').append('<tr><td>'+oDS.name+'</td><td>'+oDS.type+'</td></tr>');
 	}
 
 	// RRA Info
 	var nrRRAs=rrd_data.getNrRRAs();
 	for (var i=0; i<nrRRAs; i++) {
 		var oRRA=rrd_data.getRRAInfo(i);
-		$('#rraInfo').append('<tr><td>'+i+'</td><td>'+oRRA.getNrRows()+'</td><td>'+oRRA.getStep()+'</td></tr>');
+		$('#rraInfo').append('<tr><td>'+i+'</td><td>'+oRRA.nrRows+'</td><td>'+oRRA.step+'</td></tr>');
 	}
 }
 

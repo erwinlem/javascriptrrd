@@ -22,7 +22,7 @@ describe("file loading", function(){
 		var fn = function() {
 			var rrd_data = new rrdFile.RRDFile(bf);
 		}
-		expect(fn).to.throw("Wrong magic id.");
+		expect(fn).to.throw();
 	});	    
 
 	it("check known rra value", function() {

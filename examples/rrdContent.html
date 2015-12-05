@@ -50,19 +50,20 @@ rrd_data = undefined;
 
 // This function updates the Web Page with the data from the RRD archive header
 // when a new file is selected
-function update_fname() {
+function update_info(bf) {
+	rrd_data = new RRDFile(bf);
 	// Update DS info
 	var nrDSs=rrd_data.getNrDSs()
 
-		// But first cleanup anything that may be there from before
-		document.getElementById("ds_el").firstChild.data="None";
+	// But first cleanup anything that may be there from before
+	document.getElementById("ds_el").firstChild.data="None";
 	var oSelect=document.getElementById("select_ds");
 	while (oSelect.options.length>=1) {
 		oSelect.remove(0);
 	}         
 
 	for (var i=0; i<nrDSs; i++) {
-		var ds_name=rrd_data.getDS(i).getName();
+		var ds_name=rrd_data.getDS(i).name;
 		oSelect.options.add(new Option(ds_name,i,false,false));
 	}
 
@@ -109,12 +110,12 @@ function element_update() {
 	} 
 
 	// Generic header info
-	document.getElementById("ds_el").firstChild.data=rrd_data.getDS(ds_idx).getName();
+	document.getElementById("ds_el").firstChild.data=rrd_data.getDS(ds_idx).name;
 	document.getElementById("rra_el").firstChild.data=rra_idx;
 
 	// get RRA info
 	var rra=rrd_data.getRRA(rra_idx);
-	var rows=rra.getNrRows();
+	var rows=rra.nrRows;
 
 	var oRow=undefined;
 	for (var i=0; i<rows;i++) {
@@ -136,9 +137,7 @@ function element_update() {
 
 // this function is invoked when the RRD file name changes
 function input_update() {
-	var bf = new BinaryFile("../example_rrds/"+$('#file').val()+".rrd");
-	rrd_data = new RRDFile(bf);
-	update_fname(new RRDFile(bf))
+	new BinaryFile("../example_rrds/"+$('#file').val()+".rrd", update_info);
 }
 
 fillFileOptions($('#file'));

@@ -55,8 +55,7 @@ function update_info(bf) {
 
 
 function input_update() {
-	var bf = new BinaryFile("../example_rrds/"+$('#file').val()+".rrd");
-	update_info(bf);
+	new BinaryFile("../example_rrds/"+$('#file').val()+".rrd", update_info);
 }
 
 fillFileOptions($('#file'));

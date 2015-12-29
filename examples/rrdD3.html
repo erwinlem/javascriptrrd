@@ -1,0 +1,171 @@
+<div>
+	<script src="../node_modules/d3/d3.min.js"></script>
+	<style>
+
+//<![CDATA[
+
+svg {
+  font: 10px sans-serif;
+}
+
+.area {
+  fill: steelblue;
+  clip-path: url(#clip);
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+//]]>
+
+</style>
+    <h1 id="title">D3</h1>
+
+    <div class="form-group">
+	    <label for="input_fname">rrd file</label>
+	    <select id="file" onchange="input_update()">
+	    </select>
+    </div>
+    <button onclick="input_update()" class="btn btn-default">Update</button>
+    <hr />
+
+    <table id="infotable" class="table">
+	<tr><td><b>RRD file</b></td><td id="fname" colspan="5">None</td></tr>
+    </table>
+
+    <div id="mygraph" style="width:960px;height:540px"></div>
+    <svg />
+
+    <script type="text/javascript">
+
+//<![CDATA[
+function update_info(bf) {
+	var rrd_Graph = new rrdGraph();
+	rrd_Graph.addRrdFile(new RRDFile(bf));
+	datas(rrd_Graph.getFlotData()[0].data);
+}
+
+var margin = {top: 10, right: 10, bottom: 100, left: 40},
+    margin2 = {top: 430, right: 10, bottom: 20, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom,
+    height2 = 500 - margin2.top - margin2.bottom;
+
+var parseDate = d3.time.format("%b %Y").parse;
+
+var x = d3.time.scale().range([0, width]),
+    x2 = d3.time.scale().range([0, width]),
+    y = d3.scale.linear().range([height, 0]),
+    y2 = d3.scale.linear().range([height2, 0]);
+
+var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+    xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
+    yAxis = d3.svg.axis().scale(y).orient("left");
+
+var brush = d3.svg.brush()
+    .x(x2)
+    .on("brush", brushed);
+
+var area = d3.svg.area()
+    .interpolate("monotone")
+  .x(function(d) { return x(d[0]); })
+    .y0(height)
+    .y1(function(d) { return y(d[1]); });
+
+var area2 = d3.svg.area()
+    .interpolate("monotone")
+    .x(function(d) { return x2(d[0]); })
+    .y0(height2)
+    .y1(function(d) { return y2(d[1]); });
+
+var svg = d3.select("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom);
+
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("width", width)
+    .attr("height", height);
+
+var focus = svg.append("g")
+    .attr("class", "focus")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var context = svg.append("g")
+    .attr("class", "context")
+    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+//d3.csv("sp500.csv", type, function(error, data) {
+function datas(data) {
+  x.domain(d3.extent(data.map(function(d) { return d[0]; })));
+  y.domain([0, d3.max(data.map(function(d) { return d[1]; }))]);
+  x2.domain(x.domain());
+  y2.domain(y.domain());
+
+  focus.append("path")
+      .datum(data)
+      .attr("class", "area")
+      .attr("d", area);
+
+  focus.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  focus.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+  context.append("path")
+      .datum(data)
+      .attr("class", "area")
+      .attr("d", area2);
+
+  context.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height2 + ")")
+      .call(xAxis2);
+
+  context.append("g")
+      .attr("class", "x brush")
+      .call(brush)
+    .selectAll("rect")
+      .attr("y", -6)
+      .attr("height", height2 + 7);
+};
+
+function brushed() {
+  x.domain(brush.empty() ? x2.domain() : brush.extent());
+  focus.select(".area").attr("d", area);
+  focus.select(".x.axis").call(xAxis);
+}
+
+function type(d) {
+  d.date = parseDate(d.date);
+  d.price = +d.price;
+  return d;
+}
+
+function input_update() {
+	new BinaryFile("../example_rrds/"+$('#file').val()+".rrd", update_info);
+}
+
+
+fillFileOptions($('#file'));
+
+
+//]]>
+
+    </script>
+</div>

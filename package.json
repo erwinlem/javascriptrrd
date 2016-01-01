@@ -2,22 +2,22 @@
   "name": "javascriptrrd",
   "version": "0.0.1",
   "dependencies": {
-    "bootstrap": "^3.3.5",
+    "bootstrap": "latest",
     "flot": "^0.8.0-alpha",
-    "d3": "^3.5.10",
-    "jquery": "^2.1.4"
+    "d3": "latest",
+    "jquery": "latest"
   },
   "devDependencies": {
-    "chai": "3.3.0",
-    "coveralls": "2.11.4",
-    "istanbul": "0.4.0",
-    "js-beautify": "1.5.10",
-    "jsdoc": "3.3.3",
-    "jsdom": "^7.2.2",
-    "jshint": "2.8.0",
-    "mocha": "2.3.3",
-    "mocha-lcov-reporter": "1.0.0",
-    "xmlhttprequest": "1.8.0"
+    "chai": "latest",
+    "coveralls": "latest",
+    "istanbul": "latest",
+    "js-beautify": "latest",
+    "jsdoc": "latest",
+    "jsdom": "latest",
+    "jshint": "latest",
+    "mocha": "latest",
+    "mocha-lcov-reporter": "latest",
+    "xmlhttprequest": "latest"
   },
   "scripts": {
     "lint": "./node_modules/jshint/bin/jshint lib/*.js",

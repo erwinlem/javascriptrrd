@@ -1,52 +1,18 @@
 <div>
 	<script src="../node_modules/d3/d3.min.js"></script>
-	<style>
+	<h1 id="title">D3</h1>
 
-//<![CDATA[
+	<div class="form-group">
+		<label for="input_fname">rrd file</label>
+		<select id="file" onchange="input_update()">
+		</select>
+	</div>
+	<button onclick="input_update()" class="btn btn-default">Update</button>
+	<hr />
 
-svg {
-  font: 10px sans-serif;
-}
+	<svg id="example" />
 
-.area {
-  fill: steelblue;
-  clip-path: url(#clip);
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.brush .extent {
-  stroke: #fff;
-  fill-opacity: .125;
-  shape-rendering: crispEdges;
-}
-
-//]]>
-
-</style>
-    <h1 id="title">D3</h1>
-
-    <div class="form-group">
-	    <label for="input_fname">rrd file</label>
-	    <select id="file" onchange="input_update()">
-	    </select>
-    </div>
-    <button onclick="input_update()" class="btn btn-default">Update</button>
-    <hr />
-
-    <table id="infotable" class="table">
-	<tr><td><b>RRD file</b></td><td id="fname" colspan="5">None</td></tr>
-    </table>
-
-    <div id="mygraph" style="width:960px;height:540px"></div>
-<svg id="example" />
-
-    <script type="text/javascript">
+	<script type="text/javascript">
 
 //<![CDATA[
 
@@ -69,13 +35,10 @@ function datas(data) {
 		.domain(d3.extent(data, function(d) { return d[1]; }))
 		.range([height, 0]);
 
-	var line = d3.svg.line()
-		.defined(function(d) { return !isNaN(d[1]); })
-		.x(function(d) { return x(d[0]); })
-		.y(function(d) { return y(d[1]); });
+	d3.select("svg").remove();
 
-var svg = d3.select("body")
-    .append("svg")
+	var svg = d3.select("body")
+		.append("svg")
 		.datum(data)
 		.attr("width", width + margin.left + margin.right)
 		.attr("height", height + margin.top + margin.bottom)
@@ -91,11 +54,16 @@ var svg = d3.select("body")
 		.attr("class", "y axis")
 		.call(d3.svg.axis().orient("left").scale(y));
 
+	var line = d3.svg.area()
+		.defined(function(d) { return !isNaN(d[1]); })
+		.x(function(d) { return x(d[0]); })
+		.y0(height)
+		.y1(function(d) { return y(d[1]); });
+
 	svg.append("path")
-		.attr("class", "line")
+		.attr("class", "area")
 		.attr("d", line);
 }
-
 
 function input_update() {
 	new BinaryFile("../example_rrds/"+$('#file').val()+".rrd", update_info);
@@ -107,5 +75,5 @@ fillFileOptions($('#file'));
 
 //]]>
 
-    </script>
+	</script>
 </div>

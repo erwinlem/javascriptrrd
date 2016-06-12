@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "dependencies": {
     "bootstrap": "latest",
-    "flot": "^0.8.0-alpha",
+    "flot": "latest",
     "d3": "latest",
-    "jquery": "latest"
+    "jquery": "^2.0.0"
   },
   "devDependencies": {
     "chai": "latest",

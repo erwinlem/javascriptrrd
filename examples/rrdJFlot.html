@@ -27,28 +27,35 @@ function update_info(bf) {
 	var e = new Date((rr.getLastUpdate()-rra.nrRows*rra.step)*1000.0);
 	var ds_graph_opts={
 		'title':'test',
-		yaxis: {
-			zoomRange: [0, 100],
-			autoscaleMargin: 0
-		},
 		xaxis: {
-			autoscaleMargin: 0,
 			mode: "time",
-			panRange: [e, new Date(r.rrdFiles[0].getLastUpdate()*1000.0)]
+			//panRange: [e, new Date(r.rrdFiles[0].getLastUpdate()*1000.0)]
 		},
-		zoom: { interactive: true, },
-		pan: { interactive: true, }
+		selection: { mode: "x" }
 	};
+	
+	placeholder = $("#mygraph");
+	console.log("cwupdateBEEP");
 
-	$.plot('#mygraph', r.getFlotData(), ds_graph_opts);
+	placeholder.bind("plotselected", function (event, ranges) {
+		console.log("BEEP");
+		plot = $.plot(placeholder, r.getFlotData(),
+			$.extend(true, {}, ds_graph_opts, {
+				xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
+			}));
+	});
+
+	var plot = $.plot(placeholder, r.getFlotData(), ds_graph_opts);
+
 }
 
 function input_update() {
 	new BinaryFile("../example_rrds/"+$('#file').val()+".rrd", update_info);
 }
-
-fillFileOptions($('#file'));
-
+		
+$(function () {
+	fillFileOptions($('#file'));
+});
 //]]>
 
     </script>

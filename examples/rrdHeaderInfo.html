@@ -39,7 +39,7 @@ function update_info(bf) {
 	$('#last_update').text(new Date(rrd_data.lastUpdate*1000));
 
 	// DS info
-	var nrDSs=rrd_data.getNrDSs();
+	var nrDSs=rrd_data.ds.length;
 	for (var i=0; i<nrDSs; i++) {
 		var oDS=rrd_data.getDS(i);
 		$('#dsInfo').append('<tr><td>'+oDS.name+'</td><td>'+oDS.type+'</td></tr>');

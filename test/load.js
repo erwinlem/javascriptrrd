@@ -79,7 +79,7 @@ describe("rrd functions", function(){
 	it("datasource", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		var ds = rrd_data.getDS(0);
+		var ds = rrd_data.rrd_header.getDS(0);
 	});	    
 	
 	it("rra info", function() {

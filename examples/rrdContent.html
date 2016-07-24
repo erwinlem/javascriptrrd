@@ -63,7 +63,7 @@ function update_info(bf) {
 	}         
 
 	for (var i=0; i<nrDSs; i++) {
-		var ds_name=rrd_data.getDS(i).name;
+		var ds_name=rrd_data.rrd_header.getDS(i).name;
 		oSelect.options.add(new Option(ds_name,i,false,false));
 	}
 
@@ -110,7 +110,7 @@ function element_update() {
 	} 
 
 	// Generic header info
-	document.getElementById("ds_el").firstChild.data=rrd_data.getDS(ds_idx).name;
+	document.getElementById("ds_el").firstChild.data=rrd_data.rrd_header.getDS(ds_idx).name;
 	document.getElementById("rra_el").firstChild.data=rra_idx;
 
 	// get RRA info

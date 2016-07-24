@@ -41,7 +41,7 @@ function update_info(bf) {
 	// DS info
 	var nrDSs=rrd_data.rrd_header.getNrDSs();
 	for (var i=0; i<nrDSs; i++) {
-		var oDS=rrd_data.getDS(i);
+		var oDS=rrd_data.rrd_header.getDS(i);
 		$('#dsInfo').append('<tr><td>'+oDS.name+'</td><td>'+oDS.type+'</td></tr>');
 	}
 

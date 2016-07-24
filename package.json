@@ -5,7 +5,7 @@
     "bootstrap": "latest",
     "flot": "latest",
     "d3": "latest",
-    "jquery": "^2.0.0"
+    "jquery": "latest"
   },
   "devDependencies": {
     "chai": "latest",

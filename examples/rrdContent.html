@@ -53,7 +53,7 @@ rrd_data = undefined;
 function update_info(bf) {
 	rrd_data = new RRDFile(bf);
 	// Update DS info
-	var nrDSs=rrd_data.getNrDSs()
+	var nrDSs=rrd_data.rrd_header.getNrDSs()
 
 	// But first cleanup anything that may be there from before
 	document.getElementById("ds_el").firstChild.data="None";

@@ -69,7 +69,7 @@ describe("rrd functions", function(){
 		var rrd_data = new rrdFile.RRDFile(bf);
 		rrd_data.getMinStep();
 		rrd_data.rrd_header.getLastUpdate();
-		rrd_data.getNrDSs();
+		rrd_data.rrd_header.getNrDSs();
 		rrd_data.rrd_header.getDSNames();
 
 		rrd_data.rrd_header.getNrRRAs();

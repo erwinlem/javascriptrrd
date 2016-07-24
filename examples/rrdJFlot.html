@@ -23,13 +23,13 @@ function update_info(bf) {
 	var r = new rrdGraph();
 	r.addRrdFile(new RRDFile(bf));
 	var rr = r.rrdFiles[0];
-	var rra = rr.getRRA(rr.rrd_header.getNrRRAs()-1);
-	var e = new Date((rr.rrd_header.getLastUpdate()-rra.nrRows*rra.step)*1000.0);
+	var rra = rr.getRRA(rr.getNrRRAs()-1);
+	var e = new Date((rr.getLastUpdate()-rra.nrRows*rra.step)*1000.0);
 	var ds_graph_opts={
 		'title':'test',
 		xaxis: {
 			mode: "time",
-			//panRange: [e, new Date(r.rrdFiles[0].rrd_header.getLastUpdate()*1000.0)]
+			//panRange: [e, new Date(r.rrdFiles[0].getLastUpdate()*1000.0)]
 		},
 		selection: { mode: "x" }
 	};

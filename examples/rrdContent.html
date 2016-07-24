@@ -53,7 +53,7 @@ rrd_data = undefined;
 function update_info(bf) {
 	rrd_data = new RRDFile(bf);
 	// Update DS info
-	var nrDSs=rrd_data.rrd_header.getNrDSs()
+	var nrDSs=rrd_data.getNrDSs()
 
 	// But first cleanup anything that may be there from before
 	document.getElementById("ds_el").firstChild.data="None";
@@ -63,12 +63,12 @@ function update_info(bf) {
 	}         
 
 	for (var i=0; i<nrDSs; i++) {
-		var ds_name=rrd_data.rrd_header.getDS(i).name;
+		var ds_name=rrd_data.getDS(i).name;
 		oSelect.options.add(new Option(ds_name,i,false,false));
 	}
 
 	// Update RRA info
-	var nrRRAs=rrd_data.rrd_header.getNrRRAs()
+	var nrRRAs=rrd_data.getNrRRAs()
 
 		// But first cleanup anything that may be there from before
 		document.getElementById("rra_el").firstChild.data="None";
@@ -110,7 +110,7 @@ function element_update() {
 	} 
 
 	// Generic header info
-	document.getElementById("ds_el").firstChild.data=rrd_data.rrd_header.getDS(ds_idx).name;
+	document.getElementById("ds_el").firstChild.data=rrd_data.getDS(ds_idx).name;
 	document.getElementById("rra_el").firstChild.data=rra_idx;
 
 	// get RRA info

@@ -64,9 +64,9 @@ function mycallback(obj) {
 	//create a new rrdlist, which contains almost all original elements
 	//    plus additional operated-on DSs from RRDFilterOp 
 	for (j in obj.rrd_data) {
-		for (i=0;i<obj.rrd_data[j].rrd_header.getNrDSs;i++) {
+		for (i=0;i<obj.rrd_data[j].getNrDSs;i++) {
 			if (i!=1) op_list.push(i);
-			DS_list.push(obj.rrd_data[i].rrd_header.getDS(i));
+			DS_list.push(obj.rrd_data[i].getDS(i));
 		}
 	}
 	op_list.push(new MultiSumDS(DS_list));

@@ -35,20 +35,20 @@ function update_info(bf) {
 
 	// Generic header info
 	$('#fname').text($('#input_fname').val());
-	$('#step').text(rrd_data.rrd_header.getMinStep());
-	$('#last_update').text(new Date(rrd_data.rrd_header.getLastUpdate()*1000));
+	$('#step').text(rrd_data.getMinStep());
+	$('#last_update').text(new Date(rrd_data.getLastUpdate()*1000));
 
 	// DS info
-	var nrDSs=rrd_data.rrd_header.getNrDSs();
+	var nrDSs=rrd_data.getNrDSs();
 	for (var i=0; i<nrDSs; i++) {
-		var oDS=rrd_data.rrd_header.getDS(i);
+		var oDS=rrd_data.getDS(i);
 		$('#dsInfo').append('<tr><td>'+oDS.name+'</td><td>'+oDS.type+'</td></tr>');
 	}
 
 	// RRA Info
-	var nrRRAs=rrd_data.rrd_header.getNrRRAs();
+	var nrRRAs=rrd_data.getNrRRAs();
 	for (var i=0; i<nrRRAs; i++) {
-		var oRRA=rrd_data.rrd_header.getRRAInfo(i);
+		var oRRA=rrd_data.getRRAInfo(i);
 		$('#rraInfo').append('<tr><td>'+i+'</td><td>'+oRRA.nrRows+'</td><td>'+oRRA.step+'</td></tr>');
 	}
 }

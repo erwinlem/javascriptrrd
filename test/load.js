@@ -67,25 +67,25 @@ describe("rrd functions", function(){
 	it("header", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		rrd_data.rrd_header.getMinStep();
-		rrd_data.rrd_header.getLastUpdate();
-		rrd_data.rrd_header.getNrDSs();
-		rrd_data.rrd_header.getDSNames();
+		rrd_data.getMinStep();
+		rrd_data.getLastUpdate();
+		rrd_data.getNrDSs();
+		rrd_data.getDSNames();
 
-		rrd_data.rrd_header.getNrRRAs();
-		rrd_data.rrd_header.getRRAInfo(0);
+		rrd_data.getNrRRAs();
+		rrd_data.getRRAInfo(0);
 	});
 
 	it("datasource", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		var ds = rrd_data.rrd_header.getDS(0);
+		var ds = rrd_data.getDS(0);
 	});	    
 	
 	it("rra info", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		var rraInfo = rrd_data.rrd_header.getRRAInfo(0);
+		var rraInfo = rrd_data.getRRAInfo(0);
 	});	    
 
 	it("rra", function() {

@@ -23,7 +23,7 @@ function update_info(bf) {
 	var r = new rrdGraph();
 	r.addRrdFile(new RRDFile(bf));
 	var rr = r.rrdFiles[0];
-	var rra = rr.rra[rra.length-1];
+	var rra = rr.rra[rr.rra.length-1];
 	var e = new Date((rr.lastUpdate-rra.nrRows*rra.step)*1000.0);
 	var ds_graph_opts={
 		'title':'test',

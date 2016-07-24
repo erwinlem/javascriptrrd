@@ -73,7 +73,7 @@ describe("rrd functions", function(){
 		rrd_data.rrd_header.getDSNames();
 
 		rrd_data.getNrRRAs();
-		rrd_data.getRRAInfo(0);
+		rrd_data.rrd_header.getRRAInfo(0);
 	});
 
 	it("datasource", function() {
@@ -85,7 +85,7 @@ describe("rrd functions", function(){
 	it("rra info", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		var rraInfo = rrd_data.getRRAInfo(0);
+		var rraInfo = rrd_data.rrd_header.getRRAInfo(0);
 	});	    
 
 	it("rra", function() {

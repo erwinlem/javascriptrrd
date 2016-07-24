@@ -29,25 +29,25 @@ describe("file loading", function(){
 	it("check known rra value", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		assert.equal(rrd_data.getRRA(0).getEl(42,0), 166.25);
+		assert.equal(rrd_data.rra[0].getEl(42,0), 166.25);
 	});	    
 
 	it("check known rra amd64", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example_amd64.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		assert.equal(rrd_data.getRRA(0).getEl(10,0), 9591.318830506743);
+		assert.equal(rrd_data.rra[0].getEl(10,0), 9591.318830506743);
 	});	    
 
 	it("check known rra mips", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example_mips.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		assert.equal(rrd_data.getRRA(0).getEl(10,0), 0.4615386513891367);
+		assert.equal(rrd_data.rra[0].getEl(10,0), 0.4615386513891367);
 	});	    
 
 	it("check known rra openwrt", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example_openwrt.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		assert.equal(rrd_data.getRRA(0).getEl(42,0), 420);
+		assert.equal(rrd_data.rra[0].getEl(42,0), 420);
 	});	    
 
 });
@@ -91,7 +91,7 @@ describe("rrd functions", function(){
 	it("rra", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		var rra= rrd_data.getRRA(0);
+		var rra= rrd_data.rra[0];
 	});	    
 
 	it("flotData", function() {

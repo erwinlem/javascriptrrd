@@ -114,7 +114,7 @@ function element_update() {
 	document.getElementById("rra_el").firstChild.data=rra_idx;
 
 	// get RRA info
-	var rra=rrd_data.getRRA(rra_idx);
+	var rra=rrd_data.rra[rra_idx];
 	var rows=rra.nrRows;
 
 	var oRow=undefined;

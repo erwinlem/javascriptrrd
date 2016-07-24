@@ -68,7 +68,7 @@ function update_info(bf) {
 	}
 
 	// Update RRA info
-	var nrRRAs=rrd_data.getNrRRAs()
+	var nrRRAs=rrd_data.rrd_header.getNrRRAs()
 
 		// But first cleanup anything that may be there from before
 		document.getElementById("rra_el").firstChild.data="None";

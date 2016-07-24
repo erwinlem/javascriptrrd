@@ -46,7 +46,7 @@ function update_info(bf) {
 	}
 
 	// RRA Info
-	var nrRRAs=rrd_data.getNrRRAs();
+	var nrRRAs=rrd_data.rrd_header.getNrRRAs();
 	for (var i=0; i<nrRRAs; i++) {
 		var oRRA=rrd_data.rrd_header.getRRAInfo(i);
 		$('#rraInfo').append('<tr><td>'+i+'</td><td>'+oRRA.nrRows+'</td><td>'+oRRA.step+'</td></tr>');

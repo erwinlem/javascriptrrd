@@ -72,7 +72,7 @@ describe("rrd functions", function(){
 		rrd_data.getNrDSs();
 		rrd_data.rrd_header.getDSNames();
 
-		rrd_data.getNrRRAs();
+		rrd_data.rrd_header.getNrRRAs();
 		rrd_data.rrd_header.getRRAInfo(0);
 	});
 

@@ -26,6 +26,15 @@ describe("file loading", function(){
 		expect(fn).to.throw();
 	});	    
 
+	it("lastUpdate", function() {
+		var bf = new binaryXHR.BinaryFile("example_rrds/example_amd64.rrd");
+		var rrd_data = new rrdFile.RRDFile(bf);
+		// <lastupdate>1347055342</lastupdate> <!-- 2012-09-08 00:02:22 CEST -->
+		assert.equal(rrd_data.lastUpdate, 1347055342);
+	});	    
+
+
+
 	it("check known rra value", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);

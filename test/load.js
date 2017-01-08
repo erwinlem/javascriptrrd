@@ -76,7 +76,6 @@ describe("rrd functions", function(){
 	it("header", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
 		var rrd_data = new rrdFile.RRDFile(bf);
-		rrd_data.getMinStep();
 		rrd_data.lastUpdate;
 		rrd_data.ds.length;
 		rrd_data.getDSNames();

@@ -1,6 +1,7 @@
 var expect = require("chai").expect;
 var assert = require('assert');
 var jsdom = require('jsdom');
+const { JSDOM } = jsdom;
 
 var binaryXHR = require("../lib/binaryXHR.js");
 var rrdFile = require('../lib/rrdFile.js');
@@ -65,11 +66,8 @@ describe("rrd functions", function(){
 
 	// http://stackoverflow.com/questions/30235492/jquery-via-jsdom-isnt-a-functor-giving-typeerror
 	beforeEach(function () {
-		global.document = jsdom.jsdom('<html><body><section id="banner"></section></body></html>');
-		global.window = global.document.defaultView;
-		global.navigator = global.window.navigator;
-
-		global.$ = global.jQuery = require('jquery');
+		global.document = new JSDOM('<html><body><section id="banner"></section></body></html>');
+		global.$ = require('jquery')(global.document.window);
 	})
 
 

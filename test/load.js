@@ -102,7 +102,7 @@ describe("rrd functions", function(){
 
 	it("flotData", function() {
 		var bf = new binaryXHR.BinaryFile("example_rrds/example1.rrd");
-		var rrd_Graph = new rrdGraph.rrdGraph();
+		var rrd_Graph = new rrdGraph.RRDGraph();
 		rrd_Graph.addRrdFile(new rrdFile.RRDFile(bf));
 		rrd_Graph.getFlotData();
 

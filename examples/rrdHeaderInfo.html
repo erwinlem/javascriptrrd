@@ -35,7 +35,7 @@ function update_info(bf) {
 
 	// Generic header info
 	$('#fname').text($('#input_fname').val());
-	$('#step').text(rrd_data.getMinStep());
+	$('#step').text(rrd_data.pdp_step);
 	$('#last_update').text(new Date(rrd_data.lastUpdate*1000));
 
 	// DS info

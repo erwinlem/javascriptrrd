@@ -40,7 +40,7 @@ svg {
 //<![CDATA[
 
 function update_info(bf) {
-	var rrd_Graph = new rrdGraph();
+	var rrd_Graph = new RRDGraph();
 	rrd_Graph.addRrdFile(new RRDFile(bf));
 	datas(rrd_Graph.getFlotData()[0].data);
 }

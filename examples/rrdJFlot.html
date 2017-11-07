@@ -20,7 +20,7 @@
 
 // this function is invoked when the RRD file name changes
 function update_info(bf) {
-	var r = new rrdGraph();
+	var r = new RRDGraph();
 	r.addRrdFile(new RRDFile(bf));
 	var rr = r.rrdFiles[0];
 	var rra = rr.rra[rr.rra.length-1];

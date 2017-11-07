@@ -3,9 +3,9 @@ var assert = require('assert');
 var jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-var binaryXHR = require("../lib/binaryXHR.js");
-var rrdFile = require('../lib/rrdFile.js');
-var rrdGraph = require('../lib/rrdGraph.js');
+var binaryXHR = require("./lib/binaryXHR.js");
+var rrdFile = require('./lib/rrdFile.js');
+var rrdGraph = require('./lib/rrdGraph.js');
 
 describe("file loading", function(){
 

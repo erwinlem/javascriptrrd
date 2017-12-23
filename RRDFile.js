@@ -216,19 +216,6 @@ RRDFile.prototype = {
 		throw RangeError("DS name " + name + " unknown.");
 	},
 
-	/**
-	 * @return {Number} If id is a number, return an object of type RRDDS holding the information about the id-th Data Source.
-	 *
-	 * If id is a string, return an object of type RRDDS holding the information about the Data Source with the requested name.
-	 */
-	getDS : function(id) {
-		if (typeof id == "number") {
-			return this.ds[id];
-		} else {
-			return this.getDSbyName(id);
-		}
-	}
-
 };
 
 // this will export the module to nodejs

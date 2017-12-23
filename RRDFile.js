@@ -42,18 +42,6 @@ function RRDRRA(rrd_data) {
 		this.pdp_cnt = rrd_data.readLong();
 		rrd_data.align(rrd_data.readAlignDouble);
 		rrd_data.readNop(10*8);
-}
-
-RRDRRA.prototype = {
-	/**
-	 * @param {number} row_idx row
-	 * @param {number} ds_idx ds
-	 * @return {Number} the value for the d-th DS in the r-th row.
-	 */
-	getEl : function(row_idx, ds_idx) {
-		return this.data[ds_idx][row_idx];
-	}
-
 };
 
 /**
@@ -127,8 +115,8 @@ function RRDFile(bf) {
 	this.rrd_data.readNop(this.rrd_data.readAlignLong);
 
 	// pdp_prep_t
-	for (i = 0; i < this.ds.length; i++) {
-		this.ds[i].last_ds = this.rrd_data.readPaddedString(30);
+	for (var ds of this.ds) { 
+		ds.last_ds = this.rrd_data.readPaddedString(30);
 		this.rrd_data.align(4);
 		this.rrd_data.readNop(10*8);
 	}
@@ -144,9 +132,7 @@ function RRDFile(bf) {
 		this.rra[i].cur_row = this.rrd_data.readInt();
 	}
 		
-	for (i = 0; i < this.rra.length; i ++) {
-		var rra = this.rra[i];
-
+	for (var rra of this.rra) {
 		rra.step = this.pdp_step * rra.pdp_cnt;
 		rra.data = new Array(this.ds.length);
 

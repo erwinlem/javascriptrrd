@@ -49,7 +49,7 @@ RRDGraph.prototype.getFlotData = function() {
 				// FIXME: do this smarter and faster
 				var time = (rrd.lastUpdate - (rra.nrRows-1-x) * rra.step) * 1000;
 				if (time < rraRange[y][1]) {
-					data.push([time, rra.getEl(x,rrd.ds.indexOf(ds))]);
+					data.push([time, rra.data[rrd.ds.indexOf(ds)][x]]);
 				}
 			}
 		}

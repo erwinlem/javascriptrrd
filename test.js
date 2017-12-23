@@ -76,7 +76,7 @@ describe("rrd functions", function(){
 		var rrd_data = new RRDFile.RRDFile(bf);
 		rrd_data.lastUpdate;
 		rrd_data.ds.length;
-		rrd_data.getDSNames();
+		rrd_data.ds[0];
 
 		rrd_data.rra.length;
 		rrd_data.rra[0];

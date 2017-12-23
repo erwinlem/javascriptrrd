@@ -200,22 +200,6 @@ RRDFile.prototype = {
 
 	},
 
-	getDSNames : function() {
-		var ds_names = [];
-		for (var idx = 0; idx < this.ds.length; idx++) {
-			ds_names.push(this.ds[idx].name);
-		}
-		return ds_names;
-	},
-
-	getDSbyName : function(name) {
-		for (var idx = 0; idx < this.ds.length; idx++) {
-			if (this.ds[idx].name == name)
-				return this.ds[idx];
-		}
-		throw RangeError("DS name " + name + " unknown.");
-	},
-
 };
 
 // this will export the module to nodejs

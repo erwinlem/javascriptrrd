@@ -1,3 +1,4 @@
+"use strict";
 /**
  * this class implements all the bindings
  * @constructor
@@ -15,10 +16,9 @@ RRDGraph.prototype.getFlotData = function() {
 	var r = []; 
 
 	var rrd = this.rrdFiles[0];
-	$.each(rrd.getDSNames(), function (key,value) {
+	for (var ds of rrd.ds) {
 		var data = [];
 		var x,y;
-		var ds = rrd.getDS(value);	
 		var rra;
 
 		// calculate start, end and resolution for each rra
@@ -47,17 +47,17 @@ RRDGraph.prototype.getFlotData = function() {
 			rra = rrd.rra[y];
 			for (x = rra.nrRows-1; x > 0; x--) {
 				// FIXME: do this smarter and faster
-				time = (rrd.lastUpdate - (rra.nrRows-1-x) * rra.step) * 1000;
+				var time = (rrd.lastUpdate - (rra.nrRows-1-x) * rra.step) * 1000;
 				if (time < rraRange[y][1]) {
 					data.push([time, rra.getEl(x,rrd.ds.indexOf(ds))]);
 				}
 			}
 		}
-		r.push( { label: value,
+		r.push( { label: ds.name,
 			data: data,
 			lines: { show:true, fill: true }
 		});
-	});
+	};
 	return r;
 };
 

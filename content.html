@@ -52,8 +52,6 @@ rrd_data = undefined;
 // when a new file is selected
 function update_info(bf) {
 	rrd_data = new RRDFile(bf);
-	// Update DS info
-	var nrDSs=rrd_data.ds.length;
 
 	// But first cleanup anything that may be there from before
 	document.getElementById("ds_el").firstChild.data="None";
@@ -62,9 +60,9 @@ function update_info(bf) {
 		oSelect.remove(0);
 	}         
 
-	for (var i=0; i<nrDSs; i++) {
-		var ds_name=rrd_data.getDS(i).name;
-		oSelect.options.add(new Option(ds_name,i,false,false));
+	// Update DS options
+	for (var i=0; i<rrd_data.ds.length; i++) {
+		oSelect.options.add(new Option(rrd_data.ds[i].name,i,false,false));
 	}
 
 	// Update RRA info
@@ -110,7 +108,7 @@ function element_update() {
 	} 
 
 	// Generic header info
-	document.getElementById("ds_el").firstChild.data=rrd_data.getDS(ds_idx).name;
+	document.getElementById("ds_el").firstChild.data=rrd_data.ds[ds_idx].name;
 	document.getElementById("rra_el").firstChild.data=rra_idx;
 
 	// get RRA info
@@ -137,7 +135,7 @@ function element_update() {
 
 // this function is invoked when the RRD file name changes
 function input_update() {
-	new BinaryFile("../example_rrds/"+$('#file').val()+".rrd", update_info);
+	new BinaryFile("rrd/"+$('#file').val()+".rrd", update_info);
 }
 
 fillFileOptions($('#file'));

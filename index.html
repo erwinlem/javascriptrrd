@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>javascriptRRD examples</title>
-		<link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="dashboard.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -25,37 +25,14 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Raw <span class="caret" /></a>
 							<ul class="dropdown-menu">
-								<li><a href="#rrdHeaderInfo.html">Simple header information</a></li>
-								<li><a href="#rrdContent.html">Raw RRD content</a></li>
-							</ul>
-						</li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Flot <span class="caret" /></a>
-							<ul class="dropdown-menu">
-								<li><a href="#rrdJFlot.html">RRD plotting with Flot</a></li>
-								<li><a href="#rrdJFlotSimple.html">RRD plotting with Flot (no user input)</a></li>
-								<li><a href="#rrdJFlotDefaults.html">RRD plotting with Flot (using all available rrdflot_defaults options)</a></li>
-							</ul>
-						</li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Stack <span class="caret" /></a>
-							<ul class="dropdown-menu">
-								<li><a href="#rrdJFlotTwo.html">Plot the sum of 2 RRD files with Flot</a></li>
-								<li><a href="#rrdJFlotThree.html">Plot the sum of 3 RRD files with Flot</a></li>
-								<li><a href="#rrdMatrixFlot.html">Plot the stack of 3 RRD files with Flot</a></li>
-							</ul>
-						</li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Filter <span class="caret" /></a>
-							<ul class="dropdown-menu">
-								<li><a href="#rrdJFlotFilter.html">Filter DSs. Here, sum two DSs, and sum all of the DSs.</a></li>
-								<li><a href="#rrdJFlotFilterRRA.html">Create new RRAs with longer steps</a></li>
+								<li><a href="#headerInfo.html">Simple header information</a></li>
+								<li><a href="#content.html">Raw RRD content</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">D3 <span class="caret" /></a>
 							<ul class="dropdown-menu">
-								<li><a href="#rrdD3.html">Plot graph with d3js.</a></li>
+								<li><a href="#D3.html">Plot graph with d3js.</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -72,16 +49,16 @@
 		</div>
 
 
-		<script src="../node_modules/jquery/dist/jquery.min.js"></script>
-		<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="node_modules/jquery/dist/jquery.min.js"></script>
+		<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
-		<script src="../node_modules/flot/jquery.flot.js" ></script>
-		<script src="../node_modules/flot/jquery.flot.selection.js" ></script>
-		<script src="../node_modules/flot/jquery.flot.time.js" ></script>
-		<script src="../node_modules/flot/jquery.flot.navigate.js" ></script>
-		<script src="../lib/RRDFile.js" ></script>
-		<script src="../lib/binaryXHR.js" ></script>
-		<script src="../lib/RRDGraph.js" ></script>
+		<script src="node_modules/flot/jquery.flot.js" ></script>
+		<script src="node_modules/flot/jquery.flot.selection.js" ></script>
+		<script src="node_modules/flot/jquery.flot.time.js" ></script>
+		<script src="node_modules/flot/jquery.flot.navigate.js" ></script>
+		<script src="RRDFile.js" ></script>
+		<script src="binaryXHR.js" ></script>
+		<script src="RRDGraph.js" ></script>
 
 	<script>
 $(".main").load(this.window.location.hash.substring(1));

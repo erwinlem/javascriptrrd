@@ -1,10 +1,10 @@
+"use strict";
 /**
  * This class implements the methods needed to access the information about a RRD Data Source.
  * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
  * @constructor
  */
 function RRDDS(rrd_data) {
-
 	/** the name of the data source. 
 	 * @member {string} 
 	 */

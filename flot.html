@@ -50,7 +50,7 @@ function update_info(bf) {
 }
 
 function input_update() {
-	new BinaryFile("../example_rrds/"+$('#file').val()+".rrd", update_info);
+	new BinaryFile("rrd/"+$('#file').val()+".rrd", update_info);
 }
 		
 $(function () {

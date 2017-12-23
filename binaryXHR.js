@@ -1,3 +1,4 @@
+"use strict";
 /**
  * This class implements the methods needed to access the content of the binary file.
  * @todo use https://www.npmjs.com/package/binary-file

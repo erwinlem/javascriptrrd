@@ -1,48 +1,4 @@
 "use strict";
-/**
- * This class implements the methods needed to access the information about a RRD Data Source.
- * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
- * @constructor
- */
-function RRDDS(rrd_data) {
-	/** the name of the data source. 
-	 * @member {string} 
-	 */
-	this.name = rrd_data.readPaddedString(20);
-	/** the type of the data source.  
-	 * @member {string} 
-	 */
-	this.type = rrd_data.readPaddedString(20);
-	this.DS_mrhb_cnt = rrd_data.readDouble();
-	/** the minimum value the data source can contain.  
-	 * @member {Number} 
-	 */
-	this.DS_min_val = rrd_data.readDouble();
-	/** the maximum value the data source can contain.  
-	 * @member {Number} 
-	 */
-	this.DS_max_val = rrd_data.readDouble();
-
-	// skip remainder of header
-	rrd_data.readNop((10-3)*8);
-}
-
-/**
- * This class implements the methods needed to access the content of a Round Robin Archive.
- * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
- * @constructor
- */
-function RRDRRA(rrd_data) {
-		/** the Consolidation Function used by the RRA.  
-		 * @member {string} */
-		this.cf_nam = rrd_data.readPaddedString(20);
-		this.nrRows = rrd_data.readLong();
-		/** number of slots used for consolidation.  
-		 * @member {Number} */
-		this.pdp_cnt = rrd_data.readLong();
-		rrd_data.align(rrd_data.readAlignDouble);
-		rrd_data.readNop(10*8);
-};
 
 /**
  * This is the main class of the package. It is also the only class the user
@@ -57,6 +13,53 @@ function RRDRRA(rrd_data) {
  * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
  */
 function RRDFile(bf) {
+
+	/**
+ 	 * This class implements the methods needed to access the information about a RRD Data Source.
+ 	 * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
+ 	 * @constructor
+ 	 */
+	function RRDDS(rrd_data) {
+		/** the name of the data source. 
+	 	 * @member {string} 
+	 	 */
+		this.name = rrd_data.readPaddedString(20);
+		/** the type of the data source.  
+	 	 * @member {string} 
+	 	 */
+		this.type = rrd_data.readPaddedString(20);
+		this.DS_mrhb_cnt = rrd_data.readDouble();
+		/** the minimum value the data source can contain.  
+	 	 * @member {Number} 
+	 	 */
+		this.DS_min_val = rrd_data.readDouble();
+		/** the maximum value the data source can contain.  
+	 	 * @member {Number} 
+	 	 */
+		this.DS_max_val = rrd_data.readDouble();
+
+		// skip remainder of header
+		rrd_data.readNop((10-3)*8);
+	}
+
+	/**
+ 	 * This class implements the methods needed to access the content of a Round Robin Archive.
+ 	 * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
+ 	 * @constructor
+ 	 */
+	function RRDRRA(rrd_data) {
+			/** the Consolidation Function used by the RRA.  
+		 	 * @member {string} */
+			this.cf_nam = rrd_data.readPaddedString(20);
+			this.nrRows = rrd_data.readLong();
+			/** number of slots used for consolidation.  
+		 	 * @member {Number} */
+			this.pdp_cnt = rrd_data.readLong();
+			rrd_data.align(rrd_data.readAlignDouble);
+			rrd_data.readNop(10*8);
+	};
+
+	// CONSTRUCTOR STARTS HERE 
 	this.rrd_data = bf;
 
 	// sanity checks

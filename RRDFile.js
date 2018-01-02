@@ -14,25 +14,6 @@
  */
 function RRDFile(bf) {
 
-
-	/**
- 	 * This class implements the methods needed to access the content of a Round Robin Archive.
- 	 * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
- 	 * @constructor
- 	 */
-	function RRDRRA(rrd_data) {
-			/** the Consolidation Function used by the RRA.  
-		 	 * @member {string} */
-			this.cf_nam = rrd_data.readPaddedString(20);
-			this.nrRows = rrd_data.readLong();
-			/** number of slots used for consolidation.  
-		 	 * @member {Number} */
-			this.pdp_cnt = rrd_data.readLong();
-			rrd_data.align(rrd_data.readAlignDouble);
-			rrd_data.readNop(10*8);
-	};
-
-	// CONSTRUCTOR STARTS HERE 
 	this.rrd_data = bf;
 
 	// sanity checks
@@ -127,7 +108,13 @@ function RRDFile(bf) {
 	// rra_def_t *rra_def; /* list of round robin archive def */
 	// load RRA
 	for (i = 0; i < this.rra.length; i ++) {
-		this.rra[i] = new RRDRRA(this.rrd_data);
+		this.rra[i] = {
+			cf_nam : bf.readPaddedString(20),
+			nrRows : bf.readLong(),
+			pdp_cnt : bf.readLong()
+		}
+		bf.align(bf.readAlignDouble);
+		bf.readNop(10*8);
 	}
 
 	// live_head_t

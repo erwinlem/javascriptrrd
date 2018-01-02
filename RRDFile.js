@@ -10,59 +10,57 @@
  * to the start at 0 (to preserve the sanity of the user).
  * 
  * @constructor
- * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
+ * @param {BinaryFile} bf must be an object compatible with the BinaryFile interface.
  */
 function RRDFile(bf) {
 
-	this.rrd_data = bf;
-
 	// sanity checks
-	if (this.rrd_data.buffer.byteLength < 1) throw "Empty file.";
-	if (this.rrd_data.buffer.byteLength < 16) throw "File too short.";
+	if (bf.buffer.byteLength < 1) throw "Empty file.";
+	if (bf.buffer.byteLength < 16) throw "File too short.";
 
 	// figure out alignment & endian and give this to the binary reader 
-	this.rrd_data.readAlignDouble = 8; 
-	this.rrd_data.readAlignLong = 4;
-	if (this.rrd_data.getLongAt(12) === 0) {
+	bf.readAlignDouble = 8; 
+	bf.readAlignLong = 4;
+	if (bf.getLongAt(12) === 0) {
 		// not a double here... likely 64 bit
-		if (this.rrd_data.getDoubleAt(16) != 8.642135e+130) {
+		if (bf.getDoubleAt(16) != 8.642135e+130) {
 			// uhm... wrong endian?
-			this.rrd_data.switch_endian = true;
+			bf.switch_endian = true;
 		}
 
-		if (this.rrd_data.getDoubleAt(16) != 8.642135e+130) {
+		if (bf.getDoubleAt(16) != 8.642135e+130) {
 			throw "Magic float not found at 16.";
 		}
 
 		// now, is it all 64bit or only float 64 bit?
-		if (this.rrd_data.getLongAt(28) === 0) {
+		if (bf.getLongAt(28) === 0) {
 			// true 64 bit align
-			this.rrd_data.readAlignLong = 8;
+			bf.readAlignLong = 8;
 		}
 	} else {
 		/// should be 32 bit alignment
-		if (this.rrd_data.getDoubleAt(12) != 8.642135e+130) {
+		if (bf.getDoubleAt(12) != 8.642135e+130) {
 			// uhm... wrong endian?
-			this.rrd_data.switch_endian = true;
+			bf.switch_endian = true;
 		}
-		if (this.rrd_data.getDoubleAt(12) != 8.642135e+130) {
+		if (bf.getDoubleAt(12) != 8.642135e+130) {
 			throw "Magic float not found at 12.";
 		}
-		this.rrd_data.readAlignDouble = 4; 
+		bf.readAlignDouble = 4; 
 	}
 
 	// LOAD THE HEADER
 	// stat_head_t *stat_head; /* the static header */
 
 	// header is described in the rrd_format.h https://github.com/oetiker/rrdtool-1.x/blob/master/src/rrd_format.h
-	this.cookie = this.rrd_data.readString();
-	this.version = this.rrd_data.readString();
-	this.float_cookie = this.rrd_data.readDouble();
-	this.ds = new Array(this.rrd_data.readLong());
-	this.rra = new Array(this.rrd_data.readLong());
+	this.cookie = bf.readString();
+	this.version = bf.readString();
+	this.float_cookie = bf.readDouble();
+	this.ds = new Array(bf.readLong());
+	this.rra = new Array(bf.readLong());
 	/** the base interval in seconds that was used to feed the RRD file.  
 	 * @member {Number} */
-	this.pdp_step = this.rrd_data.readLong();
+	this.pdp_step = bf.readLong();
 
 	// do some sanity checks
 	if (this.cookie !== "RRD") {
@@ -81,12 +79,12 @@ function RRDFile(bf) {
 		throw "pdp step less than 1.";
 	}
 
-	this.rrd_data.readNop(10*8);
+	bf.readNop(10*8);
 
 	// best guess, assuming no weird align problems
-	this.rrd_data.align(8);
-	this.top_header_size = this.rrd_data.filePos;
-	var t = this.rrd_data.getLongAt(this.top_header_size);
+	bf.align(8);
+	this.top_header_size = bf.filePos;
+	var t = bf.getLongAt(this.top_header_size);
 	if (t === 0) {
 		throw "Could not find first DS name.";
 	}
@@ -119,27 +117,27 @@ function RRDFile(bf) {
 
 	// live_head_t
 	// skip time_t, this is very platform specific :(
-	this.lastUpdate = this.rrd_data.readLong();
+	this.lastUpdate = bf.readLong();
 
-	this.rrd_data.align(this.rrd_data.readAlignLong);
-	this.rrd_data.readNop(this.rrd_data.readAlignLong);
+	bf.align(bf.readAlignLong);
+	bf.readNop(bf.readAlignLong);
 
 	// pdp_prep_t
 	for (var ds of this.ds) { 
-		ds.last_ds = this.rrd_data.readPaddedString(30);
-		this.rrd_data.align(4);
-		this.rrd_data.readNop(10*8);
+		ds.last_ds = bf.readPaddedString(30);
+		bf.align(4);
+		bf.readNop(10*8);
 	}
 
 	// cdp_prep_t, no clue, just skip
 	for (i = 0; i < this.rra.length*this.ds.length; i ++) {
-		this.rrd_data.align(4);
-		this.rrd_data.readNop(10*8);
+		bf.align(4);
+		bf.readNop(10*8);
 	}
 
 	// rra_ptr_t
 	for (i = 0; i < this.rra.length; i ++) {
-		this.rra[i].cur_row = this.rrd_data.readInt();
+		this.rra[i].cur_row = bf.readInt();
 	}
 		
 	for (var rra of this.rra) {
@@ -153,7 +151,7 @@ function RRDFile(bf) {
 		for (var x = 0; x < rra.nrRows; x++) {
 			for (y = 0; y < this.ds.length; y++) {
 				// it is round robin, starting from cur_row+1
-				rra.data[y][(rra.nrRows + (x - rra.cur_row - 1)) % rra.nrRows] = this.rrd_data.readDouble();
+				rra.data[y][(rra.nrRows + (x - rra.cur_row - 1)) % rra.nrRows] = bf.readDouble();
 			}
 		}
 	}

@@ -45,17 +45,57 @@ function RRDRRA(rrd_data) {
 };
 
 /**
- * This is the main class of the package. It is also the only class the user ever needs to explicitly instantiate. Given a BinaryFile, gives access to the RRD archive fields
+ * This is the main class of the package. It is also the only class the user
+ * ever needs to explicitly instantiate. Given a BinaryFile, gives access to
+ * the RRD archive fields. 
+ *
+ * There will be as little processing as possible and the class will mimic the
+ * file as much as possible with the exception of the RRA which will be shifted
+ * to the start at 0 (to preserve the sanity of the user).
  * 
  * @constructor
  * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
  */
 function RRDFile(bf) {
 	this.rrd_data = bf;
-	this.validate_rrd();
 
+	// sanity checks
+	if (this.rrd_data.buffer.byteLength < 1) throw "Empty file.";
+	if (this.rrd_data.buffer.byteLength < 16) throw "File too short.";
+
+	// figure out alignment & endian and give this to the binary reader 
+	this.rrd_data.readAlignDouble = 8; 
+	this.rrd_data.readAlignLong = 4;
+	if (this.rrd_data.getLongAt(12) === 0) {
+		// not a double here... likely 64 bit
+		if (this.rrd_data.getDoubleAt(16) != 8.642135e+130) {
+			// uhm... wrong endian?
+			this.rrd_data.switch_endian = true;
+		}
+
+		if (this.rrd_data.getDoubleAt(16) != 8.642135e+130) {
+			throw "Magic float not found at 16.";
+		}
+
+		// now, is it all 64bit or only float 64 bit?
+		if (this.rrd_data.getLongAt(28) === 0) {
+			// true 64 bit align
+			this.rrd_data.readAlignLong = 8;
+		}
+	} else {
+		/// should be 32 bit alignment
+		if (this.rrd_data.getDoubleAt(12) != 8.642135e+130) {
+			// uhm... wrong endian?
+			this.rrd_data.switch_endian = true;
+		}
+		if (this.rrd_data.getDoubleAt(12) != 8.642135e+130) {
+			throw "Magic float not found at 12.";
+		}
+		this.rrd_data.readAlignDouble = 4; 
+	}
+
+	// LOAD THE HEADER
 	// stat_head_t *stat_head; /* the static header */
-	// process the header here, since I need it for validation
 
 	// header is described in the rrd_format.h https://github.com/oetiker/rrdtool-1.x/blob/master/src/rrd_format.h
 	this.cookie = this.rrd_data.readString();
@@ -102,7 +142,7 @@ function RRDFile(bf) {
 	}
 
 	// rra_def_t *rra_def; /* list of round robin archive def */
-	// load rra
+	// load RRA
 	for (i = 0; i < this.rra.length; i ++) {
 		this.rra[i] = new RRDRRA(this.rrd_data);
 	}
@@ -148,45 +188,6 @@ function RRDFile(bf) {
 		}
 	}
 }
-
-RRDFile.prototype = {
-	validate_rrd : function() {
-		if (this.rrd_data.buffer.byteLength < 1) throw "Empty file.";
-		if (this.rrd_data.buffer.byteLength < 16) throw "File too short.";
-
-		this.rrd_data.readAlignDouble = 8; 
-		this.rrd_data.readAlignLong = 4;
-		if (this.rrd_data.getLongAt(12) === 0) {
-			// not a double here... likely 64 bit
-			if (this.rrd_data.getDoubleAt(16) != 8.642135e+130) {
-				// uhm... wrong endian?
-				this.rrd_data.switch_endian = true;
-			}
-
-			if (this.rrd_data.getDoubleAt(16) != 8.642135e+130) {
-				throw "Magic float not found at 16.";
-			}
-
-			// now, is it all 64bit or only float 64 bit?
-			if (this.rrd_data.getLongAt(28) === 0) {
-				// true 64 bit align
-				this.rrd_data.readAlignLong = 8;
-			}
-		} else {
-			/// should be 32 bit alignment
-			if (this.rrd_data.getDoubleAt(12) != 8.642135e+130) {
-				// uhm... wrong endian?
-				this.rrd_data.switch_endian = true;
-			}
-			if (this.rrd_data.getDoubleAt(12) != 8.642135e+130) {
-				throw "Magic float not found at 12.";
-			}
-			this.rrd_data.readAlignDouble = 4; 
-		}
-
-	},
-
-};
 
 // this will export the module to nodejs
 if(typeof(exports) !== 'undefined' && exports !== null) {

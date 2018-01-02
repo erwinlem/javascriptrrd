@@ -14,33 +14,6 @@
  */
 function RRDFile(bf) {
 
-	/**
- 	 * This class implements the methods needed to access the information about a RRD Data Source.
- 	 * @param {BinaryFile} rrd_data must be an object compatible with the BinaryFile interface
- 	 * @constructor
- 	 */
-	function RRDDS(rrd_data) {
-		/** the name of the data source. 
-	 	 * @member {string} 
-	 	 */
-		this.name = rrd_data.readPaddedString(20);
-		/** the type of the data source.  
-	 	 * @member {string} 
-	 	 */
-		this.type = rrd_data.readPaddedString(20);
-		this.DS_mrhb_cnt = rrd_data.readDouble();
-		/** the minimum value the data source can contain.  
-	 	 * @member {Number} 
-	 	 */
-		this.DS_min_val = rrd_data.readDouble();
-		/** the maximum value the data source can contain.  
-	 	 * @member {Number} 
-	 	 */
-		this.DS_max_val = rrd_data.readDouble();
-
-		// skip remainder of header
-		rrd_data.readNop((10-3)*8);
-	}
 
 	/**
  	 * This class implements the methods needed to access the content of a Round Robin Archive.
@@ -141,7 +114,14 @@ function RRDFile(bf) {
 	// load DS
 	var i;
 	for (i = 0; i < this.ds.length; i++) {
-		this.ds[i] = new RRDDS(this.rrd_data);
+		this.ds[i] = { 
+			name : bf.readPaddedString(20),
+			type : bf.readPaddedString(20),
+			DS_mrhb_cnt : bf.readDouble(),
+			DS_min_val : bf.readDouble(),
+			DS_max_val : bf.readDouble()
+		}
+		bf.readNop((10-3)*8);
 	}
 
 	// rra_def_t *rra_def; /* list of round robin archive def */

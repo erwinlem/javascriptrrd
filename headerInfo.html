@@ -13,15 +13,18 @@
 		<dt>filename</dt><dd id="fname">NA</dd>
 		<dt>min step</dt><dd id="step">NA</dd>
 		<dt>last update</dt><dd id="last_update">NA</dd>
+		<dt>version</dt><dd id="version">NA</dd>
 	</dl>
 
 	<table id="dsInfo" class="table table-condensed table-bordered">
 		<caption>DS list</caption>
 		<thead><tr><th>Name</th><th>Type</th></tr></thead>
+		<tbody></tbody>
 	</table>
 	<table id="rraInfo" class="table table-condensed table-bordered">
 		<caption>RRA list</caption>
-		<thead><tr><th>Index</th><th>Rows</th><th>Steps</th></tr></thead>
+		<thead><tr><th>consolidation function</th><th>Rows</th><th>Steps</th></tr></thead>
+		<tbody></tbody>
 	</table>
 
 	<script type="text/javascript">
@@ -37,17 +40,16 @@ function update_info(bf) {
 	$('#fname').text($('#input_fname').val());
 	$('#step').text(rrd_data.pdp_step);
 	$('#last_update').text(new Date(rrd_data.lastUpdate*1000));
+	$('#version').text(rrd_data.version);
 
 	// DS info
 	for (var oDS of rrd_data.ds) {
-		$('#dsInfo').append('<tr><td>XXX'+oDS.name+'</td><td>'+oDS.type+'</td></tr>');
+		$('#dsInfo tbody').append('<tr><td>'+oDS.name+'</td><td>'+oDS.type+'</td></tr>');
 	}
 
 	// RRA Info
-	var nrRRAs=rrd_data.rra.length;
-	for (var i=0; i<nrRRAs; i++) {
-		var oRRA=rrd_data.rra[i];
-		$('#rraInfo').append('<tr><td>'+i+'</td><td>'+oRRA.nrRows+'</td><td>'+oRRA.step+'</td></tr>');
+	for (var oRRA of rrd_data.rra) {
+		$('#rraInfo tbody').append('<tr><td>'+oRRA.cf_nam+'</td><td>'+oRRA.nrRows+'</td><td>'+oRRA.step+'</td></tr>');
 	}
 }
 

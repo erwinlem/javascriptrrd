@@ -12,7 +12,6 @@
     "coveralls": "latest",
     "istanbul": "latest",
     "js-beautify": "latest",
-    "jsdoc": "latest",
     "jsdom": "latest",
     "jshint": "latest",
     "mocha": "latest",
@@ -23,9 +22,7 @@
     "lint": "./node_modules/jshint/bin/jshint lib/*.js",
     "testonly": "./node_modules/.bin/_mocha test.js",
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha test.js",
-    "test": "./node_modules/.bin/istanbul cover --report lcovonly ./node_modules/.bin/_mocha test.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "doc": "./node_modules/.bin/jsdoc --access all --template template.jsdoc --readme README.md lib/*.js",
-    "doc2": "./node_modules/.bin/jsdoc --access all --readme README.md lib/*.js"
+    "test": "./node_modules/.bin/istanbul cover --report lcovonly ./node_modules/.bin/_mocha test.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",

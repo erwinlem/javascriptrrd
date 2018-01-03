@@ -9,8 +9,6 @@
  * file as much as possible with the exception of the RRA which will be shifted
  * to the start at 0 (to preserve the sanity of the user).
  * 
- * @constructor
- * @param {BinaryFile} bf must be an object compatible with the BinaryFile interface.
  */
 function RRDFile(bf) {
 
@@ -38,7 +36,7 @@ function RRDFile(bf) {
 			bf.readAlignLong = 8;
 		}
 	} else {
-		/// should be 32 bit alignment
+		// should be 32 bit alignment
 		if (bf.getDoubleAt(12) != 8.642135e+130) {
 			// uhm... wrong endian?
 			bf.switch_endian = true;
@@ -58,8 +56,6 @@ function RRDFile(bf) {
 	this.float_cookie = bf.readDouble();
 	this.ds = new Array(bf.readLong());
 	this.rra = new Array(bf.readLong());
-	/** the base interval in seconds that was used to feed the RRD file.  
-	 * @member {Number} */
 	this.pdp_step = bf.readLong();
 
 	// do some sanity checks

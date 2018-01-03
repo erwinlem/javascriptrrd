@@ -1,8 +1,5 @@
 "use strict";
-/**
- * this class implements all the bindings
- * @constructor
- */
+
 function RRDGraph() {
 	this.rrdFiles = [];
 }

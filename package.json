@@ -2,19 +2,19 @@
   "name": "javascriptrrd",
   "version": "0.0.1",
   "dependencies": {
-    "bootstrap": "latest",
-    "d3": "latest",
-    "flot": "latest",
-    "jquery": "latest"
+    "bootstrap": "^3.3.7",
+    "d3": "^4.12.2",
+    "flot": "^0.8.0-alpha",
+    "jquery": "^3.2.1"
   },
   "devDependencies": {
     "chai": "latest",
     "coveralls": "latest",
     "istanbul": "latest",
-    "js-beautify": "latest",
-    "jsdom": "latest",
+    "js-beautify": "^1.7.5",
+    "jsdom": "^11.5.1",
     "jshint": "latest",
-    "mocha": "latest",
+    "mocha": "^4.1.0",
     "mocha-lcov-reporter": "latest",
     "xmlhttprequest": "latest"
   },

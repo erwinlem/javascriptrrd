@@ -20,7 +20,6 @@ The following libraries are used at runtime :
 	 
 The following libraries are used to aid development :
 
-* JsDoc
 * JsHint
 * Chai
 * Mocha
@@ -30,13 +29,21 @@ Dependencies could be installed using npm or you could manually edit the file ja
 
 The examples directory contains ready to use examples, this could be used as a reference point.
 
-Generating documentation
-------------------------
-Documentation is generated with jsdoc. This is integrated in npm, so running "npm run doc" should generate all the required api documentation. This can be found in the out directory and will be included in releases. 
-
-running tests
+Running tests
 -------------
-Tests are run with Mocha and code coverage is done with Istanbul. You can run "npm run test" or "npm run cover". The first one will run only the tests and cover will also run the code coverage. 
+
+First install the dev packages :
+
+```
+npm update --save-dev
+```
+
+You can run the test or full coverage :
+
+```
+npm run test
+npm run cover
+```
 
 Original implementation & credits
 =================================

@@ -1,3 +1,5 @@
+/*jslint esversion:6*/
+
 var expect = require("chai").expect;
 var assert = require('assert');
 var jsdom = require('jsdom');
@@ -23,7 +25,7 @@ describe("file loading", function(){
 		var bf = new binaryXHR.BinaryFile("README.md");
 		var fn = function() {
 			var rrd_data = new RRDFile.RRDFile(bf);
-		}
+		};
 		expect(fn).to.throw();
 	});	    
 
@@ -68,18 +70,18 @@ describe("rrd functions", function(){
 	beforeEach(function () {
 		global.document = new JSDOM('<html><body><section id="banner"></section></body></html>');
 		global.$ = require('jquery')(global.document.window);
-	})
+	});
 
 
 	it("header", function() {
 		var bf = new binaryXHR.BinaryFile("rrd/example1.rrd");
 		var rrd_data = new RRDFile.RRDFile(bf);
-		rrd_data.lastUpdate;
-		rrd_data.ds.length;
-		rrd_data.ds[0];
+		var a = rrd_data.lastUpdate;
+		a = rrd_data.ds.length;
+		a = rrd_data.ds[0];
 
-		rrd_data.rra.length;
-		rrd_data.rra[0];
+		a = rrd_data.rra.length;
+		a = rrd_data.rra[0];
 	});
 
 	it("datasource", function() {

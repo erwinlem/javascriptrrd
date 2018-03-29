@@ -1,3 +1,4 @@
+/*jslint esversion:6*/
 "use strict";
 
 /**
@@ -95,7 +96,7 @@ function RRDFile(bf) {
 			DS_mrhb_cnt : bf.readDouble(),
 			DS_min_val : bf.readDouble(),
 			DS_max_val : bf.readDouble()
-		}
+		};
 		bf.readNop((10-3)*8);
 	}
 
@@ -106,7 +107,7 @@ function RRDFile(bf) {
 			cf_nam : bf.readPaddedString(20),
 			nrRows : bf.readLong(),
 			pdp_cnt : bf.readLong()
-		}
+		};
 		bf.align(bf.readAlignDouble);
 		bf.readNop(10*8);
 	}

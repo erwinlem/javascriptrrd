@@ -1,3 +1,4 @@
+/*jslint esversion:6*/
 "use strict";
 
 function RRDGraph() {
@@ -54,7 +55,7 @@ RRDGraph.prototype.getFlotData = function() {
 			data: data,
 			lines: { show:true, fill: true }
 		});
-	};
+	}
 	return r;
 };
 

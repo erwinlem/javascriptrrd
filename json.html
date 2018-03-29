@@ -1,0 +1,37 @@
+<div>
+	<h1 id="title">Json</h1>
+
+	<div class="form-group">
+		<label for="input_fname">rrd file</label>
+		<select id="file" onchange="input_update()">
+		</select>
+	</div>
+	<button onclick="input_update()" class="btn btn-default">Update</button>
+	<hr />
+
+	<pre id="example" >
+		test
+	</pre>
+
+	<script type="text/javascript">
+
+//<![CDATA[
+
+function update_info(bf) {
+	$("#example").html(JSON.stringify(new RRDFile(bf)));
+
+	//datas(rrd_Graph.getFlotData()[0].data);
+}
+
+function input_update() {
+	new BinaryFile("rrd/"+$('#file').val()+".rrd", update_info);
+}
+
+
+fillFileOptions($('#file'));
+
+
+//]]>
+
+	</script>
+</div>

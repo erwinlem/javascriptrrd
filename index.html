@@ -40,20 +40,20 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Raw <span class="caret" /></a>
 							<ul class="dropdown-menu">
-								<li><a href="#headerInfo.html">Simple header information</a></li>
-								<li><a href="#content.html">Raw RRD content</a></li>
+								<li><a href="#headerInfo">Simple header information</a></li>
+								<li><a href="#content">Raw RRD content</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">D3 <span class="caret" /></a>
 							<ul class="dropdown-menu">
-								<li><a href="#D3.html">Plot graph with d3js.</a></li>
+								<li><a href="#D3">Plot graph with d3js.</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Json<span class="caret" /></a>
 							<ul class="dropdown-menu">
-								<li><a href="#json.html">Dump data with Json.</a></li>
+								<li><a href="#json">Dump data with Json.</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -86,7 +86,7 @@ $(".main").load(this.window.location.hash.substring(1));
 
 $('.dropdown-menu > li > a').click(function() {
 	console.log($(this).attr('href'));
-	$(".main").load($(this).attr('href').split('#')[1]);
+	$(".main").load("example_"+$(this).attr('href').split('#')[1]+".html");
 });
 
 function fillFileOptions(node) {

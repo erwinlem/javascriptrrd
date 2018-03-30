@@ -14,23 +14,15 @@ function BinaryFile(url, onload) {
 		// we are running node.js
 		this.buffer = new DataView(new Uint8Array(require("fs").readFileSync(url)).buffer);
 	} else {
-		// we are running in the browser
-		var request = new XMLHttpRequest();
-		request.open("GET", url, true);
-		// need to use binary for webbrowsers
-		request.overrideMimeType('text/plain; charset=x-user-defined');
-		request.responseType = 'arraybuffer';
 		var that = this;
-		request.onreadystatechange = function(e) {
-			// FIXME: error handling
-			if (this.readyState !== (this.DONE || 4)) {
-				return;
-			}
-			that.buffer = new DataView(request.response);
-			// stupid async complex stuff 
-			onload(that);
-		};
-		request.send();
+		fetch(url)
+			.then(function(response) {
+    			return response.arrayBuffer();
+  			}).then(function(buffer) {
+				that.buffer = new DataView(buffer);
+				onload(that);
+    		}
+  			);
 	}
 }	
 

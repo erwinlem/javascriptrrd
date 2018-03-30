@@ -52,15 +52,15 @@ function RRDFile(bf) {
 	// stat_head_t *stat_head; /* the static header */
 
 	// header is described in the rrd_format.h https://github.com/oetiker/rrdtool-1.x/blob/master/src/rrd_format.h
-	this.cookie = bf.readString();
+	var cookie = bf.readString();
 	this.version = bf.readString();
-	this.float_cookie = bf.readDouble();
+	var float_cookie = bf.readDouble();
 	this.ds = new Array(bf.readLong());
 	this.rra = new Array(bf.readLong());
-	this.pdp_step = bf.readLong();
+	var pdp_step = bf.readLong();
 
 	// do some sanity checks
-	if (this.cookie !== "RRD") {
+	if (cookie !== "RRD") {
 		throw "Wrong magic id.";
 	}
 	if (!this.version.match("0003|0004|0001")) {
@@ -72,7 +72,7 @@ function RRDFile(bf) {
 	if (this.rra.length < 1) {
 		throw "rra count ("+this.rra.length+") less than 1.";
 	}
-	if (this.pdp_step < 1) {
+	if (pdp_step < 1) {
 		throw "pdp step less than 1.";
 	}
 
@@ -80,8 +80,8 @@ function RRDFile(bf) {
 
 	// best guess, assuming no weird align problems
 	bf.align(8);
-	this.top_header_size = bf.filePos;
-	var t = bf.getLongAt(this.top_header_size);
+	var top_header_size = bf.filePos;
+	var t = bf.getLongAt(top_header_size);
 	if (t === 0) {
 		throw "Could not find first DS name.";
 	}
@@ -138,7 +138,7 @@ function RRDFile(bf) {
 	}
 		
 	for (var rra of this.rra) {
-		rra.step = this.pdp_step * rra.pdp_cnt;
+		rra.step = pdp_step * rra.pdp_cnt;
 		rra.data = new Array(this.ds.length);
 
 		for (var y = 0; y < this.ds.length; y++) {
